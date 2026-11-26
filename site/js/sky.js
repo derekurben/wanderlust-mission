@@ -41,11 +41,11 @@
 
   // The look of a clear sky at six sun heights. Everything between is interpolated.
   var KEYS = [
-    { alt: -18, sky: '#050A18', hor: '#0E1830', fog: '#0A1224', tint: '#06123A', top: 0.58, bri: 0.30, sat: -0.55 },
-    { alt: -6,  sky: '#1D2B55', hor: '#5A5282', fog: '#3A3F66', tint: '#1A2A66', top: 0.42, bri: 0.50, sat: -0.35 },
-    { alt: -1,  sky: '#4A6AA8', hor: '#F0916B', fog: '#E5A28C', tint: '#D8643C', top: 0.20, bri: 0.82, sat: -0.05 },
-    { alt: 4,   sky: '#78A6DC', hor: '#FFC98C', fog: '#FFDDB5', tint: '#FF9A45', top: 0.13, bri: 0.96, sat: 0.08 },
-    { alt: 12,  sky: '#86B6E6', hor: '#E8F0F6', fog: '#F1F5F8', tint: '#FFD9A8', top: 0.03, bri: 1.00, sat: 0.03 },
+    { alt: -18, sky: '#050A18', hor: '#0E1830', fog: '#0A1224', tint: '#06123A', top: 0.50, bri: 0.42, sat: -0.5 },
+    { alt: -6,  sky: '#1D2B55', hor: '#5A5282', fog: '#3A3F66', tint: '#1A2A66', top: 0.40, bri: 0.56, sat: -0.35 },
+    { alt: -1,  sky: '#4A6AA8', hor: '#F0916B', fog: '#E5A28C', tint: '#E0683A', top: 0.26, bri: 0.84, sat: 0.0 },
+    { alt: 4,   sky: '#78A6DC', hor: '#FFC98C', fog: '#FFDDB5', tint: '#FF9440', top: 0.20, bri: 0.97, sat: 0.1 },
+    { alt: 12,  sky: '#86B6E6', hor: '#E8F0F6', fog: '#F1F5F8', tint: '#FFD9A8', top: 0.05, bri: 1.00, sat: 0.04 },
     { alt: 30,  sky: '#8FBCE8', hor: '#EAF2F8', fog: '#F2F6F9', tint: '#FFFFFF', top: 0.00, bri: 1.00, sat: 0.00 }
   ];
   KEYS.forEach(function (k) { ['sky', 'hor', 'fog', 'tint'].forEach(function (n) { k[n] = hex(k[n]); }); });
@@ -80,10 +80,11 @@
       brightness: clamp(k.bri * (1 - 0.13 * c * day) * (1 - 0.06 * wet), 0.2, 1),
       saturation: clamp(k.sat - 0.26 * c - 0.1 * wet + 0.1 * glow, -0.8, 0.3),
       contrast: clamp(-0.14 * c * day + 0.07 * glow, -0.3, 0.2),
-      shadeDir: Math.round(w.az), shadeAlt: clamp(w.alt, 4, 80),
-      shade: clamp(day * (1 - 0.8 * c) * (0.2 + 0.36 * low), 0, 0.6),
-      shadow: css(mix(hex('#1B2A4A'), hex('#3A2A5A'), glow), 0.9),
-      highlight: css(mix(hex('#FFFFFF'), hex('#FFC27A'), glow), 0.75),
+      // by day the sun models the slopes; by night a faint, cool light from the north-west keeps their shape
+      shadeDir: day > 0.05 ? Math.round(w.az) : 315, shadeAlt: day > 0.05 ? clamp(w.alt, 22, 80) : 40,
+      shade: clamp(day * (1 - 0.8 * c) * (0.13 + 0.19 * low) + (1 - day) * 0.12, 0, 0.34),
+      shadow: css(mix(mix(hex('#060B1C'), hex('#26355A'), day), hex('#4A3560'), glow), 0.42 + 0.14 * glow),
+      highlight: css(mix(mix(hex('#8FA6D8'), hex('#FFFFFF'), day), hex('#FFB45E'), glow), 0.35 + 0.4 * glow),
       day: day, glow: glow, night: 1 - smooth(w.alt, -9, -2)
     };
   }
@@ -134,7 +135,7 @@
     this.raf = 0; this.t = 0; this.still = false;
     var blobs = [], seed = 7;
     function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
-    for (var i = 0; i < 16; i++) blobs.push({ x: rnd() * 1.6 - 0.3, y: rnd() * 1.1 - 0.05, r: 0.16 + rnd() * 0.22, s: 0.6 + rnd() * 0.8, sq: 0.55 + rnd() * 0.35 });
+    for (var i = 0; i < 16; i++) blobs.push({ x: rnd() * 1.6 - 0.3, y: rnd() * 1.1 - 0.05, r: 0.10 + rnd() * 0.14, s: 0.6 + rnd() * 0.8, sq: 0.55 + rnd() * 0.35 });
     this.blobs = blobs;
     var drops = [];
     for (i = 0; i < 420; i++) drops.push({ x: rnd(), y: rnd(), v: 0.75 + rnd() * 0.5, l: 0.7 + rnd() * 0.6, ph: rnd() * 6.28, r: 0.9 + rnd() * 1.9 });
@@ -167,9 +168,9 @@
     var g = this.shade.getContext('2d'), sw = this.shade.width, sh = this.shade.height;
     g.clearRect(0, 0, sw, sh);
     var c = clamp(w.cloud, 0, 1), broken = c < 0.8 ? c / 0.8 : Math.max(0.25, (1 - c) / 0.2);
-    var strength = broken * L.day * 0.34;
+    var strength = broken * L.day * 0.13;
     if (strength > 0.01) {
-      var n = Math.round(4 + c * 12);
+      var n = Math.round(3 + c * 6);
       for (var i = 0; i < n; i++) {
         var b = this.blobs[i];
         b.x += dt * (0.006 + 0.03 * wind) * b.s; if (b.x - b.r > 1.3) b.x = -0.3 - b.r;
@@ -222,6 +223,7 @@
       }
     }
     var busy = strength > 0.01 || w.rain > 0.04;
+    this.busy = busy;
     this.raf = (busy && !this.still) ? requestAnimationFrame(this.tick) : 0;
   };
 
