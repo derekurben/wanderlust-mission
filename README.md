@@ -46,3 +46,15 @@ Map © swisstopo. Terrain © Mapterhorn. Weather from Open-Meteo (ERA5). Map eng
 
 - `source/huts_master.json` is the master Google Sheet (name, height, done, date) with each hut's position, canton and commune from the swisstopo place-name search. `python3 tools/make_huts.py` turns it into `site/js/huts.js`.
 - `source/peaks_raw.txt` is swisstopo's 1:200,000 name set around the visited huts, each with its class. The summits in it become `site/js/peaks.js`.
+
+## Features added on 26 Nov 2026
+
+| File | What it does |
+|---|---|
+| `site/js/sky.js` | Sun position for a date, time and place; the light, sky colour, cloud shadows, rain and snow drawn on the map |
+| `site/js/app.js` | Also: the story clock (`buildClock`), fly-through, photo spots on the route, summit names, the look-around, unvisited huts, the mission replay |
+| `site/js/pages.js` | Mission numbers and charts, the hut passport, the hut rankings |
+| `site/js/rankings.js` | **Hut scores. Edit this file to rate a hut.** |
+| `site/js/huts.js`, `site/js/peaks.js` | Generated: every hut on the list, and the summits around visited huts |
+
+Times along a route come from the watch recording where there is one. Without it they are estimated from the length of the walk, and the clock on the map says "about".

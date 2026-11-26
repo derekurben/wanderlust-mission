@@ -363,6 +363,7 @@
   function openLog(id, instant) {
     var l = BY_ID[id];
     if (!l) return;
+    if (replay) stopReplay(true);
     hideCard(); hideTip();
     active = id; hot = null;
     $('nav-mission').removeAttribute('aria-pressed');
@@ -1165,7 +1166,7 @@
         l.huts.forEach(function (h) { b.extend(h.at); });
         $('hud-title').textContent = dateRange(l.dates);
         $('hud-sub').textContent = l.title;
-        map.fitBounds(b, { padding: padded(small() ? 56 : 120), maxZoom: 11.4, pitch: 52, bearing: 0, duration: reduceMotion ? 0 : 1000 * k });
+        map.fitBounds(b, { padding: padded(small() ? 56 : 120), maxZoom: 10.7, pitch: 50, bearing: 0, duration: reduceMotion ? 0 : 1000 * k });
         if (!(await wait(1050 * k))) return;
         if (l.track) {
           if (!(await draw(l, reduceMotion ? 1 : 1300 * k))) return;
