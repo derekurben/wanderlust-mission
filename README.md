@@ -3,6 +3,8 @@
 The site behind wanderlustmission.com: a 3D map of Swiss Alpine Club hut trips, with each logbook told as a
 scroll-driven story beside the map. Netlify publishes the `site/` folder on every push to `main`. There is no build step.
 
+Live at https://wanderlustmission.com (Netlify project `wanderlust-mission`).
+
 ## Layout
 
 | Path | What it is |
