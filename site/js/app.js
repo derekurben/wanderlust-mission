@@ -137,9 +137,9 @@
       layers: [
         { id: 'bg', type: 'background', paint: { 'background-color': '#E6EBEE' } },
         { id: 'relief', type: 'hillshade', source: 'relief', paint: { 'hillshade-shadow-color': '#7C8A94', 'hillshade-highlight-color': '#FFFFFF', 'hillshade-accent-color': '#9AA6AE', 'hillshade-exaggeration': 0.55 } },
-        { id: 'summer', type: 'raster', source: 'summer' },
+        { id: 'summer', type: 'raster', source: 'summer', layout: { visibility: 'none' } },
         { id: 'winter', type: 'raster', source: 'winter', layout: { visibility: 'none' } },
-        { id: 'aerial', type: 'raster', source: 'aerial', layout: { visibility: 'none' } }
+        { id: 'aerial', type: 'raster', source: 'aerial' }
       ],
       terrain: { source: 'dem', exaggeration: 1.15 },
       sky: { 'sky-color': '#9CC4E4', 'horizon-color': '#F2F4F6', 'fog-color': '#FFFFFF', 'sky-horizon-blend': 0.7, 'horizon-fog-blend': 0.7, 'fog-ground-blend': 0.35 }
@@ -149,7 +149,7 @@
   // The map fills the window; panels sit on top of it. This is the part of the map left uncovered.
   function clearArea() {
     var W = window.innerWidth, H = window.innerHeight, open = !$('panel').hidden;
-    if (small()) return { top: 56, left: 0, right: 0, bottom: open ? Math.round(H * 0.64) : 110 };
+    if (small()) return { top: 56, left: 0, right: 0, bottom: open ? ($('panel').offsetHeight || Math.round(H * 0.52)) : 110 };
     var left = $('rail').classList.contains('is-shut') ? 0 : (document.body.classList.contains('story-open') ? SLIM : 300);
     var right = open ? $('panel').offsetWidth : 0;
     return { top: 56, left: left, right: right, bottom: document.body.classList.contains('story-open') ? 150 : 0 };
@@ -328,7 +328,7 @@
     $('nav-mission').removeAttribute('aria-pressed');
     $('nav-about').removeAttribute('aria-pressed');
     if (dot) { dot.remove(); dot = null; }
-    if (!userBase) setBase('summer');
+    if (!userBase) setBase('aerial');
     var was = active;
     active = null; applyStates();
     if (was) history.replaceState(null, '', location.pathname + location.search);
@@ -407,8 +407,8 @@
       story = { l: l, rows: Array.prototype.slice.call($('story').querySelectorAll('.row[data-f]')), target: 0, cur: 0, mode: 'overview', raf: 0, userCam: false, lastWalk: -1, now: -1 };
       $('strip').hidden = small();
       drawProfile(l);
-      if (!userBase) setBase('aerial'); // the printed map's labels smear on steep ground
-    } else if (!userBase) setBase('summer');
+    }
+    if (!userBase) setBase('aerial');
     applyStates();
 
     if (mapReady) {
@@ -696,7 +696,7 @@
     if (dot) { dot.remove(); dot = null; }
     $('nav-mission').removeAttribute('aria-pressed'); $('nav-about').removeAttribute('aria-pressed');
     $(nav).setAttribute('aria-pressed', 'true');
-    if (!userBase) setBase('summer');
+    if (!userBase) setBase('aerial');
   }
   function afterSidePanel() { applyStates(); if (mapReady) goHome(1400); }
   function openMission() {

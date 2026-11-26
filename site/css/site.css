@@ -330,7 +330,7 @@ body.rail-shut .strip { left: 14px; }
 .panel.is-story .prose p { font-size: 17px; }
 
 @media (max-width: 900px) {
-  .panel.is-story { width: 100vw; min-width: 0; height: 64vh; }
+  .panel.is-story { width: 100vw; min-width: 0; height: 52vh; height: 52dvh; }
   body.story-open .rail { width: min(86vw, 320px); }
   body.story-open .mapctl { right: 12px; }
   body.story-open .maplibregl-ctl-bottom-right { right: 0; bottom: 0; }
@@ -387,6 +387,33 @@ body.rail-shut .strip { left: 14px; }
   .lightbox img { padding: 56px 6px 4px; }
   .lb-prev, .lb-next { top: auto; bottom: 74px; }
   .lb-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+
+/* ---------- phones: keep the whole top bar on screen ---------- */
+@media (max-width: 900px) {
+  .bar { padding-right: 6px; gap: 4px; }
+  .bar .brand { min-width: 0; flex: 0 1 auto; padding-right: 4px; }
+  .brand-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-photos, .nav { flex: none; }
+}
+@media (max-width: 480px) {
+  .blaze { width: 30px; padding: 16px 7px; }
+  .bar .brand { gap: 7px; flex: none; }
+  .brand-name { font-size: 17px; white-space: normal; overflow: visible; line-height: .95; width: min-content; }
+  .bar-photos { padding: 5px 7px; font-size: 12.5px; border-width: 1.5px; }
+  .nav { gap: 0; }
+  .nav button { padding: 9px 6px; font-size: 12.5px; }
+}
+@media (max-width: 385px) {
+  .blaze { width: 16px; padding: 16px 0 16px 6px; border-right: 0; }
+  .brand-name { font-size: 16px; }
+  .nav button { padding: 9px 5px; }
+}
+@media (max-width: 345px) {
+  .brand-name { font-size: 14.5px; }
+  .bar .brand { gap: 5px; padding-right: 2px; }
+  .bar-photos { padding: 4px 5px; font-size: 12px; }
+  .nav button { padding: 9px 3px; font-size: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
