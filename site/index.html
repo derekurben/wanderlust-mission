@@ -21,9 +21,12 @@
     <span class="brand-name">Wanderlust Mission</span>
   </a>
   <button type="button" class="bar-photos" id="nav-photos">Photos</button>
-  <nav class="nav" aria-label="Sections">
+  <button type="button" class="bar-menu" id="nav-menu" aria-expanded="false" aria-controls="nav">Menu</button>
+  <nav class="nav" id="nav" aria-label="Sections">
     <button type="button" id="nav-logbook" aria-pressed="true">Logbook</button>
     <button type="button" id="nav-mission">Mission</button>
+    <button type="button" id="nav-passport">Passport</button>
+    <button type="button" id="nav-rankings">Rankings</button>
     <button type="button" id="nav-about">About</button>
   </nav>
 </header>
@@ -35,6 +38,17 @@
   </div>
   <ol class="rail-list" id="rail-list"></ol>
 </aside>
+
+<div class="wx" id="wx" aria-hidden="true"><canvas id="wx-shade"></canvas><canvas id="wx-fall"></canvas></div>
+
+<div class="clock" id="clock" hidden>
+  <svg class="clock-arc" id="clock-arc" viewBox="0 0 120 46" width="120" height="46" aria-hidden="true"></svg>
+  <p><b id="clock-time"></b><span id="clock-wx"></span></p>
+</div>
+
+<button type="button" class="replay-btn" id="replay">
+  <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M6 4.5v11l9-5.5z" fill="currentColor"/></svg>Replay the mission
+</button>
 
 <button type="button" class="meter" id="meter" aria-label="Open mission progress">
   <span class="meter-num"><b id="meter-done">0</b><span>of <span id="meter-total">153</span> huts</span></span>
@@ -48,6 +62,7 @@
     <button type="button" role="radio" aria-checked="true" data-base="aerial">Aerial</button>
   </div>
   <button type="button" class="ctl-btn" id="tilt" aria-pressed="true">3D</button>
+  <button type="button" class="ctl-btn" id="light" aria-pressed="true" title="Light and weather of the day, inside a logbook">Light</button>
 </div>
 
 <div class="strip" id="strip" hidden>
@@ -56,6 +71,13 @@
 </div>
 
 <div class="card" id="card" hidden></div>
+
+<figure class="flycard" id="flycard" hidden><img id="flycard-img" alt=""><figcaption id="flycard-cap"></figcaption></figure>
+<div class="hud" id="hud" hidden>
+  <p class="hud-text"><b id="hud-title"></b><span id="hud-sub"></span></p>
+  <div class="hud-bar" id="hud-bar" hidden><i id="hud-fill"></i></div>
+  <div class="hud-btns" id="hud-btns"></div>
+</div>
 
 <section class="panel" id="panel" aria-live="polite" hidden>
   <button type="button" class="panel-close" id="panel-close" aria-label="Close">
@@ -66,6 +88,10 @@
 
 <section class="gallery" id="gallery" aria-label="Photos" hidden>
   <div class="gallery-in" id="gallery-in" tabindex="-1"></div>
+</section>
+
+<section class="gallery page" id="page" hidden>
+  <div class="gallery-in" id="page-in" tabindex="-1"></div>
 </section>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo" hidden>
@@ -83,6 +109,11 @@
 <script src="js/data.js"></script>
 <script src="js/stories.js"></script>
 <script src="js/photos.js"></script>
+<script src="js/huts.js"></script>
+<script src="js/peaks.js"></script>
+<script src="js/rankings.js"></script>
+<script src="js/sky.js"></script>
 <script src="js/app.js"></script>
+<script src="js/pages.js"></script>
 </body>
 </html>

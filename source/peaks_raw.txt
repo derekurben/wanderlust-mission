@@ -1,0 +1,241 @@
+Altmann|2435|9.37154|47.23955|Main peak
+Chreialppass|2011|9.37861|47.23611|Pass
+Hoher Kasten|1794|9.48503|47.28369|Main peak
+Schäfler|1925|9.39031|47.27603|Peak
+Öhrlikopf|2193|9.36066|47.26545|Peak
+Stauberenkanzel|1860|9.45201|47.26030|Peak
+Säntis|2502|9.34324|47.24943|Viewpoint
+Gandstock|2315|9.11697|46.96535|Peak
+Richetlipass|2261|9.06744|46.89791|Pass
+Laaxer Stöckli|2899|9.20413|46.88309|Main peak
+Vorstegstock|2677|9.02695|46.88389|Main peak
+Glarner Vorab|3017|9.15292|46.87988|Alpin peak
+Bündner Vorab|3026|9.15678|46.87392|Alpin peak
+Hausstock|3158|9.06562|46.87430|Alpin peak
+Charenstock|2421|9.12221|46.95051|Peak
+Fanenstock|2237|9.19880|46.94494|Peak
+Gross Kärpf|2794|9.09322|46.91674|Main peak
+Pass dil Segnas|2625|9.22456|46.90197|Pass
+Ruchi|3105|9.04516|46.86498|Main peak
+Alp Nagens|1973|9.23549|46.85615|Building Stalla
+Panixerpass|2404|9.10402|46.85580|Pass
+Crap Masegn|2516|9.17113|46.85034|Main peak
+Muttenstock|3089|9.04585|46.84999|Main peak
+Crap Sogn Gion|2263|9.21035|46.83830|Local name swisstopo
+Kistenpass|2501|9.02399|46.82421|Pass
+Tschugga|1938|9.91983|46.78721|Local name swisstopo
+Piz Murtera|3043|10.04035|46.77534|Main peak
+Jöriflesspass|2558|9.98732|46.77344|Pass
+Sentischhora|2827|9.91521|46.76597|Main peak
+Jatzhora|2681|9.85994|46.76585|Main peak
+Jakobshora|2590|9.84933|46.77242|Main peak
+Pass da Fless|2458|10.02229|46.79491|Pass Flesspass|Pass da Fless (GR) - Zernez
+Büelehora|2513|9.88795|46.79266|Main peak
+Bocktehora|3043|9.90271|46.70706|Main peak
+Piz Sarsura|3176|9.99449|46.69117|Main peak
+Cuolm S-chaletta|2605|9.92026|46.69271|Pass
+Chüealphora|3077|9.90531|46.68534|Main peak
+Hoch Ducan|3063|9.85142|46.68953|Main peak Hoch Dukan|Piz Ducan (GR) - Davos
+Piz Vadret|3228|9.96269|46.68702|Alpin peak
+Flüela Wisshorn|3085|9.96664|46.76212|Alpin peak
+Gadme|1821|9.90136|46.75246|Local name swisstopo
+Flüelapass|2384|9.94886|46.74869|Roadpass
+Piz dal Ras|3028|10.03331|46.73831|Main peak
+Schwarzhora|3146|9.94171|46.73577|Main peak
+Wuoschthora|2815|9.87788|46.73458|Main peak
+Sertig Dörfli|1861|9.84864|46.72617|Populated Place
+Piz Radönt|3064|9.95773|46.72248|Main peak
+Piz Arpschella|3031|10.01044|46.71853|Main peak
+Fuorcla da Grialetsch|2537|9.95868|46.71186|Pass
+Piz Griatschouls|2971|9.94380|46.62823|Main peak
+Piz Val Müra|3164|9.90092|46.62793|Main peak
+Sertigpass|2739|9.88439|46.68087|Pass Sartiv|Sertigpass (GR) - S-chanf
+Alp Barlas-ch|2077|10.03039|46.67128|Local name swisstopo
+Piz Fourun|2931|9.97542|46.66106|Main peak
+Piz Forun|3052|9.86492|46.65531|Main peak
+Piz Viluoch|3041|9.91366|46.64235|Main peak
+Am Rin|1847|9.90554|46.74517|Local name swisstopo
+Bös Fulen|2801|8.94571|46.96716|Main peak
+Bächistock|2915|8.98910|46.99289|Alpin peak
+Silberen|2318|8.89948|46.99240|Peak
+Chamerstock|2123|8.96493|46.89378|Peak
+Höch Windgällen|2764|8.79176|46.88793|Alpin peak
+Glatten|2505|8.85934|46.88134|Main peak
+Pfannenstock|2572|8.91151|46.96158|Main peak
+Vorder Eggstock|2449|8.98006|46.96046|Peak
+Höch Turen|2666|8.93574|46.93219|Main peak
+Ortstock|2716|8.94820|46.92539|Alpin peak
+Alpler Horn|2380|8.80820|46.91070|Peak
+Vorfrutt|1787|8.87086|46.87240|Local name swisstopo
+Klausenpass|1948|8.85548|46.86820|Pass
+Gämsfairenstock|2972|8.91779|46.86050|Main peak
+Clariden|3267|8.87123|46.84204|Alpin peak
+Gumihorn|2099|7.90804|46.65517|Peak
+Höji Sulegg|2413|7.85171|46.62131|Peak
+Männlichen|2342|7.93806|46.61817|Peak
+Rotenegg|1890|7.81301|46.64006|Peak
+Morgenberghorn|2249|7.79355|46.62220|Main peak
+Roteflue|2296|7.95773|46.68154|Peak
+Loucherhorn|2232|7.93509|46.66620|Peak
+Hundshore|2929|7.80630|46.54272|Main peak
+Silberhorn|3690|7.94899|46.54194|Main peak
+Jungfrau|4158|7.96259|46.53678|Alpin peak
+Wätterlatte|2007|7.74331|46.60786|Peak
+Tschuggen|2521|7.94952|46.60022|?
+Schwalmere|2777|7.81674|46.59291|Alpin peak
+Dreispitz|2520|7.75963|46.59279|?
+Kleine Scheidegg|2061|7.96066|46.58508|Building Bergrestaurant
+Drättehore|2794|7.82383|46.58239|Main peak
+Bietenhorn|2756|7.86473|46.57706|Main peak
+Schilthorn|2969|7.83491|46.55728|Main peak
+Zahm Andrist|2681|7.78777|46.55338|Main peak
+Schwarzmönch|2648|7.92438|46.55268|Main peak
+Jungfraujoch|3463|7.97838|46.54771|Pass
+Eigergletscher|2320|7.97419|46.57488|Building Restaurant
+Fronalpstock|1921|8.63728|46.96820|Main peak
+Gitschen|2513|8.57510|46.87718|Main peak
+Chlingenstock|1935|8.67463|46.95744|Peak
+Chaiserstock|2515|8.72856|46.92836|Main peak
+Rophaien|2078|8.64649|46.92799|Main peak
+Rossstock|2461|8.70775|46.91718|Peak
+Chinzig Chulm|2073|8.72531|46.90717|Pass
+Hagelstock|2181|8.68168|46.91713|Peak
+Sustenpass|2224|8.45120|46.73132|Roadpass
+Stucklistock|3313|8.48724|46.71716|Main peak
+Giglistock|2898|8.38655|46.70967|Main peak
+Fleckistock|3417|8.49756|46.70743|Main peak
+Titlis|3238|8.43778|46.77204|Alpin peak
+Stössenstock|2941|8.47306|46.76772|Main peak
+Gross Wendestock|3042|8.38043|46.76164|Main peak
+Schafschijen|2853|8.54517|46.75283|Main peak
+Witenstock|2391|8.60118|46.75108|Peak
+Fünffingersteck|2993|8.43627|46.75217|Main peak
+Schijenstock|2419|8.58215|46.73137|Peak
+Steingletscher|1867|8.42758|46.73143|Building Berghotel
+Dammastock|3630|8.42108|46.64348|Alpin peak
+Tieralplistock|3383|8.37498|46.63311|Main peak
+Mittagstock|2988|8.51233|46.63237|Main peak
+Winterstock|3202|8.45429|46.62031|Main peak
+Sustenhorn|3502|8.45512|46.69893|Alpin peak
+Salbitschijen|2986|8.52907|46.68048|Main peak
+Hinter Tierberg|3446|8.39891|46.68153|Main peak
+Hoch Horenfellistock|3175|8.47211|46.67091|Main peak
+Galenstock|3586|8.41697|46.61259|Alpin peak
+Prodkamm|2006|9.26552|47.07133|Peak
+Ruchen|2440|9.14415|47.07010|Main peak
+Guscha|2141|9.31500|47.05025|Peak
+Grosser Güslen|1843|9.23210|47.08502|Peak
+Wissgandstöckli|2487|9.24989|46.99517|Peak
+Gulderturm|2519|9.20026|46.99287|Main peak
+Risetenpass|2187|9.24658|46.97803|Pass
+Hochfinsler|2422|9.29979|47.03330|Peak
+Magerrain|2523|9.22002|47.03312|Main peak
+Bützistock|2496|9.17607|47.02800|Peak
+Spitzmeilen|2501|9.23637|47.02397|Main peak
+Gufelstock|2435|9.14658|47.02499|Main peak
+Guli|2355|9.29485|47.01285|Peak
+Foostock|2610|9.24471|46.95647|Main peak
+Hangsackgrat|2634|9.32184|46.95225|Main peak
+Vrenelisgärtli|2905|9.01688|47.00779|Main peak
+Inner Füürberg|2627|8.97909|47.00538|Main peak
+Ruchen|2901|9.00093|47.01065|Main peak
+Pizzo Lucendro|2963|8.51947|46.53890|Main peak
+Gross Läckihorn|3068|8.46432|46.53578|Main peak
+Saashörner-Südgipfel|3039|8.43205|46.52601|Main peak
+Pizzo Rotondo|3191|8.46613|46.51758|Alpin peak
+Belvédère|2271|8.38908|46.57791|?
+Furkapass|2429|8.41504|46.57258|Roadpass
+Gletsch|1757|8.36188|46.56240|Local name swisstopo
+Passo del San Gottardo|2106|8.56116|46.55931|Roadpass
+Tällistock|2861|8.40127|46.55174|Main peak
+Gross Muttenhorn|3099|8.42715|46.54656|Main peak
+Fibbia|2739|8.54752|46.54276|Main peak
+Riale|1733|8.41578|46.42317|?
+Kastelhorn|3128|8.45755|46.42226|Main peak
+Corno di Ban|3023|8.36102|46.41780|?
+Pizzo Castello|2807|8.56515|46.41551|Main peak
+Basòdino|3273|8.46840|46.41160|Alpin peak
+Chüebodenhorn|3070|8.45300|46.50812|Main peak
+Poncione di Vespero|2718|8.58136|46.49951|Main peak
+Pizzo Gallina|3060|8.39204|46.49489|Main peak
+Il Madone|2756|8.55899|46.49188|Main peak
+Passo del Náret|2437|8.55724|46.47911|Pass
+Nufenenpass|2478|8.38944|46.47760|Roadpass
+Passo di Cristallina|2566|8.52699|46.47137|Pass
+Poncione dei Laghetti|2617|8.59473|46.46666|Main peak
+Nufenenstock|2865|8.38817|46.46708|Main peak
+Cristallina|2912|8.53671|46.46475|Alpin peak
+Poncione di Valleggia|2872|8.49918|46.46514|Main peak
+Passo San Giacomo|2307|8.45223|46.45899|Pass
+Griespass|2452|8.37120|46.45197|Pass
+Grieshorn|2967|8.39296|46.45158|Main peak Corno Gries
+Marchhorn|2962|8.46250|46.44844|Main peak
+A Robièi|1890|8.51269|46.44315|Building Albergo Robiei (TI) - Cevio
+Poncione di Braga|2864|8.54302|46.43442|Main peak
+Alpe Toggia|2159|8.42800|46.43479|?
+Nätschen|1842|8.61359|46.64251|Local name swisstopo Ober
+Rossbodenstock|2837|8.65124|46.63498|Main peak
+Badus|2928|8.66368|46.62251|Alpin peak
+Rienzenstock|2962|8.63550|46.68282|Main peak
+Fellilücke|2477|8.66424|46.67267|Pass
+Oberalppass|2044|8.67121|46.65868|Roadpass
+Gemsstock|2962|8.61149|46.60213|Main peak
+Chastelhorn|2973|8.59792|46.59510|Main peak
+Tiefenbach|2107|8.46284|46.59238|Populated Place
+Hinter Schloss|3133|8.52702|46.80258|Main peak
+Gross Spannort|3198|8.52460|46.78677|Alpin peak
+Jakobiger|2505|8.61251|46.79301|Main peak
+Hoch Geissberg|2396|8.59606|46.82635|Peak
+Hahnen|2607|8.45563|46.82394|Main peak
+Wissberg|2627|8.47813|46.81372|Main peak
+Krönten|3108|8.56934|46.78217|Main peak
+Chli Spannort|3136|8.51618|46.78033|Main peak
+Rautispitz|2283|9.02840|47.07126|Main peak
+Diethelm|2099|8.88390|47.06083|Peak
+Schijen|2259|8.99179|47.05936|?
+Mutteristock|2295|8.94281|47.04872|Main peak
+Brünnelistock|2133|8.97259|47.08417|Peak
+Piet|1965|8.84116|47.03745|Peak
+Fläschenspitz|2073|8.87169|47.02854|Peak
+Vorder Glärnisch|2328|9.04111|47.02203|Peak
+Bifertenstock|3418|8.95749|46.80420|Alpin peak
+Piz Urlaun|3358|8.92820|46.79640|Main peak
+Cavistrau Grond|3251|8.97362|46.78437|Main peak
+Piz Dado|2698|9.01534|46.79087|Main peak
+Gross Düssi|3256|8.82768|46.79163|Alpin peak
+Hinter Selbsanft|3029|8.97795|46.83172|Main peak
+Gross Schärhorn|3296|8.82948|46.82696|Alpin peak
+Piz Cazarauls|3062|8.87706|46.81292|Main peak
+Piz Russein|3612|8.91464|46.81119|Alpin peak
+Piz Ner|2858|8.94802|46.76895|Main peak
+Piz Avat|2910|8.90627|46.76758|Main peak
+Piz Alpetta|2764|8.87110|46.74758|Main peak
+Gross Ruchen|3137|8.77475|46.81019|Main peak
+Hinter Griessstock|2733|8.80447|46.83161|Main peak
+Chli Ruchen|2945|8.79815|46.82084|Main peak
+Oberalpstock|3328|8.76946|46.74271|Alpin peak
+Brichlig|2964|8.81299|46.73731|Main peak
+Hoh Brisen|2413|8.46563|46.89752|Main peak
+Stanserhorn|1898|8.34030|46.92973|Main peak
+Oberbauenstock|2117|8.54429|46.92787|Peak
+Schwalmis|2246|8.49352|46.91855|Peak
+Uri Rotstock|2929|8.53521|46.86176|Alpin peak
+Ruchstock|2813|8.47080|46.85646|Main peak
+Engelberger Rotstock|2818|8.49787|46.85369|Main peak
+Rigidalstock|2593|8.41950|46.85225|Main peak
+Brunnistock|2952|8.55002|46.84774|Alpin peak
+Wissigstock|2887|8.50704|46.84549|Main peak
+Surenenpass|2292|8.54568|46.83644|Pass Eggen|Surenenpass (UR) - Attinghausen
+Jochpass|2208|8.38666|46.77835|Pass
+Rotsandnollen|2700|8.34408|46.80068|Alpin peak
+Diechterhoren|3388|8.36018|46.64811|Main peak
+Mittler Gärstenhorn|3184|8.36145|46.59811|Main peak
+Gross Furkahorn|3168|8.41039|46.59652|Main peak
+Winterhorn|2662|8.53916|46.58673|Main peak Pizzo d'Orsino|Winterhorn (UR) - Realp
+Chli Furkahorn|3026|8.40630|46.58572|Main peak
+Radlefshoren|2603|8.35529|46.71445|Main peak
+Spittelnollen|1980|8.33346|46.57246|Peak
+Grimselpass|2164|8.33770|46.56152|Roadpass
+Bälmeten|2415|8.68046|46.83101|Peak
+Pörtlilücke|2505|8.68407|46.71886|Pass
+Bristen|3073|8.68135|46.73690|Alpin peak

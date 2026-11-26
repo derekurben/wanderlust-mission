@@ -1,0 +1,1502 @@
+[
+ {
+  "name": "Carschinahütte SAC",
+  "ele": 2236,
+  "done": false,
+  "date": "",
+  "lat": 47.00707,
+  "lon": 9.82735,
+  "canton": "GR",
+  "place": "Luzein"
+ },
+ {
+  "name": "Albert-Heim-Hütte SAC",
+  "ele": 2542,
+  "done": true,
+  "date": "September 7, 2026",
+  "lat": 46.60893,
+  "lon": 8.46357,
+  "canton": "UR",
+  "place": "Realp"
+ },
+ {
+  "name": "Schalijochbiwak SAC",
+  "ele": 3786,
+  "done": false,
+  "date": "",
+  "lat": 46.09332,
+  "lon": 7.70952,
+  "canton": "VS",
+  "place": "Randa"
+ },
+ {
+  "name": "Cufercalhütte SAC",
+  "ele": 2385,
+  "done": false,
+  "date": "",
+  "lat": 46.59337,
+  "lon": 9.35902,
+  "canton": "GR",
+  "place": "Andeer"
+ },
+ {
+  "name": "Capanna Motterascio CAS",
+  "ele": 2172,
+  "done": false,
+  "date": "",
+  "lat": 46.59335,
+  "lon": 9.00549,
+  "canton": "TI",
+  "place": "Blenio"
+ },
+ {
+  "name": "Oberaarjochhütte SAC",
+  "ele": 3258,
+  "done": false,
+  "date": "",
+  "lat": 46.52605,
+  "lon": 8.17308,
+  "canton": "VS",
+  "place": "Fieschertal"
+ },
+ {
+  "name": "Capanna da l'Albigna CAS",
+  "ele": 2336,
+  "done": false,
+  "date": "",
+  "lat": 46.32998,
+  "lon": 9.65523,
+  "canton": "GR",
+  "place": "Bregaglia"
+ },
+ {
+  "name": "Konkordiahütte SAC",
+  "ele": 2850,
+  "done": false,
+  "date": "",
+  "lat": 46.50048,
+  "lon": 8.05319,
+  "canton": "VS",
+  "place": "Fieschertal"
+ },
+ {
+  "name": "Fründenhütte SAC",
+  "ele": 2562,
+  "done": false,
+  "date": "",
+  "lat": 46.48365,
+  "lon": 7.74187,
+  "canton": "BE",
+  "place": "Kandersteg"
+ },
+ {
+  "name": "Aarbiwak SAC",
+  "ele": 2731,
+  "done": false,
+  "date": "",
+  "lat": 46.55554,
+  "lon": 8.15223,
+  "canton": "BE",
+  "place": "Guttannen"
+ },
+ {
+  "name": "Cabane du Trient CAS",
+  "ele": 3170,
+  "done": false,
+  "date": "",
+  "lat": 45.9996,
+  "lon": 7.04369,
+  "canton": "VS",
+  "place": "Trient"
+ },
+ {
+  "name": "Chamanna Coaz CAS",
+  "ele": 2610,
+  "done": false,
+  "date": "",
+  "lat": 46.38369,
+  "lon": 9.83543,
+  "canton": "GR",
+  "place": "Samedan"
+ },
+ {
+  "name": "Monte-Rosa-Hütte SAC",
+  "ele": 2883,
+  "done": false,
+  "date": "",
+  "lat": 45.95693,
+  "lon": 7.81454,
+  "canton": "VS",
+  "place": "Zermatt"
+ },
+ {
+  "name": "Windegghütte SAC",
+  "ele": 1886,
+  "done": false,
+  "date": "",
+  "lat": 46.69499,
+  "lon": 8.34803,
+  "canton": "BE",
+  "place": "Innertkirchen"
+ },
+ {
+  "name": "Ringelspitzhütte SAC",
+  "ele": 1998,
+  "done": false,
+  "date": "",
+  "lat": 46.8658,
+  "lon": 9.38071,
+  "canton": "GR",
+  "place": "Tamins"
+ },
+ {
+  "name": "Spitzmeilenhütte SAC",
+  "ele": 2087,
+  "done": true,
+  "date": "May 13, 2026",
+  "lat": 47.03425,
+  "lon": 9.25057,
+  "canton": "SG",
+  "place": "Flums"
+ },
+ {
+  "name": "Cabane de Susanfe CAS",
+  "ele": 2102,
+  "done": false,
+  "date": "",
+  "lat": 46.13942,
+  "lon": 6.89811,
+  "canton": "VS",
+  "place": "Evionnaz"
+ },
+ {
+  "name": "Rosenlauibiwak SAC",
+  "ele": 2330,
+  "done": false,
+  "date": "",
+  "lat": 46.65914,
+  "lon": 8.1675,
+  "canton": "BE",
+  "place": "Schattenhalb"
+ },
+ {
+  "name": "Gaulihütte SAC",
+  "ele": 2205,
+  "done": false,
+  "date": "",
+  "lat": 46.62378,
+  "lon": 8.21665,
+  "canton": "BE",
+  "place": "Innertkirchen"
+ },
+ {
+  "name": "Berglihütte SAC",
+  "ele": 3299,
+  "done": false,
+  "date": "",
+  "lat": 46.5668,
+  "lon": 8.02053,
+  "canton": "BE",
+  "place": "Grindelwald"
+ },
+ {
+  "name": "Leutschachhütte SAC",
+  "ele": 2208,
+  "done": false,
+  "date": "",
+  "lat": 46.7837,
+  "lon": 8.60118,
+  "canton": "UR",
+  "place": "Gurtnellen"
+ },
+ {
+  "name": "Glattalphütte SAC",
+  "ele": 1896,
+  "done": true,
+  "date": "September 13 2025",
+  "lat": 46.91686,
+  "lon": 8.87502,
+  "canton": "SZ",
+  "place": "Muotathal"
+ },
+ {
+  "name": "Medelserhütte SAC",
+  "ele": 2524,
+  "done": false,
+  "date": "",
+  "lat": 46.64055,
+  "lon": 8.91376,
+  "canton": "GR",
+  "place": "Medel (Lucmagn)"
+ },
+ {
+  "name": "Spannorthütte SAC",
+  "ele": 1956,
+  "done": false,
+  "date": "",
+  "lat": 46.79982,
+  "lon": 8.5098,
+  "canton": "UR",
+  "place": "Attinghausen"
+ },
+ {
+  "name": "Weisshornhütte SAC",
+  "ele": 2932,
+  "done": false,
+  "date": "",
+  "lat": 46.08596,
+  "lon": 7.74359,
+  "canton": "VS",
+  "place": "Randa"
+ },
+ {
+  "name": "Salbithütte SAC",
+  "ele": 2105,
+  "done": true,
+  "date": "June 25, 2026",
+  "lat": 46.67649,
+  "lon": 8.55179,
+  "canton": "UR",
+  "place": "Göschenen"
+ },
+ {
+  "name": "Britanniahütte SAC",
+  "ele": 3030,
+  "done": false,
+  "date": "",
+  "lat": 46.06008,
+  "lon": 7.93505,
+  "canton": "VS",
+  "place": "Saas-Almagell"
+ },
+ {
+  "name": "Treschhütte SAC",
+  "ele": 1475,
+  "done": false,
+  "date": "",
+  "lat": 46.71861,
+  "lon": 8.64947,
+  "canton": "UR",
+  "place": "Gurtnellen"
+ },
+ {
+  "name": "Chamanna d'Es-cha CAS",
+  "ele": 2594,
+  "done": false,
+  "date": "",
+  "lat": 46.61147,
+  "lon": 9.90284,
+  "canton": "GR",
+  "place": "Zuoz"
+ },
+ {
+  "name": "Bivouac de l'Aiguillette à la Singla CAS",
+  "ele": 3179,
+  "done": false,
+  "date": "",
+  "lat": 45.94147,
+  "lon": 7.45409,
+  "canton": "VS",
+  "place": "Val de Bagnes"
+ },
+ {
+  "name": "Leglerhütte SAC",
+  "ele": 2273,
+  "done": true,
+  "date": "June 8, 2026",
+  "lat": 46.92743,
+  "lon": 9.08017,
+  "canton": "GL",
+  "place": "Glarus Süd"
+ },
+ {
+  "name": "Rifugio Saoseo CAS",
+  "ele": 1985,
+  "done": false,
+  "date": "",
+  "lat": 46.39705,
+  "lon": 10.11861,
+  "canton": "GR",
+  "place": "Poschiavo"
+ },
+ {
+  "name": "Wildstrubelhütte SAC",
+  "ele": 2793,
+  "done": false,
+  "date": "",
+  "lat": 46.383,
+  "lon": 7.46783,
+  "canton": "BE",
+  "place": "Lenk"
+ },
+ {
+  "name": "Grünhornhütte SAC",
+  "ele": 2448,
+  "done": true,
+  "date": "August 9, 2026",
+  "lat": 46.81047,
+  "lon": 8.94138,
+  "canton": "GL",
+  "place": "Glarus Süd"
+ },
+ {
+  "name": "Cabane Rambert CAS",
+  "ele": 2580,
+  "done": false,
+  "date": "",
+  "lat": 46.23022,
+  "lon": 7.13425,
+  "canton": "VS",
+  "place": "Leytron"
+ },
+ {
+  "name": "Lämmerenhütte SAC",
+  "ele": 2507,
+  "done": false,
+  "date": "",
+  "lat": 46.40029,
+  "lon": 7.57451,
+  "canton": "VS",
+  "place": "Leukerbad"
+ },
+ {
+  "name": "Finsteraarhornhütte SAC",
+  "ele": 3048,
+  "done": false,
+  "date": "",
+  "lat": 46.52197,
+  "lon": 8.11446,
+  "canton": "VS",
+  "place": "Fieschertal"
+ },
+ {
+  "name": "Turtmannhütte SAC",
+  "ele": 2519,
+  "done": false,
+  "date": "",
+  "lat": 46.16012,
+  "lon": 7.6995,
+  "canton": "VS",
+  "place": "Turtmann-Unterems"
+ },
+ {
+  "name": "Capanna Alzasca CAS",
+  "ele": 1734,
+  "done": false,
+  "date": "",
+  "lat": 46.27133,
+  "lon": 8.58925,
+  "canton": "TI",
+  "place": "Maggia"
+ },
+ {
+  "name": "Rotondohütte SAC",
+  "ele": 2570,
+  "done": false,
+  "date": "",
+  "lat": 46.54491,
+  "lon": 8.48433,
+  "canton": "UR",
+  "place": "Realp"
+ },
+ {
+  "name": "Silberhornhütte SAC",
+  "ele": 2663,
+  "done": false,
+  "date": "",
+  "lat": 46.54904,
+  "lon": 7.93358,
+  "canton": "BE",
+  "place": "Lauterbrunnen"
+ },
+ {
+  "name": "Cabane du Vélan CAS",
+  "ele": 2642,
+  "done": false,
+  "date": "",
+  "lat": 45.91695,
+  "lon": 7.24545,
+  "canton": "VS",
+  "place": "Bourg-Saint-Pierre"
+ },
+ {
+  "name": "Gspaltenhornhütte SAC",
+  "ele": 2455,
+  "done": false,
+  "date": "",
+  "lat": 46.5127,
+  "lon": 7.81024,
+  "canton": "BE",
+  "place": "Reichenbach im Kandertal"
+ },
+ {
+  "name": "Bergseehütte SAC",
+  "ele": 2370,
+  "done": false,
+  "date": "",
+  "lat": 46.65741,
+  "lon": 8.48492,
+  "canton": "UR",
+  "place": "Göschenen"
+ },
+ {
+  "name": "Blüemlisalphütte SAC",
+  "ele": 2840,
+  "done": false,
+  "date": "",
+  "lat": 46.51019,
+  "lon": 7.77162,
+  "canton": "BE",
+  "place": "Kandersteg"
+ },
+ {
+  "name": "Cabane du Mountet CAS",
+  "ele": 2886,
+  "done": false,
+  "date": "",
+  "lat": 46.06005,
+  "lon": 7.65353,
+  "canton": "VS",
+  "place": "Anniviers"
+ },
+ {
+  "name": "Fridolinshütten SAC",
+  "ele": 2111,
+  "done": true,
+  "date": "August 8, 2026",
+  "lat": 46.82132,
+  "lon": 8.95005,
+  "canton": "GL",
+  "place": "Glarus Süd"
+ },
+ {
+  "name": "Monte-Leone-Hütte SAC",
+  "ele": 2848,
+  "done": false,
+  "date": "",
+  "lat": 46.26075,
+  "lon": 8.08033,
+  "canton": "VS",
+  "place": "Ried-Brig"
+ },
+ {
+  "name": "Claridenhütte SAC",
+  "ele": 2453,
+  "done": false,
+  "date": "",
+  "lat": 46.85952,
+  "lon": 8.93575,
+  "canton": "GL",
+  "place": "Glarus Süd"
+ },
+ {
+  "name": "Gelmerhütte SAC",
+  "ele": 2412,
+  "done": false,
+  "date": "",
+  "lat": 46.63127,
+  "lon": 8.34278,
+  "canton": "BE",
+  "place": "Guttannen"
+ },
+ {
+  "name": "Planurahütte SAC",
+  "ele": 2947,
+  "done": true,
+  "date": "August 9, 2026",
+  "lat": 46.82001,
+  "lon": 8.88038,
+  "canton": "GL",
+  "place": "Glarus Süd"
+ },
+ {
+  "name": "Refuge des Bouquetins CAS",
+  "ele": 2980,
+  "done": false,
+  "date": "",
+  "lat": 45.97087,
+  "lon": 7.53051,
+  "canton": "VS",
+  "place": "Evolène"
+ },
+ {
+  "name": "Dammahütte SAC",
+  "ele": 2439,
+  "done": true,
+  "date": "September 12, 2026",
+  "lat": 46.64486,
+  "lon": 8.45779,
+  "canton": "UR",
+  "place": "Göschenen"
+ },
+ {
+  "name": "Cabane du Mont Fort CAS",
+  "ele": 2457,
+  "done": false,
+  "date": "",
+  "lat": 46.0836,
+  "lon": 7.28108,
+  "canton": "VS",
+  "place": "Val de Bagnes"
+ },
+ {
+  "name": "Chamonna Tuoi CAS",
+  "ele": 2250,
+  "done": false,
+  "date": "",
+  "lat": 46.83077,
+  "lon": 10.13248,
+  "canton": "GR",
+  "place": "Scuol"
+ },
+ {
+  "name": "Cabane des Diablerets CAS",
+  "ele": 2486,
+  "done": false,
+  "date": "",
+  "lat": 46.3387,
+  "lon": 7.21549,
+  "canton": "VD",
+  "place": "Ormont-Dessus"
+ },
+ {
+  "name": "Silvrettahütte SAC",
+  "ele": 2341,
+  "done": false,
+  "date": "",
+  "lat": 46.85452,
+  "lon": 10.04144,
+  "canton": "GR",
+  "place": "Klosters"
+ },
+ {
+  "name": "Sewenhütte SAC",
+  "ele": 2150,
+  "done": true,
+  "date": "July 5, 2026",
+  "lat": 46.74663,
+  "lon": 8.52103,
+  "canton": "UR",
+  "place": "Wassen"
+ },
+ {
+  "name": "Seetalhütte SAC",
+  "ele": 2065,
+  "done": false,
+  "date": "",
+  "lat": 46.8739,
+  "lon": 10.00933,
+  "canton": "GR",
+  "place": "Klosters"
+ },
+ {
+  "name": "Chamonas d'Ela CAS",
+  "ele": 2252,
+  "done": false,
+  "date": "",
+  "lat": 46.61876,
+  "lon": 9.6919,
+  "canton": "GR",
+  "place": "Bergün Filisur"
+ },
+ {
+  "name": "Voralphütte SAC",
+  "ele": 2126,
+  "done": true,
+  "date": "May 2, 2026",
+  "lat": 46.69055,
+  "lon": 8.48772,
+  "canton": "UR",
+  "place": "Göschenen"
+ },
+ {
+  "name": "Chelenalphütte SAC",
+  "ele": 2350,
+  "done": false,
+  "date": "",
+  "lat": 46.67171,
+  "lon": 8.43991,
+  "canton": "UR",
+  "place": "Göschenen"
+ },
+ {
+  "name": "Chamonna Lischana CAS",
+  "ele": 2500,
+  "done": false,
+  "date": "",
+  "lat": 46.76558,
+  "lon": 10.33456,
+  "canton": "GR",
+  "place": "Scuol"
+ },
+ {
+  "name": "Cabane de Chanrion CAS",
+  "ele": 2462,
+  "done": false,
+  "date": "",
+  "lat": 45.93918,
+  "lon": 7.38097,
+  "canton": "VS",
+  "place": "Val de Bagnes"
+ },
+ {
+  "name": "Sardonahütte SAC",
+  "ele": 2158,
+  "done": false,
+  "date": "",
+  "lat": 46.91548,
+  "lon": 9.27542,
+  "canton": "SG",
+  "place": "Pfäfers"
+ },
+ {
+  "name": "Domhütte SAC",
+  "ele": 2940,
+  "done": false,
+  "date": "",
+  "lat": 46.10279,
+  "lon": 7.81766,
+  "canton": "VS",
+  "place": "Randa"
+ },
+ {
+  "name": "Camona da Punteglias CAS",
+  "ele": 2311,
+  "done": false,
+  "date": "",
+  "lat": 46.77723,
+  "lon": 8.95608,
+  "canton": "GR",
+  "place": "Trun"
+ },
+ {
+  "name": "Tierberglihütte SAC",
+  "ele": 2795,
+  "done": false,
+  "date": "",
+  "lat": 46.70206,
+  "lon": 8.41422,
+  "canton": "BE",
+  "place": "Innertkirchen"
+ },
+ {
+  "name": "Baltschiederklause SAC",
+  "ele": 2783,
+  "done": false,
+  "date": "",
+  "lat": 46.39499,
+  "lon": 7.88981,
+  "canton": "VS",
+  "place": "Baltschieder"
+ },
+ {
+  "name": "Cabane Arpitettaz CAS",
+  "ele": 2786,
+  "done": false,
+  "date": "",
+  "lat": 46.1009,
+  "lon": 7.67934,
+  "canton": "VS",
+  "place": "Anniviers"
+ },
+ {
+  "name": "Schreckhornhütte SAC",
+  "ele": 2530,
+  "done": false,
+  "date": "",
+  "lat": 46.58187,
+  "lon": 8.0987,
+  "canton": "BE",
+  "place": "Grindelwald"
+ },
+ {
+  "name": "Länta-Hütte SAC",
+  "ele": 2090,
+  "done": false,
+  "date": "",
+  "lat": 46.54159,
+  "lon": 9.04179,
+  "canton": "GR",
+  "place": "Vals"
+ },
+ {
+  "name": "Doldenhornhütte SAC",
+  "ele": 1915,
+  "done": false,
+  "date": "",
+  "lat": 46.48691,
+  "lon": 7.6974,
+  "canton": "BE",
+  "place": "Kandersteg"
+ },
+ {
+  "name": "Täschhütte SAC",
+  "ele": 2701,
+  "done": false,
+  "date": "",
+  "lat": 46.05157,
+  "lon": 7.83001,
+  "canton": "VS",
+  "place": "Täsch"
+ },
+ {
+  "name": "Grassenbiwak SAC",
+  "ele": 2647,
+  "done": false,
+  "date": "",
+  "lat": 46.77018,
+  "lon": 8.44665,
+  "canton": "OW",
+  "place": "Engelberg"
+ },
+ {
+  "name": "Capanna Corno Gries CAS",
+  "ele": 2338,
+  "done": false,
+  "date": "",
+  "lat": 46.46707,
+  "lon": 8.41007,
+  "canton": "TI",
+  "place": "Bedretto"
+ },
+ {
+  "name": "Lidernenhütte SAC",
+  "ele": 1727,
+  "done": true,
+  "date": "December 13 2025",
+  "lat": 46.93517,
+  "lon": 8.69264,
+  "canton": "UR",
+  "place": "Sisikon"
+ },
+ {
+  "name": "Capanna del Forno CAS",
+  "ele": 2574,
+  "done": false,
+  "date": "",
+  "lat": 46.33187,
+  "lon": 9.70938,
+  "canton": "GR",
+  "place": "Bregaglia"
+ },
+ {
+  "name": "Calandahütte SAC",
+  "ele": 2073,
+  "done": false,
+  "date": "",
+  "lat": 46.88303,
+  "lon": 9.48219,
+  "canton": "GR",
+  "place": "Chur"
+ },
+ {
+  "name": "Binntalhütte SAC",
+  "ele": 2267,
+  "done": false,
+  "date": "",
+  "lat": 46.3747,
+  "lon": 8.29179,
+  "canton": "VS",
+  "place": "Binn"
+ },
+ {
+  "name": "Sustlihütte SAC",
+  "ele": 2257,
+  "done": false,
+  "date": "",
+  "lat": 46.75169,
+  "lon": 8.47073,
+  "canton": "UR",
+  "place": "Wassen"
+ },
+ {
+  "name": "Wildhornhütte SAC",
+  "ele": 2303,
+  "done": false,
+  "date": "",
+  "lat": 46.37925,
+  "lon": 7.38802,
+  "canton": "BE",
+  "place": "Lenk"
+ },
+ {
+  "name": "Rugghubelhütte SAC",
+  "ele": 2296,
+  "done": true,
+  "date": "August 30 2026",
+  "lat": 46.84616,
+  "lon": 8.46281,
+  "canton": "OW",
+  "place": "Engelberg"
+ },
+ {
+  "name": "Lauteraarhütte SAC",
+  "ele": 2393,
+  "done": false,
+  "date": "",
+  "lat": 46.57007,
+  "lon": 8.22218,
+  "canton": "BE",
+  "place": "Guttannen"
+ },
+ {
+  "name": "Chamanna Jenatsch CAS",
+  "ele": 2652,
+  "done": false,
+  "date": "",
+  "lat": 46.52935,
+  "lon": 9.72446,
+  "canton": "GR",
+  "place": "Bever"
+ },
+ {
+  "name": "Hollandiahütte SAC",
+  "ele": 3238,
+  "done": false,
+  "date": "",
+  "lat": 46.4753,
+  "lon": 7.96014,
+  "canton": "VS",
+  "place": "Blatten"
+ },
+ {
+  "name": "Oberaletschhütte SAC",
+  "ele": 2640,
+  "done": false,
+  "date": "",
+  "lat": 46.42493,
+  "lon": 7.97384,
+  "canton": "VS",
+  "place": "Naters"
+ },
+ {
+  "name": "Schönbielhütte SAC",
+  "ele": 2694,
+  "done": false,
+  "date": "",
+  "lat": 46.00198,
+  "lon": 7.62897,
+  "canton": "VS",
+  "place": "Zermatt"
+ },
+ {
+  "name": "Chamanna dal Linard CAS",
+  "ele": 2327,
+  "done": false,
+  "date": "",
+  "lat": 46.7794,
+  "lon": 10.08297,
+  "canton": "GR",
+  "place": "Zernez"
+ },
+ {
+  "name": "Bächlitalhütte SAC",
+  "ele": 2328,
+  "done": false,
+  "date": "",
+  "lat": 46.58699,
+  "lon": 8.28261,
+  "canton": "BE",
+  "place": "Guttannen"
+ },
+ {
+  "name": "Chamanna da Grialetsch CAS",
+  "ele": 2542,
+  "done": true,
+  "date": "August 14 2025",
+  "lat": 46.71013,
+  "lon": 9.96059,
+  "canton": "GR",
+  "place": "Zernez"
+ },
+ {
+  "name": "Ramozhütte SAC",
+  "ele": 2293,
+  "done": false,
+  "date": "",
+  "lat": 46.73088,
+  "lon": 9.64375,
+  "canton": "GR",
+  "place": "Albula/Alvra"
+ },
+ {
+  "name": "Zapporthütte SAC",
+  "ele": 2276,
+  "done": false,
+  "date": "",
+  "lat": 46.50005,
+  "lon": 9.09389,
+  "canton": "GR",
+  "place": "Rheinwald"
+ },
+ {
+  "name": "Glärnischhütte SAC",
+  "ele": 1990,
+  "done": true,
+  "date": "July 11, 2026",
+  "lat": 47.00163,
+  "lon": 8.96355,
+  "canton": "GL",
+  "place": "Glarus"
+ },
+ {
+  "name": "Capanna Basodino (Robiei) CAS",
+  "ele": 1856,
+  "done": false,
+  "date": "",
+  "lat": 46.43957,
+  "lon": 8.51408,
+  "canton": "TI",
+  "place": "Cevio"
+ },
+ {
+  "name": "Hundsteinhütte SAC",
+  "ele": 1554,
+  "done": true,
+  "date": "October 12 2024",
+  "lat": 47.25483,
+  "lon": 9.42223,
+  "canton": "AI",
+  "place": "Schwende-Rüte"
+ },
+ {
+  "name": "Capanna Cristallina CAS",
+  "ele": 2575,
+  "done": false,
+  "date": "",
+  "lat": 46.47186,
+  "lon": 8.52623,
+  "canton": "TI",
+  "place": "Bedretto"
+ },
+ {
+  "name": "Terrihütte SAC",
+  "ele": 2170,
+  "done": false,
+  "date": "",
+  "lat": 46.63452,
+  "lon": 9.00508,
+  "canton": "GR",
+  "place": "Sumvitg"
+ },
+ {
+  "name": "Kröntenhütte SAC",
+  "ele": 1903,
+  "done": true,
+  "date": "October 31, 2026",
+  "lat": 46.80008,
+  "lon": 8.57539,
+  "canton": "UR",
+  "place": "Erstfeld"
+ },
+ {
+  "name": "Laggin Biwak SAC",
+  "ele": 2428,
+  "done": false,
+  "date": "",
+  "lat": 46.16443,
+  "lon": 8.04538,
+  "canton": "VS",
+  "place": "Simplon"
+ },
+ {
+  "name": "Mutthornhütte SAC",
+  "ele": 2780,
+  "done": false,
+  "date": "",
+  "lat": 46.48702,
+  "lon": 7.81676,
+  "canton": "BE",
+  "place": "Kandersteg"
+ },
+ {
+  "name": "Cabane des Vignettes CAS",
+  "ele": 3160,
+  "done": false,
+  "date": "",
+  "lat": 45.98979,
+  "lon": 7.47571,
+  "canton": "VS",
+  "place": "Evolène"
+ },
+ {
+  "name": "Weissmieshütte SAC",
+  "ele": 2726,
+  "done": false,
+  "date": "",
+  "lat": 46.14376,
+  "lon": 7.9779,
+  "canton": "VS",
+  "place": "Saas-Grund"
+ },
+ {
+  "name": "Cabane de Bertol CAS",
+  "ele": 3311,
+  "done": false,
+  "date": "",
+  "lat": 46.00608,
+  "lon": 7.52766,
+  "canton": "VS",
+  "place": "Evolène"
+ },
+ {
+  "name": "Geltenhütte SAC",
+  "ele": 2002,
+  "done": false,
+  "date": "",
+  "lat": 46.3696,
+  "lon": 7.33906,
+  "canton": "BE",
+  "place": "Lauenen"
+ },
+ {
+  "name": "Cabane de l'A Neuve CAS",
+  "ele": 2735,
+  "done": false,
+  "date": "",
+  "lat": 45.94882,
+  "lon": 7.06688,
+  "canton": "VS",
+  "place": "Orsières"
+ },
+ {
+  "name": "Topalihütte SAC",
+  "ele": 2674,
+  "done": false,
+  "date": "",
+  "lat": 46.15688,
+  "lon": 7.76202,
+  "canton": "VS",
+  "place": "St. Niklaus"
+ },
+ {
+  "name": "Bordierhütte SAC",
+  "ele": 2886,
+  "done": false,
+  "date": "",
+  "lat": 46.1446,
+  "lon": 7.84985,
+  "canton": "VS",
+  "place": "St. Niklaus"
+ },
+ {
+  "name": "Cabane de Moiry CAS",
+  "ele": 2825,
+  "done": false,
+  "date": "",
+  "lat": 46.0907,
+  "lon": 7.59552,
+  "canton": "VS",
+  "place": "Anniviers"
+ },
+ {
+  "name": "Cabane des Dix CAS",
+  "ele": 2928,
+  "done": false,
+  "date": "",
+  "lat": 46.01107,
+  "lon": 7.41766,
+  "canton": "VS",
+  "place": "Hérémence"
+ },
+ {
+  "name": "Chamanna da Tschierva CAS",
+  "ele": 2583,
+  "done": false,
+  "date": "",
+  "lat": 46.40388,
+  "lon": 9.88007,
+  "canton": "GR",
+  "place": "Samedan"
+ },
+ {
+  "name": "Refuge de Chalin CAS",
+  "ele": 2595,
+  "done": false,
+  "date": "",
+  "lat": 46.17922,
+  "lon": 6.9472,
+  "canton": "VS",
+  "place": "Val-d'Illiez"
+ },
+ {
+  "name": "Cresta-Biwak SAC",
+  "ele": 3032,
+  "done": false,
+  "date": "",
+  "lat": 46.04474,
+  "lon": 8.03018,
+  "canton": "VS",
+  "place": "Saas-Almagell"
+ },
+ {
+  "name": "Capanna Sasc Furä CAS",
+  "ele": 1904,
+  "done": false,
+  "date": "",
+  "lat": 46.31532,
+  "lon": 9.5824,
+  "canton": "GR",
+  "place": "Bregaglia"
+ },
+ {
+  "name": "Capanna Adula CAS",
+  "ele": 2012,
+  "done": false,
+  "date": "",
+  "lat": 46.49919,
+  "lon": 8.9956,
+  "canton": "TI",
+  "place": "Blenio"
+ },
+ {
+  "name": "Mischabeljochbiwak SAC",
+  "ele": 3855,
+  "done": false,
+  "date": "",
+  "lat": 46.07422,
+  "lon": 7.86581,
+  "canton": "VS",
+  "place": "Täsch"
+ },
+ {
+  "name": "Capanna Piansecco CAS",
+  "ele": 1988,
+  "done": true,
+  "date": "June 14, 2026",
+  "lat": 46.49444,
+  "lon": 8.47145,
+  "canton": "TI",
+  "place": "Bedretto"
+ },
+ {
+  "name": "Bivouac du Dolent-La Maye CAS",
+  "ele": 2667,
+  "done": false,
+  "date": "",
+  "lat": 45.92726,
+  "lon": 7.06901,
+  "canton": "VS",
+  "place": "Orsières"
+ },
+ {
+  "name": "Trifthütte SAC",
+  "ele": 2420,
+  "done": false,
+  "date": "",
+  "lat": 46.67402,
+  "lon": 8.37117,
+  "canton": "BE",
+  "place": "Innertkirchen"
+ },
+ {
+  "name": "Martinsmadhütte SAC",
+  "ele": 2002,
+  "done": false,
+  "date": "",
+  "lat": 46.89256,
+  "lon": 9.1883,
+  "canton": "GL",
+  "place": "Glarus Süd"
+ },
+ {
+  "name": "Camona da Maighels CAS",
+  "ele": 2310,
+  "done": false,
+  "date": "",
+  "lat": 46.6254,
+  "lon": 8.69012,
+  "canton": "GR",
+  "place": "Tujetsch"
+ },
+ {
+  "name": "Muttseehütte SAC",
+  "ele": 2501,
+  "done": false,
+  "date": "",
+  "lat": 46.85749,
+  "lon": 9.01877,
+  "canton": "GL",
+  "place": "Glarus Süd"
+ },
+ {
+  "name": "Cabane d'Orny CAS",
+  "ele": 2826,
+  "done": false,
+  "date": "",
+  "lat": 46.00194,
+  "lon": 7.06283,
+  "canton": "VS",
+  "place": "Orsières"
+ },
+ {
+  "name": "Bivouac au Col de la Dent Blanche CAS",
+  "ele": 3540,
+  "done": false,
+  "date": "",
+  "lat": 46.04193,
+  "lon": 7.60709,
+  "canton": "VS",
+  "place": "Evolène"
+ },
+ {
+  "name": "Cabane de Saleinaz CAS",
+  "ele": 2691,
+  "done": false,
+  "date": "",
+  "lat": 45.97646,
+  "lon": 7.07033,
+  "canton": "VS",
+  "place": "Orsières"
+ },
+ {
+  "name": "Cabane de la Dent Blanche CAS",
+  "ele": 3507,
+  "done": false,
+  "date": "",
+  "lat": 46.02022,
+  "lon": 7.60088,
+  "canton": "VS",
+  "place": "Evolène"
+ },
+ {
+  "name": "Kesch-Hütte SAC",
+  "ele": 2625,
+  "done": false,
+  "date": "",
+  "lat": 46.64516,
+  "lon": 9.87519,
+  "canton": "GR",
+  "place": "Bergün Filisur"
+ },
+ {
+  "name": "Stockhornbiwak SAC",
+  "ele": 2598,
+  "done": false,
+  "date": "",
+  "lat": 46.37741,
+  "lon": 7.88106,
+  "canton": "VS",
+  "place": "Baltschieder"
+ },
+ {
+  "name": "Rothornhütte SAC",
+  "ele": 3180,
+  "done": false,
+  "date": "",
+  "lat": 46.04817,
+  "lon": 7.69729,
+  "canton": "VS",
+  "place": "Zermatt"
+ },
+ {
+  "name": "Enderlinhütte SAC",
+  "ele": 1501,
+  "done": false,
+  "date": "",
+  "lat": 47.03883,
+  "lon": 9.55148,
+  "canton": "GR",
+  "place": "Maienfeld"
+ },
+ {
+  "name": "Cabane de Tracuit CAS",
+  "ele": 3256,
+  "done": false,
+  "date": "",
+  "lat": 46.13031,
+  "lon": 7.67933,
+  "canton": "VS",
+  "place": "Anniviers"
+ },
+ {
+  "name": "Fergenhütte SAC",
+  "ele": 2141,
+  "done": false,
+  "date": "",
+  "lat": 46.86898,
+  "lon": 9.96478,
+  "canton": "GR",
+  "place": "Klosters"
+ },
+ {
+  "name": "Cabane de Valsorey CAS",
+  "ele": 3032,
+  "done": false,
+  "date": "",
+  "lat": 45.93038,
+  "lon": 7.27179,
+  "canton": "VS",
+  "place": "Bourg-Saint-Pierre"
+ },
+ {
+  "name": "Arbenbiwak SAC",
+  "ele": 3225,
+  "done": false,
+  "date": "",
+  "lat": 46.03136,
+  "lon": 7.66506,
+  "canton": "VS",
+  "place": "Zermatt"
+ },
+ {
+  "name": "Cabane des Violettes CAS",
+  "ele": 2209,
+  "done": false,
+  "date": "",
+  "lat": 46.34238,
+  "lon": 7.50006,
+  "canton": "VS",
+  "place": "Crans-Montana"
+ },
+ {
+  "name": "Lohnerhütte SAC",
+  "ele": 2171,
+  "done": false,
+  "date": "",
+  "lat": 46.47456,
+  "lon": 7.59968,
+  "canton": "BE",
+  "place": "Adelboden"
+ },
+ {
+  "name": "Capanna Cadlimo CAS",
+  "ele": 2570,
+  "done": false,
+  "date": "",
+  "lat": 46.57162,
+  "lon": 8.69517,
+  "canton": "TI",
+  "place": "Airolo"
+ },
+ {
+  "name": "Balmhornhütte SAC",
+  "ele": 1956,
+  "done": false,
+  "date": "",
+  "lat": 46.45121,
+  "lon": 7.68963,
+  "canton": "BE",
+  "place": "Kandersteg"
+ },
+ {
+  "name": "Almagellerhütte SAC",
+  "ele": 2894,
+  "done": false,
+  "date": "",
+  "lat": 46.10762,
+  "lon": 8.00768,
+  "canton": "VS",
+  "place": "Saas-Almagell"
+ },
+ {
+  "name": "Capanna Campo Tencia CAS",
+  "ele": 2140,
+  "done": false,
+  "date": "",
+  "lat": 46.44423,
+  "lon": 8.73262,
+  "canton": "TI",
+  "place": "Faido"
+ },
+ {
+  "name": "Etzlihütte SAC",
+  "ele": 2052,
+  "done": false,
+  "date": "",
+  "lat": 46.71819,
+  "lon": 8.72066,
+  "canton": "UR",
+  "place": "Silenen"
+ },
+ {
+  "name": "Dossenhütte SAC",
+  "ele": 2663,
+  "done": false,
+  "date": "",
+  "lat": 46.65514,
+  "lon": 8.16954,
+  "canton": "BE",
+  "place": "Innertkirchen"
+ },
+ {
+  "name": "Hüfihütte SAC",
+  "ele": 2334,
+  "done": false,
+  "date": "",
+  "lat": 46.80185,
+  "lon": 8.81901,
+  "canton": "UR",
+  "place": "Silenen"
+ },
+ {
+  "name": "Guggihütte SAC",
+  "ele": 2791,
+  "done": false,
+  "date": "",
+  "lat": 46.56278,
+  "lon": 7.9744,
+  "canton": "BE",
+  "place": "Lauterbrunnen"
+ },
+ {
+  "name": "Camona da Cavardiras CAS",
+  "ele": 2649,
+  "done": false,
+  "date": "",
+  "lat": 46.74247,
+  "lon": 8.81427,
+  "canton": "GR",
+  "place": "Disentis/Mustér"
+ },
+ {
+  "name": "Salbitschijenbiwak SAC",
+  "ele": 2400,
+  "done": false,
+  "date": "",
+  "lat": 46.67616,
+  "lon": 8.52369,
+  "canton": "UR",
+  "place": "Göschenen"
+ },
+ {
+  "name": "Chamanna da Boval CAS",
+  "ele": 2495,
+  "done": false,
+  "date": "",
+  "lat": 46.41519,
+  "lon": 9.92507,
+  "canton": "GR",
+  "place": "Pontresina"
+ },
+ {
+  "name": "Capanna di Sciora CAS",
+  "ele": 2118,
+  "done": false,
+  "date": "",
+  "lat": 46.31248,
+  "lon": 9.61111,
+  "canton": "GR",
+  "place": "Bregaglia"
+ },
+ {
+  "name": "Rottalhütte SAC",
+  "ele": 2755,
+  "done": false,
+  "date": "",
+  "lat": 46.52612,
+  "lon": 7.94472,
+  "canton": "BE",
+  "place": "Lauterbrunnen"
+ },
+ {
+  "name": "Glecksteinhütte SAC",
+  "ele": 2316,
+  "done": false,
+  "date": "",
+  "lat": 46.62511,
+  "lon": 8.09651,
+  "canton": "BE",
+  "place": "Grindelwald"
+ }
+]

@@ -61,6 +61,12 @@ for line in open(ROOT + '/source/weather.txt', encoding='utf8'):
         assert len(day[key]) == 17, (cur, key)
     W[cur].append(day)
 
+# --- hut positions from the master list (see tools/make_huts.py) -----------
+def hut_key(n):
+    n = re.sub(r'\s+(SAC|CAS)$', '', n).lower().replace('ü', 'u').replace('ä', 'a').replace('ö', 'o')
+    return re.sub(r'(hutten|hutte)$', 'hut', re.sub(r'[^a-z]', '', n))
+MASTER = {hut_key(h['name']): h for h in json.load(open(ROOT + '/source/huts_master.json', encoding='utf8'))}
+
 # --- logbooks ------------------------------------------------------------
 # pin rules: 'hi' = track high point, 'start', 'far' = farthest from start,
 # ('near', lat, lng) = track point closest to a known position, matching hut elevation
@@ -69,7 +75,7 @@ L = [
       slug='logbook1', cover='', kind='Notes', canton='', track=None, stated=None, huts=[]),
  dict(id='hundstein', no=1, title='Hundsteinhütte', sub='Our very first SAC hut visit, in the Appenzell Alps', dates=['2024-10-12'],
       slug='episode-02-soundtrack-to-my-life-5yc5c-4xffw', cover=SQ+'1767882680705-F5S5INDDKDICST86HOD3/IMG_7571+%281%29.jpg',
-      kind='Hike', canton='AI', track='Hundsteinhütte', stated=None, dateGuess=True,
+      kind='Hike', canton='AI', track='Hundsteinhütte', stated=None,
       huts=[dict(name='Hundsteinhütte', ele=1554, sac=True, pin='far')]),
  dict(id='obererbs', no=2, title='Skihütte Obererbs', sub='A whiteout snowshoe in Elm', dates=['2024-12-15'],
       slug='episode-02-soundtrack-to-my-life-5yc5c', cover=SQ+'1767559564861-XT0VCN189HWFNMPY5SHV/IMG_9160.jpg',
@@ -81,7 +87,7 @@ L = [
       huts=[dict(name='Chamanna da Grialetsch', ele=2542, sac=True, pin='hi')]),
  dict(id='glattalp', no=4, title='Glattalphütte', sub='One of the most beautiful and accessible alpine settings in Switzerland', dates=['2025-09-13'],
       slug='chamanna-da-grialetsch-cas-fyzaf-g74ff-6f89g', cover=SQ+'1767728428314-BIJUJELUA88O1ZOX67O9/IMG_4038.jpg',
-      kind='Hike', canton='SZ', track='Glatalphutte', stated=dict(km=6.9, gain=125, time='1:30'), dateGuess=True,
+      kind='Hike', canton='SZ', track='Glatalphutte', stated=dict(km=6.9, gain=125, time='1:30'),
       huts=[dict(name='Glattalphütte', ele=1892, sac=True, pin='start')]),
  dict(id='loborn', no=5, title='Lobhornhütte (kind of)', sub='An incredible hike, but we didn’t technically make it to the hut, which is also technically not a SAC hut', dates=['2025-09-20', '2025-09-21'],
       slug='chamanna-da-grialetsch-cas-fyzaf', cover='img/covers/loborn.jpg',
@@ -139,7 +145,7 @@ L = [
       huts=[dict(name='Dammahütte', ele=2439, sac=True, pin='hi')]),
  dict(id='kroenten', no=18, title='Kröntenhütte', sub='The last overnight of the 2026 summer season', dates=['2026-10-31', '2026-11-01'],
       slug='dammahutte-6zb3f', cover='img/covers/kroenten.jpg',
-      kind='Overnight hike', canton='UR', track='Kroentenhutte', stated=dict(km=10.6, gain=956, time='3:46'), dateGuess=True,
+      kind='Overnight hike', canton='UR', track='Kroentenhutte', stated=dict(km=10.6, gain=956, time='3:46'),
       huts=[dict(name='Kröntenhütte', ele=1903, sac=True, pin='hi')]),
 ]
 
@@ -192,6 +198,11 @@ for lb in L:
             hh['at'] = [round(pts[i][0], 5), round(pts[i][1], 5)]
             hh['trackEle'] = int(pts[i][2])
             print(f"{lb['id']:12s} {h['name']:24s} pin@{hh['at']} trackEle={pts[i][2]} hutEle={h['ele']}  idx {i}/{len(pts)}")
+        m = MASTER.get(hut_key(h['name'])) if h['sac'] else None
+        if m:  # the hut building itself, from swisstopo, not the nearest point of the recording
+            d = hav([hh['at'][0], hh['at'][1]], [m['lon'], m['lat']])
+            if d > 30: print(f"   moved {h['name']} pin {d:.0f} m onto the building")
+            hh['at'] = [round(m['lon'], 5), round(m['lat'], 5)]
         huts.append(hh)
     e['huts'] = huts
     out.append(e)

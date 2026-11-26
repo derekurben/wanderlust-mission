@@ -41,3 +41,8 @@ but they are overwritten the next time the generators run, so make them in `sour
 ## Credits
 
 Map © swisstopo. Terrain © Mapterhorn. Weather from Open-Meteo (ERA5). Map engine: MapLibre GL JS 5.24.1.
+
+## Hut list and summit names
+
+- `source/huts_master.json` is the master Google Sheet (name, height, done, date) with each hut's position, canton and commune from the swisstopo place-name search. `python3 tools/make_huts.py` turns it into `site/js/huts.js`.
+- `source/peaks_raw.txt` is swisstopo's 1:200,000 name set around the visited huts, each with its class. The summits in it become `site/js/peaks.js`.

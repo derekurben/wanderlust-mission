@@ -79,7 +79,12 @@
   var map = null, mapReady = false;
   var active = null, hot = null, userBase = false;
   var pins = [], dot = null, hiker = null;
-  var story = null; // { l, rows, target, cur, mode, raf, userCam, lastWalk }
+  var story = null; // { l, rows, items, f, T, target, cur, clockT, clockCur, mode, raf, userCam, lastWalk, fly }
+  var HUTS = (window.WM_HUTS && window.WM_HUTS.huts) || [], PEAKS = window.WM_PEAKS || [];
+  var lightOn = true, wx = null, peakMarks = [], pano = null, replay = null;
+  var clamp = function (x, a, b) { return Math.max(a, Math.min(b, x)); };
+  var hm = function (s) { var p = String(s).split(':'); return +p[0] + (+p[1] || 0) / 60; };
+  var clockText = function (h) { h = ((h % 24) + 24) % 24; var m = Math.round(h * 60); if (m >= 1440) m -= 1440; return Math.floor(m / 60) + ':' + ('0' + (m % 60)).slice(-2); };
 
   // =====================================================================
   // Rail, meter
@@ -149,6 +154,7 @@
   // The map fills the window; panels sit on top of it. This is the part of the map left uncovered.
   function clearArea() {
     var W = window.innerWidth, H = window.innerHeight, open = !$('panel').hidden;
+    if (document.body.classList.contains('fly-open')) return { top: 56, left: 0, right: 0, bottom: small() ? 96 : 170 };
     if (small()) return { top: 56, left: 0, right: 0, bottom: open ? ($('panel').offsetHeight || Math.round(H * 0.52)) : 110 };
     var left = $('rail').classList.contains('is-shut') ? 0 : (document.body.classList.contains('story-open') ? SLIM : 300);
     var right = open ? $('panel').offsetWidth : 0;
@@ -161,6 +167,7 @@
   function goHome(ms) {
     var b = new maplibregl.LngLatBounds();
     LOGS.forEach(function (l) { l.huts.forEach(function (h) { b.extend(h.at); }); });
+    if (!small()) HUTS.forEach(function (h) { b.extend(h.at); }); // on a wide screen, show the whole mission
     map.setPadding({ top: 0, left: 0, right: 0, bottom: 0 });
     var p = padded(70); p.left += 40; p.right += 40; p.bottom += 60;
     map.fitBounds(b, { padding: p, pitch: HOME.pitch, bearing: HOME.bearing, duration: reduceMotion ? 0 : ms, maxZoom: 9.2 });
@@ -191,15 +198,19 @@
       var isHot = ['boolean', ['feature-state', 'hot'], false];
       var isDim = ['boolean', ['feature-state', 'dim'], false];
       var isAhead = ['boolean', ['feature-state', 'ahead'], false];
+      var isOff = ['boolean', ['feature-state', 'off'], false];
       map.addLayer({ id: 'route-case', type: 'line', source: 'routes', layout: { 'line-join': 'round', 'line-cap': 'round' },
-        paint: { 'line-color': '#FFFFFF', 'line-opacity': ['case', isDim, 0.5, 0.95],
+        paint: { 'line-color': '#FFFFFF', 'line-opacity': ['case', isOff, 0, isDim, 0.5, 0.95],
           'line-width': ['interpolate', ['linear'], ['zoom'], 7, ['case', isHot, 6, 3.5], 14, ['case', isHot, 11, 7.5]] } });
       map.addLayer({ id: 'route', type: 'line', source: 'routes', layout: { 'line-join': 'round', 'line-cap': 'round' },
-        paint: { 'line-color': ['case', isAhead, '#F0A49D', RED], 'line-opacity': ['case', isDim, 0.45, 1],
+        paint: { 'line-color': ['case', isAhead, '#F0A49D', RED], 'line-opacity': ['case', isOff, 0, isDim, 0.45, 1],
           'line-width': ['interpolate', ['linear'], ['zoom'], 7, ['case', isHot, 3.5, 1.8], 14, ['case', isHot, 6.5, 4]] } });
       map.addLayer({ id: 'walked', type: 'line', source: 'walked', layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: { 'line-color': RED, 'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.5, 14, 6.5] } });
       map.addLayer({ id: 'route-hit', type: 'line', source: 'routes', paint: { 'line-color': '#000', 'line-opacity': 0, 'line-width': 18 } });
+      WMSky.addLayers(map, 'route-case'); // sun shading and colour wash sit on the terrain, under the routes
+      addGhosts();
+      addShots();
 
       map.on('mousemove', 'route-hit', function (e) {
         if (!e.features.length) return;
@@ -215,9 +226,13 @@
       if (BY_ID[id]) openLog(id, true); else goHome(3200);
     });
     ['mousedown', 'wheel', 'touchstart'].forEach(function (ev) {
-      map.getCanvas().addEventListener(ev, function () { if (story) story.userCam = true; }, { passive: true });
+      map.getCanvas().addEventListener(ev, function () {
+        if (story) { story.userCam = true; if (story.fly && story.fly.playing) flyPlay(false); }
+        stopPano();
+      }, { passive: true });
     });
     map.on('movestart', hideCard);
+    map.on('zoom', function () { document.body.classList.toggle('peaks-far', map.getZoom() < 11.3); });
   }
 
   function addPins() {
@@ -233,7 +248,7 @@
         b.addEventListener('blur', function () { setHot(null); });
         b.addEventListener('click', function (e) { e.stopPropagation(); if (l.id !== active) openLog(l.id); });
         new maplibregl.Marker({ element: b, anchor: 'center', opacity: '1', opacityWhenCovered: '1' }).setLngLat(h.at).addTo(map);
-        pins.push({ id: l.id, node: b });
+        pins.push({ id: l.id, node: b, sac: h.sac });
       });
     });
   }
@@ -306,10 +321,19 @@
     if (!story) return;
     cancelAnimationFrame(story.raf);
     story = null;
-    document.body.classList.remove('story-open');
-    $('strip').hidden = true;
+    document.body.classList.remove('story-open', 'fly-open', 'is-night');
+    $('strip').hidden = true; $('clock').hidden = true; $('flycard').hidden = true;
+    if (!replay) hideHud();
+    stopPano();
+    peakMarks.forEach(function (m) { m.remove(); }); peakMarks = [];
     if (hiker) { hiker.remove(); hiker = null; }
-    if (mapReady) map.getSource('walked').setData({ type: 'FeatureCollection', features: [] });
+    if (wx) wx.stop();
+    if (mapReady) {
+      map.getSource('walked').setData({ type: 'FeatureCollection', features: [] });
+      map.getSource('shots').setData({ type: 'FeatureCollection', features: [] });
+      WMSky.reset(map);
+      map.setPaintProperty('ghost', 'circle-opacity', 0.92); map.setPaintProperty('ghost', 'circle-stroke-opacity', 0.9);
+    }
   }
   function openPanel(html, wide) {
     endStory();
@@ -376,22 +400,26 @@
           lastF = it.f;
         }
       }
-      rows += '<div class="row" data-i="' + (n++) + '"' + (it.f != null ? ' data-f="' + it.f + '"' : '') + '><div class="tl">' + tl + '</div><div class="rc">' + body + '</div></div>';
+      rows += '<div class="row" data-i="' + (n++) + '" data-k="' + it.k + '"' + (it.f != null ? ' data-f="' + it.f + '"' : '') + '><div class="tl">' + tl + '</div><div class="rc">' + body + '</div></div>';
     });
 
     var html = (l.cover ? '<div class="hero"><img alt="" src="' + esc(l.cover) + '"><span class="hero-no" aria-hidden="true">' + l.no + '</span></div>' : '') +
       '<div class="sheet"><p class="kicker">Logbook ' + l.no + '</p><h1>' + esc(l.title) + '</h1><p class="lede">' + esc(l.sub) + '</p>' +
       (facts.length ? '<p class="facts">' + facts.join('') + '</p>' : '') +
       (stats ? '<dl class="stats">' + stats + '</dl>' : '') +
-      (l.track ? '<p class="howto">Scroll to walk the route. The hiker on the map keeps pace with the story.</p>' : '') + '</div>' +
+      (l.track ? '<p class="howto">Scroll to walk the route. The hiker on the map keeps pace with the story, and the light and weather on the mountains follow the day' + (l.window ? '' : ', at estimated times') + '.</p>' +
+        '<div class="actions"><button type="button" class="btn" id="fly-go"><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M6 4.5v11l9-5.5z" fill="currentColor"/></svg>Fly the route</button></div>' : '') + '</div>' +
       '<div class="story' + (l.track ? '' : ' is-plain') + '" id="story">' + rows + '</div>' +
       '<div class="sheet after" id="after">' +
       (l.weather.length ? '<section class="block"><h2>Weather on the day</h2><p class="note">Hourly conditions at the hut’s position and height, 5 am to 9 pm.</p><div id="weather"></div></section>' : '') +
       (l.huts.length ? '<section class="block"><h2>' + (l.huts.length > 1 ? 'Huts on this trip' : 'The hut') + '</h2><ul class="huts">' +
         l.huts.map(function (h) {
           return '<li><b>' + esc(h.label || h.name) + (h.sac ? '<span class="tag">SAC</span>' : '<span class="tag is-off">not a SAC hut</span>') + '</b><span>' + fmt(h.ele) + ' m</span></li>';
-        }).join('') + '</ul><p class="note" style="margin-top:12px">' + (sac ? sac + ' of the 153 counted here.' : 'This one does not count toward the 153.') + '</p></section>' : '') +
-      (l.weather.length ? '<section class="block"><p class="note">Weather is ERA5 reanalysis from <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>, adjusted to the hut’s height. It is a model of the day, not a reading from a station at the hut.' +
+        }).join('') + '</ul>' +
+        (l.track ? '<div class="actions" style="margin-top:14px">' + l.huts.map(function (h, k) {
+          return '<button type="button" class="btn is-quiet" data-pano="' + k + '">Look around from ' + esc(h.label ? 'the high point' : h.name) + '</button>';
+        }).join('') + '</div>' : '') + '<p class="note" style="margin-top:12px">' + (sac ? sac + ' of the 153 counted here.' : 'This one does not count toward the 153.') + '</p></section>' : '') +
+      (l.weather.length ? '<section class="block"><p class="note">Weather is ERA5 reanalysis from <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>, adjusted to the hut’s height. It is a model of the day, not a reading from a station at the hut. On the map, the sun stands where it really stood for that date, place and time. Cloud, rain, snow and wind are drawn from the same hourly record' + (l.window ? ', timed by my watch recording.' : ', at times estimated from the length of the walk.') +
         (l.eleSrc === 'dem' ? ' This route was saved without heights, so the elevations come from the terrain model.' : '') + '</p></section>' : '') +
       nextPrev(l) + '</div>';
     openPanel(html, true);
@@ -404,9 +432,15 @@
 
     if (l.track) {
       document.body.classList.add('story-open');
-      story = { l: l, rows: Array.prototype.slice.call($('story').querySelectorAll('.row[data-f]')), target: 0, cur: 0, mode: 'overview', raf: 0, userCam: false, lastWalk: -1, now: -1 };
+      var its = items.filter(function (it) { return it.f != null; });
+      var ck = buildClock(l, its);
+      story = { l: l, rows: Array.prototype.slice.call($('story').querySelectorAll('.row[data-f]')), items: its, f: its.map(function (it) { return it.f; }),
+        T: ck.T, est: ck.est, clockT: ck.T[0], clockCur: ck.T[0], skyAt: -99, skyT: 0, skyB: 0, arcDay: -1,
+        target: 0, cur: 0, mode: 'overview', raf: 0, userCam: false, lastWalk: -1, now: -1, fly: null };
       $('strip').hidden = small();
       drawProfile(l);
+      $('fly-go').addEventListener('click', startFly);
+      $('panel-body').querySelectorAll('[data-pano]').forEach(function (b) { b.addEventListener('click', function () { startPano(l.huts[+b.dataset.pano]); }); });
     }
     if (!userBase) setBase('aerial');
     applyStates();
@@ -416,7 +450,10 @@
         map.setPadding(clearArea());
         ensureHiker(l.track[0]);
         frame(l, instant);
+        setShots(l); setPeaks(l);
+        map.setPaintProperty('ghost', 'circle-opacity', 0.3); map.setPaintProperty('ghost', 'circle-stroke-opacity', 0.3);
         onStoryScroll();
+        skyUpdate(true);
         story.raf = requestAnimationFrame(tick);
       } else goHome(1600);
     }
@@ -447,47 +484,63 @@
     return dot;
   }
 
-  // Where the reading line sits in the story decides how far along the route we are.
+  // Where the reading line sits in the story decides how far along the route we are, and what time of day it is.
   function onStoryScroll() {
-    if (!story) return;
+    if (!story || story.fly) return;
     var body = $('panel-body'), box = body.getBoundingClientRect();
     var line = box.top + box.height * 0.42;
-    var rows = story.rows, prev = null, target = null, now = -1;
+    var rows = story.rows, T = story.T, prev = null, target = null, clock = null, now = -1;
     for (var i = 0; i < rows.length; i++) {
-      var r = rows[i].getBoundingClientRect(), c = r.top + r.height / 2, f = +rows[i].dataset.f;
+      var r = rows[i].getBoundingClientRect(), c = r.top + r.height / 2, f = story.f[i];
       if (c >= line) {
-        if (!prev) target = f; else { var t = (line - prev.c) / (c - prev.c || 1); target = prev.f + (f - prev.f) * Math.max(0, Math.min(1, t)); }
+        if (!prev) { target = f; clock = T[i]; }
+        else { var t = Math.max(0, Math.min(1, (line - prev.c) / (c - prev.c || 1))); target = prev.f + (f - prev.f) * t; clock = T[i - 1] + (T[i] - T[i - 1]) * t; }
         now = (prev && line - prev.c < c - line) ? i - 1 : i;
         break;
       }
       prev = { c: c, f: f };
     }
-    if (target == null) { target = prev ? prev.f : 0; now = rows.length - 1; }
+    if (target == null) { target = prev ? prev.f : 0; clock = T[rows.length - 1]; now = rows.length - 1; }
     story.target = target * story.l.total;
+    story.clockT = clock;
     var first = rows[0].getBoundingClientRect(), after = $('after').getBoundingClientRect();
     var mode = (first.top > line + 40 || after.top < line - 40) ? 'overview' : 'follow';
-    if (now !== story.now) {
-      if (rows[story.now]) rows[story.now].classList.remove('is-now');
-      if (rows[now]) rows[now].classList.add('is-now');
-      story.now = now;
-    }
+    setNow(now);
     if (mode !== story.mode) {
-      story.mode = mode; story.userCam = false;
+      story.mode = mode; story.userCam = false; stopPano();
       if (!mapReady) return;
       if (mode === 'overview') frame(story.l);
       else {
         var p = pointAt(story.l, story.target).p;
         map.easeTo({ center: [p[0], p[1]], zoom: Math.max(13.4, Math.min(14.3, map.getZoom() + 1.4)), pitch: 62, bearing: story.l.bearing, duration: reduceMotion ? 0 : 1500 });
       }
-    } else if (mode === 'follow') story.userCam = false; // scrolling hands the camera back to the story
+    } else if (mode === 'follow') { story.userCam = false; stopPano(); } // scrolling hands the camera back to the story
   }
+  function setNow(now) {
+    var s = story;
+    if (now === s.now) return;
+    if (s.rows[s.now]) s.rows[s.now].classList.remove('is-now');
+    if (s.rows[now]) s.rows[now].classList.add('is-now');
+    s.now = now;
+    if (mapReady && s.shotOf) {
+      var g = s.shotOf[now];
+      if (g !== s.shotOn) {
+        if (s.shotOn != null) map.setFeatureState({ source: 'shots', id: s.shotOn }, { on: false });
+        if (g != null) map.setFeatureState({ source: 'shots', id: g }, { on: true });
+        s.shotOn = g;
+      }
+    }
+  }
+  function angDiff(a, b) { return ((a - b + 540) % 360) - 180; }
   function tick(now) {
     if (!story) return;
-    var s = story, l = s.l, gap = s.target - s.cur;
+    var s = story, l = s.l;
     var dt = Math.min(250, now - (s.t || now)); s.t = now;
-    if (Math.abs(gap) > 0.5) {
-      // ease toward the target at the same pace whatever the frame rate
-      s.cur += reduceMotion ? gap : gap * (1 - Math.exp(-dt / 220));
+    if (s.fly) flyStep(dt);
+    var gap = s.target - s.cur;
+    if (Math.abs(gap) > 0.5 || s.fly) {
+      // ease toward the target at the same pace whatever the frame rate (the fly-through sets the pace itself)
+      s.cur += (reduceMotion || s.fly) ? gap : gap * (1 - Math.exp(-dt / 220));
       if (Math.abs(s.target - s.cur) < 0.5) s.cur = s.target;
       var pt = pointAt(l, s.cur);
       hiker.setLngLat([pt.p[0], pt.p[1]]);
@@ -498,9 +551,328 @@
         map.getSource('walked').setData({ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: line.length > 1 ? line : [line[0], line[0]] } });
         s.lastWalk = s.cur;
       }
-      if (s.mode === 'follow' && !s.userCam && !map.isEasing()) map.setCenter([pt.p[0], pt.p[1]]);
+      if (s.mode === 'follow' && !s.userCam && !map.isEasing()) {
+        if (s.fly) {
+          var ahead = pointAt(l, Math.min(l.total, s.cur + 320)).p;
+          if (hav(pt.p, ahead) > 40) s.fly.bearing += angDiff(bearing(pt.p, ahead), s.fly.bearing) * (1 - Math.exp(-dt / 2200));
+          map.jumpTo({ center: [pt.p[0], pt.p[1]], bearing: s.fly.bearing });
+        } else map.setCenter([pt.p[0], pt.p[1]]);
+      }
     }
+    // the clock eases too, so dusk falls smoothly however fast the reader scrolls
+    var cg = s.clockT - s.clockCur;
+    if (Math.abs(cg) > 0.001) s.clockCur += (reduceMotion || s.fly) ? cg : cg * (1 - Math.exp(-dt / 380));
+    if (Math.abs(s.clockCur - s.skyAt) > 0.012 || (now - s.skyT > 500 && Math.abs(angDiff(map.getBearing(), s.skyB)) > 3)) { s.skyT = now; skyUpdate(); }
     s.raf = requestAnimationFrame(tick);
+  }
+
+  // ---------- the clock: what time it was at each point of the story ----------
+  // The watch recording gives the start and end. Between them time runs with distance. On an overnight trip the
+  // rows written at the hut carry the evening, the night and the next morning.
+  function buildClock(l, items) {
+    var n = l.dates.length, mov = l.time ? hm(l.time) : (l.km / 4 + l.gain / 500), W = l.window || null;
+    var N = items.length, T = new Array(N), day = new Array(N), i, d = 0;
+    var rise = function (k) { return l.weather[k] ? hm(l.weather[k].sunrise) : 6.5; };
+    var sett = function (k) { return l.weather[k] ? hm(l.weather[k].sunset) : 19.5; };
+    var marks = items.filter(function (it) { return it.k === 'h' && /Day\s*\d/i.test(it.html); }).length;
+    if (n === 1) for (i = 0; i < N; i++) day[i] = 0;
+    else if (marks >= n - 1) {
+      for (i = 0; i < N; i++) { var m = items[i].k === 'h' && /Day\s*(\d)/i.exec(items[i].html); if (m) d = clamp(+m[1] - 1, d, n - 1); day[i] = d; }
+    } else {
+      var huts = l.huts.slice().sort(function (a, b) { return a.idx - b.idx; });
+      var stops = (huts.length <= n - 1 ? huts : n === 2 ? [huts[0]] : [huts[0], huts[huts.length - 1]]).map(function (h) { return l.cum[h.idx] / l.total; });
+      for (i = 0; i < N; i++) { while (d < stops.length && items[i].f > stops[d] + 0.012) d++; day[i] = Math.min(d, n - 1); }
+    }
+    // each day: its rows, how far they travel, and which trailing rows are spent at the hut
+    var D = [], all = 0;
+    for (d = 0; d < n; d++) D.push({ rows: [], path: [], len: 0, stay: 0 });
+    for (i = 0; i < N; i++) {
+      var o = D[day[i]];
+      if (o.rows.length) o.len += Math.abs(items[i].f - items[i - 1].f);
+      o.rows.push(i); o.path.push(o.len);
+    }
+    D.forEach(function (o, k) {
+      all += o.len;
+      if (k < n - 1 && o.rows.length) { // also when the story ends at the hut: its last rows carry the evening
+        var end = items[o.rows[o.rows.length - 1]].f, j = o.rows.length - 1;
+        while (j >= 0 && Math.abs(items[o.rows[j]].f - end) < 0.012) j--;
+        o.stay = o.rows.length - 1 - j;
+      }
+    });
+    D.forEach(function (o, k) {
+      var span = Math.max(0.6, (o.len / Math.max(1, all)) * mov * 1.25), dusk = sett(k) - 1.5; // o.len is a share of the route
+      if (n === 1) { o.dep = W ? W[1] : clamp(12.5 - span / 2, 7.5, 11); o.arr = W ? W[3] : o.dep + span; }
+      else if (k === 0) { o.dep = W ? W[1] : 11; o.arr = Math.min(o.dep + span, Math.max(dusk, o.dep + 0.5)); }
+      else if (k === n - 1 && W) { o.arr = W[3]; o.dep = clamp(o.arr - span, 5.5, Math.max(5.5, o.arr - 0.5)); }
+      else { o.dep = 8.25; o.arr = Math.min(o.dep + span, dusk); }
+    });
+    D.forEach(function (o, k) {
+      var moving = o.rows.length - o.stay, reach = moving > 0 ? o.path[Math.max(0, moving - 1)] : 0, j;
+      if (o.stay) reach = o.path[o.rows.length - o.stay]; // the hut itself is where the day's walking ends
+      for (j = 0; j < moving; j++) T[o.rows[j]] = 24 * k + o.dep + (reach ? Math.min(1, o.path[j] / reach) : 0) * (o.arr - o.dep);
+      if (!o.stay) return;
+      var a = 24 * k + o.arr, ss = 24 * k + sett(k), sr = 24 * (k + 1) + rise(k + 1), dp = 24 * (k + 1) + D[k + 1].dep;
+      var K = D[k + 1].rows.length ? [a, ss - 1, ss - 0.1, ss + 0.55, 24 * k + 23.6, sr - 0.7, sr + 0.25, dp] : [a, ss - 1, ss - 0.1, ss + 0.6, 24 * k + 22.8];
+      if (!D[k + 1].rows.length) dp = K[K.length - 1] + 0.3;
+      for (j = 1; j < K.length; j++) K[j] = Math.max(K[j], K[j - 1] + 0.05);
+      for (j = K.length - 2; j >= 0; j--) K[j] = Math.min(K[j], dp - 0.05 * (K.length - 1 - j));
+      for (j = 0; j < o.stay; j++) {
+        var x = (j / o.stay) * (K.length - 1), xi = Math.floor(x);
+        T[o.rows[moving + j]] = K[xi] + (K[Math.min(K.length - 1, xi + 1)] - K[xi]) * (x - xi);
+      }
+    });
+    for (i = 1; i < N; i++) if (!(T[i] >= T[i - 1])) T[i] = T[i - 1]; // time never runs backwards
+    return { T: T, est: !W };
+  }
+  function weatherAt(l, T) {
+    var d = clamp(Math.floor(T / 24), 0, l.weather.length - 1), day = l.weather[d];
+    if (!day) return null;
+    var h = T - 24 * d, x = clamp(h - 5, 0, 16), i = Math.floor(x), j = Math.min(16, i + 1), t = x - i;
+    var v = function (a) { return a[i] + (a[j] - a[i]) * t; };
+    var temp = v(day.temp), rain = v(day.rain);
+    return { d: d, day: day, hour: h, temp: temp, cloud: v(day.cloud) / 100, rain: rain, gust: v(day.gusts),
+      snow: rain > 0.04 && (temp <= 0.8 || (day.snow > 0 && temp <= 2.5)) };
+  }
+  function skyUpdate(force) {
+    var s = story;
+    if (!s || !mapReady) return;
+    s.skyAt = s.clockCur; s.skyB = map.getBearing();
+    var w = weatherAt(s.l, s.clockCur);
+    if (!w) return;
+    var pt = pointAt(s.l, s.cur).p, sn = WMSky.sun(s.l.dates[0], s.clockCur, pt[1], pt[0]);
+    w.az = sn.az; w.alt = sn.alt;
+    drawClock(s, w, sn, pt);
+    if (!lightOn) return;
+    var L = WMSky.apply(map, w);
+    if (!wx) wx = new WMSky.Overlay($('wx-shade'), $('wx-fall'));
+    wx.still = reduceMotion;
+    wx.set(w, L, s.skyB);
+    document.body.classList.toggle('is-night', L.night > 0.6);
+  }
+  var DOW3 = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  function drawClock(s, w, sn, pt) {
+    var p = parts(w.day.date), night = sn.alt < -4;
+    $('clock').hidden = false;
+    $('clock-time').textContent = DOW3[p.dow] + ' ' + p.d + ' ' + MON[p.m] + ', ' + (s.est ? 'about ' : '') + clockText(w.hour);
+    var c = w.cloud * 100, sky = c < 15 ? (night ? 'clear night' : 'clear') : c < 40 ? (night ? 'mostly clear' : 'mostly sunny') : c < 65 ? 'partly cloudy' : c < 88 ? 'mostly cloudy' : 'overcast';
+    if (w.rain > 0.04) sky = (w.rain < 0.6 ? 'light ' : '') + (w.snow ? 'snow' : 'rain');
+    $('clock-wx').textContent = fmt(w.temp) + '°, ' + sky + ', gusts ' + fmt(w.gust) + ' km/h';
+    // the sun's real path over the day, with the sun (or moon) where it is now
+    var X = function (h) { return 6 + (h / 24) * 108; }, Y = function (alt) { return 31 - clamp(alt, -22, 70) * 0.4; };
+    if (s.arcDay !== w.d) {
+      s.arcDay = w.d;
+      var a = $('clock-arc'); a.innerHTML = '';
+      var up = '', down = '', k, last = null;
+      for (k = 0; k <= 96; k++) {
+        var hh = k / 4, alt = WMSky.sun(s.l.dates[0], 24 * w.d + hh, pt[1], pt[0]).alt, seg = alt >= 0 ? 'u' : 'd';
+        var cmd = (last === seg ? 'L' : 'M') + X(hh).toFixed(1) + ' ' + Y(alt).toFixed(1);
+        if (seg === 'u') up += cmd; else down += cmd;
+        last = seg;
+      }
+      a.appendChild(svg('path', { d: down, fill: 'none', stroke: '#9AA6AE', 'stroke-width': 1.5, 'stroke-dasharray': '2 3', 'stroke-linecap': 'round' }));
+      a.appendChild(svg('line', { x1: 4, x2: 116, y1: 31, y2: 31, stroke: LINE, 'stroke-width': 1 }));
+      a.appendChild(svg('path', { d: up, fill: 'none', stroke: '#E8A317', 'stroke-width': 2, 'stroke-linecap': 'round' }));
+      s.arcSun = svg('circle', { r: 5.5, stroke: '#fff', 'stroke-width': 2 });
+      a.appendChild(s.arcSun);
+    }
+    s.arcSun.setAttribute('cx', X(w.hour).toFixed(1)); s.arcSun.setAttribute('cy', Y(sn.alt).toFixed(1));
+    s.arcSun.setAttribute('fill', sn.alt > 6 ? '#F2B01E' : sn.alt > -1 ? '#F0763A' : '#8E9BB0');
+  }
+  function setLight(on) {
+    lightOn = on;
+    $('light').setAttribute('aria-pressed', String(on));
+    if (!mapReady) return;
+    if (!on) { WMSky.reset(map); if (wx) wx.stop(); document.body.classList.remove('is-night'); }
+    else if (story) skyUpdate(true);
+  }
+
+  // ---------- photo spots along the route ----------
+  function addShots() {
+    map.addSource('shots', { type: 'geojson', promoteId: 'id', data: { type: 'FeatureCollection', features: [] } });
+    var on = ['boolean', ['feature-state', 'on'], false];
+    map.addLayer({ id: 'shots', type: 'circle', source: 'shots', paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, ['case', on, 5, 2.5], 14, ['case', on, 9, 5.5]],
+      'circle-color': ['case', on, RED, '#FFFFFF'], 'circle-stroke-color': ['case', on, '#FFFFFF', INK], 'circle-stroke-width': ['case', on, 3, 2] } });
+    map.addLayer({ id: 'shots-hit', type: 'circle', source: 'shots', paint: { 'circle-radius': 15, 'circle-color': '#000', 'circle-opacity': 0 } });
+    map.on('mousemove', 'shots-hit', function (e) {
+      if (!story || !e.features.length) return;
+      var g = story.shots[e.features[0].properties.id];
+      if (!g) return;
+      map.getCanvas().style.cursor = 'pointer';
+      var it = story.items[g.rows[0]];
+      showTip('<img alt="" src="' + esc(it.k === 'video' ? it.poster : it.src) + '"><b>' + (g.rows.length > 1 ? g.rows.length + ' photos' : (it.k === 'video' ? 'Clip' : 'Photo')) + ' at ' + fmt(g.f * story.l.km, 1) + ' km</b><br>Select to read from here', e.originalEvent.clientX, e.originalEvent.clientY - 8);
+    });
+    map.on('mouseleave', 'shots-hit', function () { map.getCanvas().style.cursor = ''; hideTip(); });
+    map.on('click', 'shots-hit', function (e) {
+      if (!story || !e.features.length) return;
+      var g = story.shots[e.features[0].properties.id];
+      if (!g) return;
+      hideTip();
+      if (story.fly) { story.fly.u = g.rows[0]; story.fly.hold = 0; flyArrive(g.rows[0]); } else scrollToRow(g.rows[0]);
+    });
+  }
+  function setShots(l) {
+    var s = story, groups = [], last = null;
+    s.shotOf = {}; s.shotOn = null;
+    s.items.forEach(function (it, i) {
+      if (it.k !== 'img' && it.k !== 'video') return;
+      if (last && Math.abs(last.f - it.f) < 0.0015) last.rows.push(i);
+      else { last = { f: it.f, rows: [i] }; groups.push(last); }
+      s.shotOf[i] = groups.length - 1;
+    });
+    s.shots = groups;
+    map.getSource('shots').setData({ type: 'FeatureCollection', features: groups.map(function (g, k) {
+      var p = pointAt(l, g.f * l.total).p;
+      return { type: 'Feature', properties: { id: k }, geometry: { type: 'Point', coordinates: [p[0], p[1]] } };
+    }) });
+  }
+  function scrollToRow(i) {
+    var row = story.rows[i], body = $('panel-body');
+    if (!row) return;
+    var y = row.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - body.clientHeight * 0.42 + row.offsetHeight / 2;
+    body.scrollTo({ top: y, behavior: reduceMotion ? 'auto' : 'smooth' });
+  }
+
+  // ---------- summit names around the route, and the look-around from a hut ----------
+  function setPeaks(l) {
+    var near = [], step = Math.max(1, Math.floor(l.track.length / 40)), max = small() ? 7 : 13;
+    PEAKS.forEach(function (pk) {
+      var at = [pk[2], pk[3]], best = Infinity;
+      for (var i = 0; i < l.track.length; i += step) best = Math.min(best, hav(l.track[i], at));
+      l.huts.forEach(function (h) { best = Math.min(best, hav(h.at, at)); });
+      if (best < 7500) near.push({ pk: pk, at: at });
+    });
+    var keep = [];
+    near.forEach(function (c) { // highest first; skip one that crowds a higher neighbour
+      if (keep.length >= max) return;
+      if (keep.some(function (k) { return hav(k.at, c.at) < 900; })) return;
+      keep.push(c);
+    });
+    keep.forEach(function (c) {
+      var n = el('div', 'peak', '<b>' + esc(c.pk[0]) + '</b><span>' + fmt(c.pk[1]) + ' m</span>');
+      peakMarks.push(new maplibregl.Marker({ element: n, anchor: 'bottom', offset: [0, -2], opacity: '1', opacityWhenCovered: '0.12' }).setLngLat(c.at).addTo(map));
+    });
+  }
+  function startPano(h) {
+    if (!story || !mapReady) return;
+    if (story.fly) stopFly();
+    stopPano();
+    story.userCam = true;
+    pano = { raf: 0, t: 0, turned: 0 };
+    showHud('Looking around from ' + (h.label ? 'the high point' : h.name), 'The names are the summits around the hut. Drag the map to take over.', [['Stop', stopPano]]);
+    map.easeTo({ center: h.at, zoom: small() ? 12.4 : 12.9, pitch: 73, duration: reduceMotion ? 0 : 1600 });
+    var spin = function (now) {
+      if (!pano) return;
+      var dt = Math.min(100, now - (pano.t || now)); pano.t = now;
+      if (!map.isEasing()) {
+        var step = dt * (360 / 70000); // one turn in 70 seconds
+        pano.turned += step;
+        map.setBearing(map.getBearing() + step);
+        if (pano.turned >= 360) { stopPano(); return; }
+      }
+      pano.raf = requestAnimationFrame(spin);
+    };
+    if (!reduceMotion) pano.raf = requestAnimationFrame(spin);
+  }
+  function stopPano() {
+    if (!pano) return;
+    cancelAnimationFrame(pano.raf); pano = null;
+    if (!replay && !(story && story.fly)) hideHud();
+  }
+
+  // ---------- the heads-up strip used by the fly-through, the look-around and the replay ----------
+  function showHud(title, sub, btns, bar) {
+    $('hud-title').textContent = title; $('hud-sub').textContent = sub || '';
+    var host = $('hud-btns'); host.innerHTML = '';
+    (btns || []).forEach(function (b) {
+      var n = el('button', 'btn' + (b[2] ? '' : ' is-quiet')); n.type = 'button'; n.textContent = b[0];
+      n.addEventListener('click', b[1]); host.appendChild(n);
+    });
+    $('hud-bar').hidden = !bar;
+    $('hud').hidden = false;
+  }
+  function hideHud() { $('hud').hidden = true; }
+
+  // ---------- fly the route: the camera follows the hiker, photos surface as they are reached ----------
+  function startFly() {
+    var s = story;
+    if (!s || !mapReady || s.fly) return;
+    stopPano();
+    var l = s.l;
+    s.fly = { u: Math.max(0, Math.min(s.now, s.rows.length - 2)), hold: 0, playing: true, bearing: map.getBearing(), v: l.total / clamp(l.km * 5.5, 30, 100), card: 0 };
+    if (s.now >= s.rows.length - 1) s.fly.u = 0;
+    document.body.classList.add('fly-open');
+    s.mode = 'follow'; s.userCam = false;
+    map.setPadding(clearArea());
+    if (!small()) drawProfile(l);
+    var p = pointAt(l, s.f[Math.floor(s.fly.u)] * l.total).p;
+    map.easeTo({ center: [p[0], p[1]], zoom: small() ? 13.3 : 13.9, pitch: 66, duration: reduceMotion ? 0 : 1400 });
+    flyHud();
+    flyArrive(Math.floor(s.fly.u));
+  }
+  function flyHud() {
+    var s = story, F = s.fly;
+    showHud(s.l.title, F.done ? 'End of the route' : (F.playing ? 'Flying the route' : 'Paused'), [
+      [F.done ? 'Fly again' : (F.playing ? 'Pause' : 'Play'), function () { if (F.done) { F.u = 0; F.done = false; flyArrive(0); flyPlay(true); } else flyPlay(!F.playing); }, true],
+      ['Back to the story', stopFly]
+    ], true);
+  }
+  function flyPlay(on) {
+    var s = story;
+    if (!s || !s.fly) return;
+    s.fly.playing = on;
+    if (on) { s.userCam = false; s.mode = 'follow'; }
+    flyHud();
+  }
+  function flyArrive(i) {
+    var s = story, F = s.fly, it = s.items[i];
+    setNow(i);
+    if (!it) return;
+    if (it.k === 'img' || it.k === 'video') {
+      var pt = pointAt(s.l, it.f * s.l.total).p;
+      $('flycard-img').src = it.k === 'video' ? it.poster : it.src;
+      $('flycard-cap').textContent = fmt(it.f * s.l.km, 1) + ' km, ' + fmt(pt[2]) + ' m';
+      $('flycard').hidden = false; $('flycard').classList.remove('is-in'); void $('flycard').offsetWidth; $('flycard').classList.add('is-in');
+      F.hold = 2600; F.card = 5200;
+    } else if (it.k === 'h') {
+      $('hud-sub').textContent = it.html.replace(/<[^>]+>/g, '');
+      F.hold = 900;
+    }
+  }
+  function flyStep(dt) {
+    var s = story, F = s.fly, last = s.rows.length - 1;
+    if (F.card > 0 && F.playing) { F.card -= dt; if (F.card <= 0) $('flycard').hidden = true; }
+    if (F.playing) {
+      if (F.hold > 0) F.hold -= dt;
+      else {
+        var i = Math.min(Math.floor(F.u), last), j = i + 1;
+        if (j > last) { F.playing = false; F.done = true; flyHud(); }
+        else {
+          var dM = Math.abs(s.f[j] - s.f[i]) * s.l.total, dT = Math.abs(s.T[j] - s.T[i]);
+          var dur = Math.max(dM / F.v, dT > 0.7 ? 1.5 : 0.1); // a night at the hut gets a moment to pass
+          F.u = Math.min(j, F.u + dt / 1000 / dur);
+          if (F.u >= j) flyArrive(j);
+        }
+      }
+    }
+    var a = Math.min(Math.floor(F.u), last), b = Math.min(a + 1, last), t = F.u - a;
+    s.target = (s.f[a] + (s.f[b] - s.f[a]) * t) * s.l.total;
+    s.clockT = s.T[a] + (s.T[b] - s.T[a]) * t;
+    $('hud-fill').style.width = (last ? (F.u / last) * 100 : 0).toFixed(1) + '%';
+  }
+  function stopFly() {
+    var s = story;
+    if (!s || !s.fly) return;
+    var at = Math.round(s.fly.u);
+    s.fly = null;
+    document.body.classList.remove('fly-open');
+    $('flycard').hidden = true; hideHud();
+    map.setPadding(clearArea());
+    if (!small()) drawProfile(s.l);
+    s.userCam = false;
+    var row = s.rows[at], body = $('panel-body');
+    if (row) body.scrollTop = row.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - body.clientHeight * 0.42 + row.offsetHeight / 2;
+    s.mode = ''; onStoryScroll();
   }
 
   // =====================================================================
@@ -595,11 +967,7 @@
       if (!story) return;
       var f = distAt(ev) / total, best = null, bd = 9;
       story.rows.forEach(function (r) { var d = Math.abs(+r.dataset.f - f); if (d < bd) { bd = d; best = r; } });
-      if (best) {
-        var body = $('panel-body');
-        var y = best.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - body.clientHeight * 0.42 + best.offsetHeight / 2;
-        body.scrollTo({ top: y, behavior: reduceMotion ? 'auto' : 'smooth' });
-      }
+      if (best) { var bi = story.rows.indexOf(best); if (story.fly) { story.fly.u = bi; story.fly.hold = 0; flyArrive(bi); } else scrollToRow(bi); }
     };
   }
 
@@ -701,31 +1069,8 @@
   function afterSidePanel() { applyStates(); if (mapReady) goHome(1400); }
   function openMission() {
     leavePanelFor('nav-mission');
-    var km = 0, gain = 0, days = 0, cantons = {}, trips = 0;
-    LOGS.forEach(function (l) {
-      if (!l.huts.length) return;
-      trips++; km += l.km || 0; gain += l.gain || 0; days += l.dates.length; cantons[l.canton] = 1;
-    });
-    var done = WM.meta.visited, total = WM.meta.total, left = total - done;
-    var thisYear = String(new Date().getFullYear());
-    var yr = 0; LOGS.forEach(function (l) { if (l.dates[0].slice(0, 4) === thisYear) yr += l.huts.filter(function (h) { return h.sac; }).length; });
-    var finish = new Date().getFullYear() + Math.ceil(left / 9);
-    var stamps = '', n = 0;
-    LOGS.slice().reverse().forEach(function (l) {
-      l.huts.forEach(function (h) { if (h.sac) { n++; stamps += '<button type="button" data-id="' + l.id + '" aria-label="Hut ' + n + ', ' + esc(h.name) + '" title="' + esc(h.name) + '">' + n + '</button>'; } });
-    });
-    for (var i = n; i < total; i++) stamps += '<span aria-hidden="true"></span>';
-    var html = '<div class="sheet" style="padding-top:34px"><h1>' + done + ' huts down, ' + left + ' to go</h1>' +
-      '<p class="lede">Every one of the 153 Swiss Alpine Club huts, touched in person. No deadline.</p>' +
-      '<dl class="stats"><div><dt>Trips logged</dt><dd>' + trips + '</dd></div><div><dt>Days out</dt><dd>' + days + '</dd></div><div><dt>Cantons</dt><dd>' + Object.keys(cantons).length + '</dd></div><div><dt>Huts in ' + thisYear + '</dt><dd>' + yr + '</dd></div></dl>' +
-      '<section class="block"><h2>Against the whole mission</h2><p class="note">The full list was estimated at about 750 km on foot and 125,000 m of climbing.</p><div class="bars">' +
-      '<div><p><span>Huts</span><b>' + done + ' of ' + total + '</b></p><i style="--v:' + (done / total * 100).toFixed(1) + '%"></i></div>' +
-      '<div><p><span>Distance</span><b>' + fmt(km) + ' of 750 km</b></p><i style="--v:' + (km / 750 * 100).toFixed(1) + '%"></i></div>' +
-      '<div><p><span>Climbing</span><b>' + fmt(gain) + ' of 125,000 m</b></p><i style="--v:' + (gain / 125000 * 100).toFixed(1) + '%"></i></div></div>' +
-      '<p class="note" style="margin-top:16px">That climbing is ' + fmt(gain / 8849, 1) + ' times the height of Everest from sea level. At nine huts a year the last one falls in ' + finish + '.</p></section>' +
-      '<section class="block"><h2>The stamp sheet</h2><p class="note">One circle per hut, in the order I reached them. Select a red one to open its logbook.</p><div class="stamps">' + stamps + '</div></section></div>';
-    openPanel(html, false);
-    $('panel-body').querySelectorAll('.stamps button').forEach(function (b) { b.addEventListener('click', function () { openLog(b.dataset.id); }); });
+    openPanel(window.WMPages.mission(), false);
+    window.WMPages.missionWire($('panel-body'));
     afterSidePanel();
   }
   function openAbout() {
@@ -738,9 +1083,116 @@
       '<p>Huts that need real mountaineering skills or equipment wait until I have built up to them. For now I go for the ones reachable on foot in summer or on skis in winter.</p>' +
       '<p>There is no deadline. Eight to ten huts a year puts the finish 15 to 20 years out.</p></section>' +
       '<section class="block"><h2>Reading the map</h2>' +
-      '<p>Red lines are routes I recorded on my watch. Each numbered pin is a hut and opens its logbook. A white pin marks a hut that is not on the SAC list. Inside a logbook, scroll the story and the hiker walks the route beside it.</p>' +
+      '<p>Red lines are routes I recorded on my watch. Each numbered pin is a hut and opens its logbook. A white pin marks a hut that is not on the SAC list, and the small white dots are the SAC huts still to come. Inside a logbook, scroll the story and the hiker walks the route beside it, in the light and weather of that day. The Light button switches that off.</p>' +
       '<p>Drag to pan, scroll to zoom, and hold the right mouse button or use two fingers to tilt and turn. Maps are from swisstopo. Terrain is from Mapterhorn.</p></section></div>', false);
     afterSidePanel();
+  }
+
+  // =====================================================================
+  // The whole mission on the map: huts still to visit, and the replay
+  // =====================================================================
+  function addGhosts() {
+    map.addSource('ghosts', { type: 'geojson', data: { type: 'FeatureCollection', features: HUTS.map(function (h, i) {
+      return h.log ? null : { type: 'Feature', properties: { i: i }, geometry: { type: 'Point', coordinates: h.at } };
+    }).filter(Boolean) } });
+    map.addLayer({ id: 'ghost', type: 'circle', source: 'ghosts', paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.4, 9, 4.6, 13, 7.5],
+      'circle-color': '#FFFFFF', 'circle-opacity': 0.92, 'circle-stroke-color': '#3A454E', 'circle-stroke-width': 1.5, 'circle-stroke-opacity': 0.9 } });
+    map.addLayer({ id: 'ghost-hit', type: 'circle', source: 'ghosts', paint: { 'circle-radius': 13, 'circle-color': '#000', 'circle-opacity': 0 } });
+    var words = function (h) { return '<b>' + esc(h.n) + '</b><br>' + fmt(h.ele) + ' m, ' + esc(h.p) + ' (' + h.c + ')<br>Not visited yet'; };
+    map.on('mousemove', 'ghost-hit', function (e) {
+      if (!e.features.length || story) return;
+      map.getCanvas().style.cursor = 'pointer';
+      showTip(words(HUTS[e.features[0].properties.i]), e.originalEvent.clientX, e.originalEvent.clientY - 6);
+    });
+    map.on('mouseleave', 'ghost-hit', function () { map.getCanvas().style.cursor = ''; hideTip(); });
+    map.on('click', 'ghost-hit', function (e) { // a tap on a phone has no hover, so show the same words
+      if (!e.features.length || story) return;
+      showTip(words(HUTS[e.features[0].properties.i]), e.originalEvent.clientX, e.originalEvent.clientY - 6);
+      clearTimeout(addGhosts.t); addGhosts.t = setTimeout(hideTip, 3200);
+    });
+  }
+  function focusHut(i) {
+    var h = HUTS[i];
+    if (!h || !mapReady) return;
+    if (!$('panel').hidden) closePanel();
+    map.setPadding({ top: 0, left: 0, right: 0, bottom: 0 });
+    map.flyTo({ center: h.at, zoom: 11.6, pitch: 55, padding: padded(0), duration: reduceMotion ? 0 : 2200 });
+    map.once('moveend', function () {
+      var pt = map.project(h.at), r = map.getCanvas().getBoundingClientRect();
+      showTip('<b>' + esc(h.n) + '</b><br>' + fmt(h.ele) + ' m, ' + esc(h.p) + ' (' + h.c + ')<br>Not visited yet', r.left + pt.x, r.top + pt.y - 12);
+      setTimeout(hideTip, 4500);
+    });
+  }
+  function setMeter(n) {
+    $('meter-done').textContent = n;
+    var t = $('meter-ticks').children;
+    for (var i = 0; i < t.length; i++) t[i].className = i < n ? 'on' : '';
+  }
+  function startReplay() {
+    if (!mapReady || replay) return;
+    if (!$('panel').hidden) closePanel();
+    hideCard(); hideTip();
+    var seq = LOGS.filter(function (l) { return l.huts.length; }).sort(function (a, b) { return a.no - b.no; });
+    var k = clamp(48 / (seq.length * 2.75), 0.35, 1), tok = { live: true }, count = 0;
+    replay = tok;
+    document.body.classList.add('replaying');
+    pins.forEach(function (p) { p.node.classList.add('is-unborn'); });
+    LOGS.forEach(function (l) { if (l.track) map.setFeatureState({ source: 'routes', id: l.id }, { off: true, hot: false, dim: false }); });
+    setMeter(0);
+    showHud('The mission so far', seq.length + ' trips, from the first hut to the latest', [['Skip', stopReplay]], true);
+    $('hud-fill').style.width = '0%';
+    var wait = function (ms) { return new Promise(function (res) { setTimeout(function () { res(tok.live); }, ms); }); };
+    var draw = function (l, ms) {
+      return new Promise(function (res) {
+        var t0 = 0, n = l.track.length;
+        var step = function (now) {
+          if (!tok.live) return res(false);
+          if (!t0) t0 = now;
+          var f = Math.min(1, (now - t0) / ms), e = f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2, upto = Math.max(2, Math.round(e * n));
+          map.getSource('walked').setData({ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: l.track.slice(0, upto).map(function (p) { return [p[0], p[1]]; }) } });
+          if (f < 1) requestAnimationFrame(step); else res(true);
+        };
+        requestAnimationFrame(step);
+      });
+    };
+    (async function () {
+      goHome(900);
+      if (!(await wait(1500))) return;
+      for (var i = 0; i < seq.length; i++) {
+        var l = seq[i], b = new maplibregl.LngLatBounds();
+        (l.track || []).forEach(function (p) { b.extend([p[0], p[1]]); });
+        l.huts.forEach(function (h) { b.extend(h.at); });
+        $('hud-title').textContent = dateRange(l.dates);
+        $('hud-sub').textContent = l.title;
+        map.fitBounds(b, { padding: padded(small() ? 56 : 120), maxZoom: 11.4, pitch: 52, bearing: 0, duration: reduceMotion ? 0 : 1000 * k });
+        if (!(await wait(1050 * k))) return;
+        if (l.track) {
+          if (!(await draw(l, reduceMotion ? 1 : 1300 * k))) return;
+          map.setFeatureState({ source: 'routes', id: l.id }, { off: false });
+          map.getSource('walked').setData({ type: 'FeatureCollection', features: [] });
+        }
+        pins.forEach(function (p) { if (p.id === l.id) { p.node.classList.remove('is-unborn'); if (p.sac) count++; } });
+        setMeter(count);
+        $('hud-fill').style.width = (((i + 1) / seq.length) * 100).toFixed(1) + '%';
+        if (!(await wait(720 * k))) return;
+      }
+      $('hud-title').textContent = count + ' of ' + WM.meta.total + ' huts';
+      $('hud-sub').textContent = (WM.meta.total - count) + ' still to go';
+      goHome(2200);
+      if (await wait(4200)) stopReplay(true);
+    })();
+  }
+  function stopReplay(stay) {
+    if (!replay) return;
+    replay.live = false; replay = null;
+    document.body.classList.remove('replaying');
+    pins.forEach(function (p) { p.node.classList.remove('is-unborn'); });
+    LOGS.forEach(function (l) { if (l.track) map.setFeatureState({ source: 'routes', id: l.id }, { off: false }); });
+    map.getSource('walked').setData({ type: 'FeatureCollection', features: [] });
+    setMeter(WM.meta.visited);
+    hideHud(); applyStates();
+    if (stay !== true) goHome(1200);
   }
 
   // =====================================================================
@@ -813,6 +1265,16 @@
   $('meter').addEventListener('click', openMission);
   $('nav-about').addEventListener('click', openAbout);
   $('panel-close').addEventListener('click', closePanel);
+  $('replay').addEventListener('click', startReplay);
+  $('light').addEventListener('click', function () { setLight(this.getAttribute('aria-pressed') !== 'true'); });
+  $('nav-menu').addEventListener('click', function () {
+    var open = !$('nav').classList.contains('is-open');
+    $('nav').classList.toggle('is-open', open); this.setAttribute('aria-expanded', String(open));
+  });
+  $('nav').addEventListener('click', function () { $('nav').classList.remove('is-open'); $('nav-menu').setAttribute('aria-expanded', 'false'); });
+  ['nav-logbook', 'nav-mission', 'nav-about', 'nav-photos', 'nav-passport', 'nav-rankings', 'brand', 'meter'].forEach(function (id) {
+    $(id).addEventListener('click', function () { if (replay) stopReplay(true); }, true);
+  });
   $('brand').addEventListener('click', function (e) { e.preventDefault(); if (!$('panel').hidden) closePanel(); else if (mapReady) goHome(1800); });
   document.addEventListener('keydown', function (e) {
     if (!$('lightbox').hidden) {
@@ -821,8 +1283,14 @@
       else if (e.key === 'ArrowLeft') openPhoto(lbAt - 1);
       return;
     }
+    if (!$('page').hidden) return; // the passport and rankings pages handle their own keys
+    if (e.key === ' ' && story && story.fly && !/^(BUTTON|A|INPUT|VIDEO)$/.test(e.target.tagName)) { e.preventDefault(); flyPlay(!story.fly.playing); return; }
     if (e.key !== 'Escape') return;
-    if (!$('gallery').hidden) closeGallery(); else if (!$('panel').hidden) closePanel();
+    if (!$('gallery').hidden) closeGallery();
+    else if (replay) stopReplay();
+    else if (pano) stopPano();
+    else if (story && story.fly) stopFly();
+    else if (!$('panel').hidden) closePanel();
   });
   $('nav-photos').addEventListener('click', function () { if ($('gallery').hidden) openGallery(); else closeGallery(); });
   $('lb-close').addEventListener('click', closePhoto);
@@ -846,6 +1314,7 @@
   window.addEventListener('resize', function () {
     clearTimeout(resizeT);
     resizeT = setTimeout(function () {
+      if (wx) wx.size();
       if (!story) return;
       $('strip').hidden = small();
       drawProfile(story.l);
@@ -860,5 +1329,8 @@
   if (location.hash === '#photos') openGallery();
 
   initMap();
-  window.__wm = { open: openLog, logs: LOGS, map: function () { return map; }, story: function () { return story; } };
+  window.__wm = { open: openLog, logs: LOGS, map: function () { return map; }, story: function () { return story; }, fly: startFly, replay: startReplay, light: setLight, pano: startPano };
+  window.WMApp = { LOGS: LOGS, BY_ID: BY_ID, HUTS: HUTS, meta: WM.meta, fmt: fmt, esc: esc, el: el, svg: svg, dateRange: dateRange, parts: parts, MON: MON, small: small,
+    openLog: openLog, closePanel: closePanel, closeGallery: closeGallery, startReplay: startReplay, focusHut: focusHut, showTip: showTip, hideTip: hideTip,
+    panelOpen: function () { return !$('panel').hidden; } };
 })();
