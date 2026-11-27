@@ -496,26 +496,35 @@ body.replaying .mapctl { display: none; }
 
 .page { z-index: 29; }
 
-/* ---------- rankings ---------- */
+/* ---------- rankings: a grid, huts down the side, scores across ---------- */
 .rk-empty { margin-top: 22px; padding: 12px 16px; border-left: 3px solid var(--red); background: var(--snow); max-width: 70ch; font-size: 14.5px; }
-.rk-wrap { margin-top: 26px; overflow-x: auto; }
-.rk { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-.rk thead th { text-align: left; vertical-align: bottom; padding: 0 14px 10px 0; border-bottom: 3px solid var(--ink); font-size: 13px; font-weight: 700; color: var(--granite); }
-.rk thead button { border: 0; background: none; padding: 0; font-weight: 700; color: var(--ink); text-align: left; text-decoration: underline; text-decoration-color: var(--scree); text-underline-offset: 3px; }
-.rk thead th[aria-sort="descending"] button { color: var(--red-deep); text-decoration-color: var(--red); }
-.rk thead th[aria-sort="descending"] button::after { content: " ↓"; }
-.rk tbody td, .rk tbody th { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-.rk-n { width: 54px; font-stretch: 66%; font-weight: 800; font-size: 26px; line-height: 1; color: var(--red); }
-.rk-h button { display: block; border: 0; background: none; padding: 0; font-weight: 800; font-stretch: 76%; font-size: 20px; line-height: 1.1; text-align: left; }
-.rk-h button:hover { color: var(--red-deep); text-decoration: underline; text-underline-offset: 3px; }
-.rk-h span { display: block; font-weight: 400; font-size: 12.5px; color: var(--granite); margin-top: 3px; }
-.rk-h em { display: block; font-style: normal; font-weight: 400; font-size: 13.5px; margin-top: 5px; max-width: 44ch; }
-.rk-s { min-width: 96px; }
-.rk-s b { font-stretch: 70%; font-weight: 800; font-size: 22px; line-height: 1; }
-.rk-s i { display: block; height: 6px; margin-top: 6px; background: var(--snow); position: relative; max-width: 110px; }
-.rk-s i::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: var(--v); background: var(--red); border-radius: 0 3px 3px 0; }
-.rk-s.is-empty span, .rk-s.is-none span { color: var(--scree); font-size: 13px; }
-.rk-o b { color: var(--red-deep); }
+.rk-wrap { margin-top: 26px; overflow-x: auto; border: 2px solid var(--ink); border-radius: 3px; -webkit-overflow-scrolling: touch; }
+.rk { width: 100%; min-width: 760px; border-collapse: separate; border-spacing: 0; font-variant-numeric: tabular-nums; }
+.rk th, .rk td { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.rk tr > :last-child { border-right: 0; }
+.rk tbody tr:last-child > * { border-bottom: 0; }
+.rk thead th { padding: 0; background: var(--ink); border-color: #38434C; border-bottom: 0; vertical-align: bottom; }
+.rk thead button { display: flex; align-items: flex-end; justify-content: center; gap: 6px; width: 100%; min-height: 54px; border: 0; background: none; padding: 10px 10px; color: var(--paper); font-weight: 700; font-size: 13.5px; line-height: 1.2; text-align: center; }
+.rk thead .rk-h button { justify-content: flex-start; text-align: left; padding-left: 16px; }
+.rk thead button i { font-style: normal; font-size: 10px; opacity: .55; flex: none; padding-bottom: 2px; }
+.rk thead button:hover { background: #2A3640; }
+.rk thead th[aria-sort="ascending"] button, .rk thead th[aria-sort="descending"] button { background: var(--red); }
+.rk thead th[aria-sort="ascending"] button i, .rk thead th[aria-sort="descending"] button i { opacity: 1; }
+.rk thead :focus-visible { outline-color: #fff; outline-offset: -4px; }
+.rk-h { position: sticky; left: 0; z-index: 1; text-align: left; }
+.rk thead .rk-h { z-index: 2; }
+.rk tbody .rk-h { background: var(--paper); padding: 10px 14px 10px 54px; min-width: 250px; box-shadow: 1px 0 0 var(--ink); }
+.rk tbody .rk-h em { position: absolute; left: 14px; top: 10px; font-style: normal; font-stretch: 66%; font-weight: 800; font-size: 22px; line-height: 1.1; color: var(--red); }
+.rk tbody .rk-h button { display: block; border: 0; background: none; padding: 0; font-weight: 800; font-stretch: 78%; font-size: 17.5px; line-height: 1.15; text-align: left; }
+.rk tbody .rk-h button:hover { color: var(--red-deep); text-decoration: underline; text-underline-offset: 3px; }
+.rk tbody .rk-h span { display: block; font-weight: 400; font-size: 12.5px; color: var(--granite); margin-top: 2px; }
+.rk tbody .rk-h small { display: block; font-weight: 400; font-size: 13px; margin-top: 4px; max-width: 40ch; }
+.rk-c { text-align: center; vertical-align: middle; padding: 8px 6px; min-width: 96px; background: rgba(218, 41, 28, calc(var(--s, 0) * var(--s, 0) * .34)); }
+.rk-c b { font-stretch: 70%; font-weight: 800; font-size: 22px; line-height: 1; }
+.rk-c.is-empty span, .rk-c.is-none span { color: var(--scree); font-size: 13px; }
+.rk-c.is-sorted { box-shadow: inset 2px 0 0 var(--red), inset -2px 0 0 var(--red); }
+.rk-c.rk-o { border-left: 2px solid var(--ink); }
+.rk-c.rk-o b { color: var(--red-deep); }
 .rk-key { margin-top: 40px; max-width: 900px; }
 .rk-key h2 { font-stretch: 70%; font-weight: 800; font-size: 22px; }
 .rk-key dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px 24px; margin-top: 12px; }
@@ -544,16 +553,16 @@ body.replaying .mapctl { display: none; }
   .nav.is-open { display: flex; }
   .nav button, .nav button[aria-pressed="true"] { padding: 14px 20px; font-size: 16px; text-align: left; border-radius: 0; box-shadow: none; color: var(--ink); }
   .nav button[aria-pressed="true"] { box-shadow: inset 4px 0 0 var(--red); }
-  /* rankings: each hut becomes a card */
-  .rk thead { display: none; }
-  .rk, .rk tbody, .rk tr, .rk td, .rk tbody th { display: block; }
-  .rk tr { position: relative; padding: 14px 0 14px 46px; border-bottom: 3px solid var(--ink); }
-  .rk tbody td, .rk tbody th { border: 0; padding: 0; }
-  .rk-n { position: absolute; left: 0; top: 14px; width: auto; }
-  .rk-s { display: flex !important; align-items: center; gap: 10px; margin-top: 9px; min-width: 0; }
-  .rk-s::before { content: attr(data-label); flex: 0 0 132px; font-size: 13px; color: var(--granite); }
-  .rk-s b { flex: 0 0 34px; font-size: 19px; }
-  .rk-s i { flex: 1; margin: 0; max-width: none; }
+  /* rankings stay a grid on a phone: the hut column holds still and the scores slide sideways */
+  .rk { min-width: 640px; }
+  .rk tbody .rk-h { min-width: 0; width: 150px; max-width: 150px; padding: 9px 8px 9px 30px; }
+  .rk tbody .rk-h em { left: 8px; top: 9px; font-size: 17px; }
+  .rk tbody .rk-h button { font-size: 13.5px; font-stretch: 72%; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+  .rk tbody .rk-h span { font-size: 11px; }
+  .rk thead button { font-size: 12.5px; padding: 8px 6px; min-height: 50px; }
+  .rk thead .rk-h button { padding-left: 8px; }
+  .rk-c { min-width: 82px; }
+  .rk-c b { font-size: 19px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

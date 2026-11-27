@@ -185,45 +185,63 @@
   }
 
   // ---------- hut rankings ----------
-  var sortBy = 'overall';
+  var sortBy = 'overall', sortDir = -1; // -1: best first, 1: lowest first
   function scoreOf(h) {
     var r = R.huts[h.n] || {}, sum = 0, n = 0;
     R.categories.forEach(function (c) { var v = r[c.id]; if (typeof v === 'number') { sum += v; n++; } });
     return { r: r, overall: n ? sum / n : null, rated: n };
   }
+  // A grid: huts down the side, the things I score across the top. Any column sorts, high to low or low to high.
   function rankings() {
     var rows = visited.map(function (h) { var s = scoreOf(h); s.h = h; return s; });
     var any = rows.some(function (r) { return r.rated; });
-    var val = function (r) { var v = sortBy === 'overall' ? r.overall : r.r[sortBy]; return typeof v === 'number' ? v : -1; };
-    rows.sort(function (a, b) { return val(b) - val(a) || a.h.no - b.h.no; });
-    var cell = function (v) {
-      if (v === 'none') return '<td class="rk-s is-none"><span>Not staffed</span></td>';
-      if (typeof v !== 'number') return '<td class="rk-s is-empty"><span aria-label="Not rated yet">–</span></td>';
-      return '<td class="rk-s"><b>' + fmt(v, v % 1 ? 1 : 0) + '</b><i style="--v:' + (v / R.scale * 100).toFixed(0) + '%"></i></td>';
+    var val = function (r) { var v = sortBy === 'overall' ? r.overall : sortBy === 'hut' ? null : r.r[sortBy]; return typeof v === 'number' ? v : null; };
+    rows.sort(function (a, b) {
+      if (sortBy === 'hut') return sortDir * -1 * a.h.n.localeCompare(b.h.n, 'de');
+      var x = val(a), y = val(b);
+      if (x == null || y == null) return (x == null) - (y == null) || a.h.no - b.h.no; // unrated huts always sit at the bottom
+      return sortDir * (x - y) || a.h.no - b.h.no;
+    });
+    var head = function (id, label, note, cls) {
+      var on = sortBy === id, dir = on ? (sortDir < 0 ? 'descending' : 'ascending') : 'none';
+      var next = on ? (sortDir < 0 ? 'lowest first' : 'highest first') : 'highest first';
+      if (id === 'hut') { dir = on ? (sortDir < 0 ? 'ascending' : 'descending') : 'none'; next = on && sortDir < 0 ? 'Z to A' : 'A to Z'; }
+      return '<th scope="col" class="' + (cls || '') + '" aria-sort="' + dir + '"><button type="button" data-sort="' + id + '" title="' + esc((note ? note + '. ' : '') + 'Sort ' + next) + '">' +
+        '<span>' + esc(label) + '</span><i aria-hidden="true">' + (on ? (dir === 'descending' ? '▼' : '▲') : '↕') + '</i></button></th>';
     };
-    var h = '<h1>Hut rankings</h1><p class="lede">Every hut I have reached, scored out of ' + R.scale + ' on ' + R.categories.length + ' things. The overall score is the average of the ones I could judge.</p>';
-    if (!any) h += '<p class="rk-empty">No scores yet. The huts are listed in the order I reached them, and the table fills in as I rate each one.</p>';
-    h += '<div class="rk-wrap"><table class="rk"><thead><tr><th class="rk-n" scope="col">Rank</th><th scope="col" class="rk-h">Hut</th>';
-    R.categories.forEach(function (c) {
-      h += '<th scope="col" aria-sort="' + (sortBy === c.id ? 'descending' : 'none') + '"><button type="button" data-sort="' + c.id + '" title="' + esc(c.note || '') + '">' + esc(c.label) + '</button></th>';
-    });
-    h += '<th scope="col" aria-sort="' + (sortBy === 'overall' ? 'descending' : 'none') + '"><button type="button" data-sort="overall">Overall</button></th></tr></thead><tbody>';
-    var rank = 0;
+    var cell = function (v, cls, dp) {
+      if (v === 'none') return '<td class="rk-c is-none ' + cls + '"><span>n/a</span></td>';
+      if (typeof v !== 'number') return '<td class="rk-c is-empty ' + cls + '"><span aria-label="Not rated yet">–</span></td>';
+      return '<td class="rk-c ' + cls + '" style="--s:' + clampN(v / R.scale).toFixed(2) + '"><b>' + (dp ? v.toFixed(1) : fmt(v, v % 1 ? 1 : 0)) + '</b></td>';
+    };
+    var h = '<h1>Hut rankings</h1><p class="lede">Every hut I have reached, scored out of ' + R.scale + '. Select a column heading to rank the huts by it, and again to flip the order.</p>';
+    if (!any) h += '<p class="rk-empty">No scores yet. The grid fills in as I rate each hut.</p>';
+    h += '<div class="rk-wrap"><table class="rk"><thead><tr>' + head('hut', 'Hut', '', 'rk-h');
+    R.categories.forEach(function (c) { h += head(c.id, c.label, c.note); });
+    h += head('overall', 'Overall', 'Average of the scores given', 'rk-o') + '</tr></thead><tbody>';
+    var rank = 0, ranked = sortBy !== 'hut';
     rows.forEach(function (r) {
-      var has = val(r) >= 0; if (has) rank++;
-      h += '<tr><td class="rk-n">' + (has ? rank : '') + '</td><th scope="row" class="rk-h"><button type="button" data-log="' + r.h.log + '">' + esc(r.h.n) + '</button>' +
-        '<span>' + (CANTON[r.h.c] || r.h.c) + ', ' + fmt(r.h.ele) + ' m, ' + day(r.h.date) + '</span>' + (r.r.note ? '<em>' + esc(r.r.note) + '</em>' : '') + '</th>';
-      R.categories.forEach(function (c) { h += cell(r.r[c.id]).replace('<td class="rk-s', '<td data-label="' + esc(c.label) + '" class="rk-s'); });
-      h += (r.overall == null ? '<td data-label="Overall" class="rk-s rk-o is-empty"><span>Not rated yet</span></td>' : '<td data-label="Overall" class="rk-s rk-o"><b>' + fmt(r.overall, 1) + '</b><i style="--v:' + (r.overall / R.scale * 100).toFixed(0) + '%"></i></td>') + '</tr>';
+      var has = ranked && val(r) != null; if (has) rank++;
+      h += '<tr><th scope="row" class="rk-h" lang="de"><em>' + (has ? rank : '') + '</em><button type="button" data-log="' + r.h.log + '">' + esc(r.h.n) + '</button>' +
+        '<span>' + (CANTON[r.h.c] || r.h.c) + ', ' + fmt(r.h.ele) + ' m</span>' + (r.r.note ? '<small>' + esc(r.r.note) + '</small>' : '') + '</th>';
+      R.categories.forEach(function (c) { h += cell(r.r[c.id], sortBy === c.id ? 'is-sorted' : ''); });
+      h += cell(r.overall == null ? null : Math.round(r.overall * 10) / 10, 'rk-o' + (sortBy === 'overall' ? ' is-sorted' : ''), true) + '</tr>';
     });
-    h += '</tbody></table></div><div class="rk-key"><h2>What each score means</h2><dl>' + R.categories.map(function (c) { return '<div><dt>' + esc(c.label) + '</dt><dd>' + esc(c.note || '') + '</dd></div>'; }).join('') + '</dl></div>';
+    h += '</tbody></table></div><div class="rk-key"><h2>What each score means</h2><dl>' + R.categories.map(function (c) { return '<div><dt>' + esc(c.label) + '</dt><dd>' + esc(c.note || '') + '</dd></div>'; }).join('') +
+      '<div><dt>Overall</dt><dd>The average of the scores a hut has. “n/a” means it could not be judged, such as food at an unstaffed hut.</dd></div></dl></div>';
     return h;
   }
+  function clampN(x) { return Math.max(0, Math.min(1, x)); }
   function wireRankings() {
     $('page-in').onclick = function (e) {
       var s = e.target.closest('[data-sort]'), l = e.target.closest('[data-log]');
-      if (s) { sortBy = s.dataset.sort; var y = $('page').scrollTop; $('page-in').innerHTML = rankings(); $('page').scrollTop = y; }
-      else if (l) { closePage(true); A.openLog(l.dataset.log); }
+      if (s) {
+        if (sortBy === s.dataset.sort) sortDir = -sortDir; else { sortBy = s.dataset.sort; sortDir = -1; }
+        var wrap = $('page-in').querySelector('.rk-wrap'), x = wrap ? wrap.scrollLeft : 0, y = $('page').scrollTop;
+        $('page-in').innerHTML = rankings();
+        $('page').scrollTop = y; wrap = $('page-in').querySelector('.rk-wrap'); if (wrap) wrap.scrollLeft = x;
+        var again = $('page-in').querySelector('[data-sort="' + sortBy + '"]'); if (again) again.focus({ preventScroll: true });
+      } else if (l) { closePage(true); A.openLog(l.dataset.log); }
     };
   }
 
