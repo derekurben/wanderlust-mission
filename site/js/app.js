@@ -88,7 +88,7 @@
     ele: { label: 'Elevation', unit: 'm', color: '#DA291C' },
     hr: { label: 'Heart rate', unit: 'bpm', color: '#B0125A', ramp: ['#FCE1EA', '#E0558C', '#B0125A', '#4E0528'] },
     kmh: { label: 'Speed', unit: 'km/h', color: '#1F6FB2', ramp: ['#DCEBF7', '#6FA9D8', '#1F6FB2', '#0B2F52'], digits: 1 },
-    temp: { label: 'Wrist temperature', unit: '°', color: '#B86E00', ramp: ['#FBEBD0', '#E8AD4A', '#B86E00', '#5A3500'] }
+    temp: { label: 'Wrist temp', unit: '°', color: '#B86E00', ramp: ['#FBEBD0', '#E8AD4A', '#B86E00', '#5A3500'] }
   };
   function watchAt(l, dist) {
     var w = WATCH[l.id];
