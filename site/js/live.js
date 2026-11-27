@@ -77,6 +77,9 @@
     }
     return (lo + hi) / 2;
   }
+  // Fog or a low stratus deck: low cloud whose base is close to the ground and not high in the mountains.
+  function isFog(p) { return p.lo >= 60 && p.base != null && p.base < 1750 && p.base - p.e < 900; }
+  function edge(x, y, w, h, m) { return smooth(Math.min(x, y, w - 1 - x, h - 1 - y), 0, m); } // fade out at the rim of the drawn area
   function build(pts) {
     var n = NX * NY, f = { snow: new Float32Array(n), top: new Float32Array(n), fog: new Float32Array(n), cov: new Float32Array(n), thick: new Float32Array(n), rain: new Float32Array(n), storm: new Float32Array(n) };
     for (var j = 0; j < NY; j++) for (var i = 0; i < NX; i++) {
@@ -86,12 +89,12 @@
       var ws = 0, wt = 0, wa = 0, q, d, w;
       for (q = 0; q < pts.length; q++) {
         d = km(pts[q], at); w = Math.exp(-(d * d) / (45 * 45));
-        if (pts[q].lo >= 60 && pts[q].base != null && pts[q].base < 3000) { var top = Math.max(pts[q].base, pts[q].e) + 280; ws += w * (pts[q].lo / 100); wt += w * top; wa += w; }
+        if (isFog(pts[q])) { var top = Math.max(pts[q].base, pts[q].e) + 280; ws += w * (pts[q].lo / 100); wt += w * top; wa += w; }
       }
       var topHere = wa > 0.02 ? wt / wa : 0, clear = 0;
       for (q = 0; q < pts.length; q++) { // a clear point only counts against fog if it sits below the deck
         d = km(pts[q], at); w = Math.exp(-(d * d) / (45 * 45));
-        if (!(pts[q].lo >= 60) && pts[q].e < topHere) clear += w;
+        if (!isFog(pts[q]) && pts[q].e < topHere) clear += w;
       }
       f.top[k] = topHere; f.fog[k] = wa > 0.02 ? ws / (wa + clear) : 0;
       f.cov[k] = clamp(Math.max(p.mi, p.hi * 0.75, p.lo * 0.45) / 100, 0, 1);
@@ -135,13 +138,22 @@
       var gy = gridY(y, GH);
       for (x = 0; x < GW; x++) {
         var k = y * GW + x, e = dem[k], gx = gxs[x], n = noise[((y & 255) << 8) | (x & 255)] - 0.5;
-        var line = snow(gx, gy) + n * 260;
-        var sa = smooth(e, line - 90, line + 170) * 0.9;                    // snow: thin at the line, solid above it
-        var t = top(gx, gy), fa = t > 0 ? smooth(t - e + n * 120, 0, 190) * clamp(fog(gx, gy) * 1.25, 0, 0.93) : 0;
+        var line = snow(gx, gy) + n * 260, rim = edge(x, y, GW, GH, 90);
+        var sa = smooth(e, line - 90, line + 170) * 0.86;                   // snow: thin at the line, solid above it
+        if (sa > 0.01 && x > 0 && x < GW - 1 && y > 0 && y < GH - 1) {      // steep rock sheds its snow
+          var slope = (Math.abs(dem[k + 1] - dem[k - 1]) + Math.abs(dem[k + GW] - dem[k - GW])) / 600;
+          sa *= 1 - 0.7 * smooth(slope, 0.55, 1.25);
+        }
+        var t = top(gx, gy), fa = 0;
+        if (t > 0) {                                                         // a sea of fog: level top, soft and slightly uneven
+          var n2 = noise[(((y >> 2) & 255) << 8) | ((x >> 2) & 255)];
+          fa = smooth(t - e + n * 110, 0, 170) * clamp(fog(gx, gy) * 1.2, 0, 0.9) * (0.8 + 0.2 * n2 * 2);
+        }
+        sa *= rim; fa = clamp(fa, 0, 0.92) * rim;
         var a = fa + sa * (1 - fa);
         if (a < 0.004) continue;
-        var w = a ? fa / a : 0, o = k * 4;                                   // fog lies over the snow
-        d[o] = 252 - 16 * w; d[o + 1] = 253 - 13 * w; d[o + 2] = 255 - 11 * w; d[o + 3] = Math.round(a * 255);
+        var w = a ? fa / a : 0, o = k * 4, tone = 14 * (noise[(((y >> 1) & 255) << 8) | ((x >> 1) & 255)] - 0.5); // fog lies over the snow, and is greyer
+        d[o] = 252 - (40 - tone) * w; d[o + 1] = 253 - (33 - tone) * w; d[o + 2] = 255 - (24 - tone) * w; d[o + 3] = Math.round(a * 255);
       }
     }
     g.putImageData(img, 0, 0);
@@ -149,15 +161,20 @@
   }
   function drawClouds(now) {
     var g = clouds.getContext('2d'), img = clouds._img || (clouds._img = g.createImageData(CW, CH)), d = img.data;
-    var cov = clouds._cov, thick = clouds._thick, x, y, k = 0;
+    var cov = clouds._cov, thick = clouds._thick, al = clouds._al || (clouds._al = new Float32Array(CW * CH)), x, y, k = 0;
     var ox = drift.x, oy = drift.y;
     for (y = 0; y < CH; y++) for (x = 0; x < CW; x++, k++) {
-      var c = cov[k], o = k * 4;
-      if (c < 0.04) { d[o + 3] = 0; continue; }
+      var c = cov[k];
+      if (c < 0.04) { al[k] = 0; continue; }
       var n = noise[(((y * 0.9 + oy) & 255) << 8) | ((x * 0.9 + ox) & 255)] * 0.7 + noise[(((y * 2.3 + oy * 1.7) & 255) << 8) | ((x * 2.3 + ox * 1.7) & 255)] * 0.3;
-      var a = smooth(n, 0.84 - c * 0.62, 0.98 - c * 0.62) * (0.5 + 0.42 * thick[k]);
-      var shade = 250 - 62 * thick[k] * a;                                   // thick, wet cloud is greyer
-      d[o] = shade; d[o + 1] = shade + 2; d[o + 2] = shade + 6; d[o + 3] = Math.round(a * 255);
+      al[k] = smooth(n, 0.84 - c * 0.62, 0.98 - c * 0.62) * (0.5 + 0.42 * thick[k]) * clouds._rim[k];
+    }
+    var SH = 5 * CW + 4; // the shadow falls a little to the south-east, which is what makes cloud readable over snow
+    for (k = 0; k < CW * CH; k++) {
+      var a = al[k], sh = k >= SH ? al[k - SH] * 0.42 : 0, o = k * 4, out = a + sh * (1 - a);
+      if (out < 0.006) { d[o + 3] = 0; continue; }
+      var cw = a / out, shade = 250 - 62 * thick[k] * a;                     // thick, wet cloud is greyer
+      d[o] = shade * cw + 22 * (1 - cw); d[o + 1] = (shade + 2) * cw + 30 * (1 - cw); d[o + 2] = (shade + 6) * cw + 48 * (1 - cw); d[o + 3] = Math.round(out * 255);
     }
     g.putImageData(img, 0, 0);
     // lightning: a short white bloom inside storm cells
@@ -172,9 +189,10 @@
   }
   function prepClouds() {
     var cov = sampler(fields.cov), thick = sampler(fields.thick), storm = sampler(fields.storm), rain = sampler(fields.rain);
-    clouds._cov = new Float32Array(CW * CH); clouds._thick = new Float32Array(CW * CH); clouds._storms = [];
+    clouds._cov = new Float32Array(CW * CH); clouds._thick = new Float32Array(CW * CH); clouds._rim = new Float32Array(CW * CH); clouds._storms = [];
     for (var y = 0, k = 0; y < CH; y++) { var gy = gridY(y, CH); for (var x = 0; x < CW; x++, k++) {
       var gx = gridX(x, CW), s = storm(gx, gy), r = rain(gx, gy);
+      clouds._rim[k] = edge(x, y, CW, CH, 26);
       clouds._cov[k] = clamp(cov(gx, gy) + s * 0.3, 0, 1); clouds._thick[k] = clamp(thick(gx, gy) + Math.min(0.5, r * 0.25) + s * 0.5, 0, 1);
       if (s > 0.5 && (x % 9 === 0) && (y % 9 === 0)) clouds._storms.push([x, y]);
     } }
