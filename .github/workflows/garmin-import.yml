@@ -1,0 +1,39 @@
+name: Import Garmin watch data
+
+# Pulls the watch recordings for logbook dates from Garmin's Personal API and saves a trimmed copy in
+# source/garmin/. The key is the repository secret GARMIN_PERSONAL_API_KEY; it is never written to the
+# repository or the logs. Runs on a push to the garmin-import branch, or by hand from the Actions tab.
+on:
+  workflow_dispatch:
+  push:
+    branches: [garmin-import]
+    paths: ['tools/garmin_import.py', '.github/workflows/garmin-import.yml', 'source/garmin/.run']
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            tools
+            source/garmin
+            site/js/data.js
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet garmin-connect-personal-api-python garmin-fit-sdk
+      - name: Import
+        env:
+          GARMIN_PERSONAL_API_KEY: ${{ secrets.GARMIN_PERSONAL_API_KEY }}
+        run: python tools/garmin_import.py
+      - name: Save the result to this branch
+        run: |
+          git config user.name "garmin-import"
+          git config user.email "garmin-import@users.noreply.github.com"
+          git add source/garmin
+          git diff --cached --quiet && echo "Nothing new to save." || (git commit -q -m "Garmin: watch data for logbook dates" && git push -q)
