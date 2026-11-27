@@ -169,7 +169,9 @@
     LOGS.forEach(function (l) { l.huts.forEach(function (h) { b.extend(h.at); }); });
     if (!small()) HUTS.forEach(function (h) { b.extend(h.at); }); // on a wide screen, show the whole mission
     map.setPadding({ top: 0, left: 0, right: 0, bottom: 0 });
-    var p = padded(70); p.left += 40; p.right += 40; p.bottom += 60;
+    var p = padded(small() ? 24 : 70);
+    if (!small()) { p.left += 40; p.right += 40; p.bottom += 60; }
+    p.bottom = Math.max(0, Math.min(p.bottom, window.innerHeight - p.top - 140)); // always leave room for the map itself
     map.fitBounds(b, { padding: p, pitch: HOME.pitch, bearing: HOME.bearing, duration: reduceMotion ? 0 : ms, maxZoom: 9.2 });
   }
 
@@ -1273,7 +1275,7 @@
     $('nav').classList.toggle('is-open', open); this.setAttribute('aria-expanded', String(open));
   });
   $('nav').addEventListener('click', function () { $('nav').classList.remove('is-open'); $('nav-menu').setAttribute('aria-expanded', 'false'); });
-  ['nav-logbook', 'nav-mission', 'nav-about', 'nav-photos', 'nav-passport', 'nav-rankings', 'brand', 'meter'].forEach(function (id) {
+  ['nav-logbook', 'nav-mission', 'nav-about', 'nav-photos', 'nav-rankings', 'brand', 'meter'].forEach(function (id) {
     $(id).addEventListener('click', function () { if (replay) stopReplay(true); }, true);
   });
   $('brand').addEventListener('click', function (e) { e.preventDefault(); if (!$('panel').hidden) closePanel(); else if (mapReady) goHome(1800); });
@@ -1284,7 +1286,7 @@
       else if (e.key === 'ArrowLeft') openPhoto(lbAt - 1);
       return;
     }
-    if (!$('page').hidden) return; // the passport and rankings pages handle their own keys
+    if (!$('page').hidden) return; // the rankings page handles its own keys
     if (e.key === ' ' && story && story.fly && !/^(BUTTON|A|INPUT|VIDEO)$/.test(e.target.tagName)) { e.preventDefault(); flyPlay(!story.fly.playing); return; }
     if (e.key !== 'Escape') return;
     if (!$('gallery').hidden) closeGallery();

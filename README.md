@@ -53,7 +53,7 @@ Map © swisstopo. Terrain © Mapterhorn. Weather from Open-Meteo (ERA5). Map eng
 |---|---|
 | `site/js/sky.js` | Sun position for a date, time and place; the light, sky colour, cloud shadows, rain and snow drawn on the map |
 | `site/js/app.js` | Also: the story clock (`buildClock`), fly-through, photo spots on the route, summit names, the look-around, unvisited huts, the mission replay |
-| `site/js/pages.js` | Mission numbers and charts, the hut passport, the hut rankings |
+| `site/js/pages.js` | Mission numbers and charts, the hut rankings |
 | `site/js/rankings.js` | **Hut scores. Edit this file to rate a hut.** |
 | `site/js/huts.js`, `site/js/peaks.js` | Generated: every hut on the list, and the summits around visited huts |
 

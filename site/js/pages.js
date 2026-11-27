@@ -1,4 +1,4 @@
-/* Wanderlust Mission: the Mission numbers, the hut passport and the hut rankings.
+/* Wanderlust Mission: the Mission numbers and the hut rankings.
    Data: js/huts.js (every hut on the list), js/rankings.js (scores), and the logbooks via window.WMApp. */
 (function () {
   'use strict';
@@ -38,7 +38,7 @@
     return '<div class="sheet" style="padding-top:34px"><h1>' + DONE + ' huts down, ' + left + ' to go</h1>' +
       '<p class="lede">Every one of the ' + TOTAL + ' Swiss Alpine Club huts, touched in person. No deadline.</p>' +
       '<div class="actions"><button type="button" class="btn" data-do="replay"><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M6 4.5v11l9-5.5z" fill="currentColor"/></svg>Replay the mission</button>' +
-      '<button type="button" class="btn is-quiet" data-do="passport">Hut passport</button><button type="button" class="btn is-quiet" data-do="rankings">Hut rankings</button></div>' +
+      '<button type="button" class="btn is-quiet" data-do="rankings">Hut rankings</button></div>' +
       '<dl class="stats"><div><dt>Trips logged</dt><dd>' + trips + '</dd></div><div><dt>Days out</dt><dd>' + days + '</dd></div>' +
       '<div><dt>On foot</dt><dd>' + fmt(km) + '<small>km</small></dd></div><div><dt>Climbed</dt><dd>' + fmt(gain) + '<small>m</small></dd></div></dl>' +
       '<p class="note" style="margin-top:14px">That climbing is ' + fmt(gain / 8849, 1) + ' times the height of Everest from sea level.</p>' +
@@ -164,16 +164,15 @@
   }
 
   // =====================================================================
-  // Pages: the passport and the rankings share one full-width sheet
+  // The rankings page: one full-width sheet
   // =====================================================================
   var pageName = null;
   function openPage(name) {
     A.closeGallery(true);
     pageName = name;
-    $('page-in').innerHTML = name === 'passport' ? passport() : rankings();
-    if (name === 'passport') wirePassport(); else wireRankings();
+    $('page-in').innerHTML = rankings();
+    wireRankings();
     $('page').hidden = false; $('page').scrollTop = 0;
-    $('nav-passport').setAttribute('aria-pressed', String(name === 'passport'));
     $('nav-rankings').setAttribute('aria-pressed', String(name === 'rankings'));
     if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
     $('page-in').focus({ preventScroll: true });
@@ -181,69 +180,8 @@
   function closePage(keepHash) {
     if ($('page').hidden) return;
     $('page').hidden = true; pageName = null;
-    $('nav-passport').removeAttribute('aria-pressed'); $('nav-rankings').removeAttribute('aria-pressed');
-    if (!keepHash && /^#(passport|rankings)$/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
-  }
-
-  // ---------- the hut passport ----------
-  function hash(s) { var h = 7; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 100003; return h; }
-  var INKS = ['#C3271B', '#1D4F91', '#23624A', '#5A3E8A', '#2A333B'];
-  var ICONS = [
-    'M-26 12 L-9 -14 L-1 -3 L7 -16 L26 12 Z', // two summits
-    'M-22 12 V-2 L0 -17 L22 -2 V12 Z M-6 12 V2 H6 V12', // hut
-    'M-24 12 L0 -18 L24 12 Z M-8 -8 L0 -2 L8 -8', // snow-capped peak
-    'M-5 -17 H5 V-5 H17 V5 H5 V17 H-5 V5 H-17 V-5 H-5 Z' // Swiss cross
-  ];
-  function stamp(h) {
-    var k = hash(h.n), ink = INKS[k % INKS.length], rot = (k % 13) - 6, shape = (k >> 3) % 4, id = 'st' + h.no;
-    var p = h.date.split('-'), date = p[2] + '.' + p[1] + '.' + p[0];
-    var name = h.n.toUpperCase(), fs = name.length <= 13 ? 17 : name.length <= 18 ? 14.5 : name.length <= 24 ? 12 : 10;
-    var foot = (CANTON[h.c] || h.c).toUpperCase() + '  ·  ' + fmt(h.ele) + ' M';
-    var rings = shape === 0 ? '<circle r="92" stroke-width="5"/><circle r="84" stroke-width="1.5"/><circle r="56" stroke-width="1.5"/>'
-      : shape === 1 ? '<circle r="92" stroke-width="3"/><circle r="85" stroke-width="3" stroke-dasharray="1 7" stroke-linecap="round"/><circle r="56" stroke-width="3"/>'
-      : shape === 2 ? '<circle r="91" stroke-width="7" stroke-dasharray="3 5"/><circle r="82" stroke-width="1.5"/><circle r="55" stroke-width="1.5"/>'
-      : '<circle r="92" stroke-width="2"/><circle r="87" stroke-width="2"/><circle r="57" stroke-width="5"/>';
-    return '<svg viewBox="-100 -100 200 200" aria-hidden="true"><g transform="rotate(' + rot + ')" filter="url(#ink' + (k % 3) + ')" fill="none" stroke="' + ink + '">' + rings +
-      '<path id="' + id + 'a" d="M-70 0 A70 70 0 0 1 70 0" stroke="none"/><path id="' + id + 'b" d="M-77 0 A77 77 0 0 0 77 0" stroke="none"/>' +
-      '<g fill="' + ink + '" stroke="none" font-weight="800">' +
-      '<text font-size="' + fs + '" letter-spacing="1.2"><textPath href="#' + id + 'a" startOffset="50%" text-anchor="middle">' + esc(name) + '</textPath></text>' +
-      '<text font-size="10.5" letter-spacing="1.4" font-weight="700"><textPath href="#' + id + 'b" startOffset="50%" text-anchor="middle">' + esc(foot) + '</textPath></text>' +
-      '<path d="' + ICONS[(k >> 5) % ICONS.length] + '" transform="translate(0,-26) scale(.78)" fill="' + ink + '" fill-rule="evenodd"/>' +
-      '<text y="11" font-size="16.5" text-anchor="middle" letter-spacing=".3">' + date + '</text>' +
-      '<text y="28" font-size="9.5" text-anchor="middle" letter-spacing="1.6" font-weight="700">HUT ' + h.no + ' OF ' + TOTAL + '</text></g></g></svg>';
-  }
-  function passport() {
-    var left = HUTS.filter(function (h) { return !h.log; }), groups = {}, missing = TOTAL - HUTS.length;
-    left.forEach(function (h) { (groups[h.c] || (groups[h.c] = [])).push(h); });
-    var h = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' + [3, 11, 23].map(function (seed, i) {
-      return '<filter id="ink' + i + '" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="' + seed + '" result="n"/>' +
-        '<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.1 2.0" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in" result="p"/>' +
-        '<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="' + (seed + 1) + '" result="g"/><feDisplacementMap in="p" in2="g" scale="1.8"/></filter>';
-    }).join('') + '</defs></svg>';
-    h += '<h1>Hut passport</h1><p class="lede">One stamp for every Swiss Alpine Club hut I have touched. ' + DONE + ' collected, ' + (TOTAL - DONE) + ' still blank.' +
-      (missing > 0 ? ' My list names ' + HUTS.length + ' of the ' + TOTAL + ' so far.' : '') + '</p>';
-    h += '<section class="g-sec"><div class="g-head"><h2>Stamped</h2><span>' + visited.length + ' huts, in the order I reached them</span></div><div class="stamps-grid">';
-    visited.forEach(function (v) {
-      h += '<button type="button" class="stamp" data-log="' + v.log + '" aria-label="Hut ' + v.no + ', ' + esc(v.n) + ', ' + day(v.date) + '. Open the logbook.">' + stamp(v) + '</button>';
-    });
-    h += '</div></section>';
-    Object.keys(groups).sort(function (a, b) { return groups[b].length - groups[a].length; }).forEach(function (c) {
-      var list = groups[c].sort(function (a, b) { return a.ele - b.ele; });
-      h += '<section class="g-sec"><div class="g-head"><h2>' + (CANTON[c] || c) + '</h2><span>' + list.length + ' to collect</span></div><div class="stamps-grid is-blank">';
-      list.forEach(function (b) {
-        h += '<button type="button" class="stamp is-blank" data-hut="' + HUTS.indexOf(b) + '" aria-label="' + esc(b.n) + ', ' + fmt(b.ele) + ' metres, not visited yet. Show on the map."><span><b>' + esc(b.n) + '</b>' + fmt(b.ele) + ' m</span></button>';
-      });
-      h += '</div></section>';
-    });
-    return h;
-  }
-  function wirePassport() {
-    $('page-in').onclick = function (e) {
-      var b = e.target.closest('.stamp');
-      if (!b) return;
-      if (b.dataset.log) { closePage(true); A.openLog(b.dataset.log); }
-      else { closePage(); A.focusHut(+b.dataset.hut); }
-    };
+    $('nav-rankings').removeAttribute('aria-pressed');
+    if (!keepHash && /^#rankings$/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
   }
 
   // ---------- hut rankings ----------
@@ -290,15 +228,14 @@
   }
 
   // ---------- wiring ----------
-  $('nav-passport').addEventListener('click', function () { if (pageName === 'passport') closePage(); else openPage('passport'); });
   $('nav-rankings').addEventListener('click', function () { if (pageName === 'rankings') closePage(); else openPage('rankings'); });
   ['nav-logbook', 'nav-mission', 'nav-about', 'nav-photos', 'brand'].forEach(function (id) { $(id).addEventListener('click', function () { closePage(id === 'nav-photos'); }, true); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('page').hidden && $('lightbox').hidden) closePage(); });
   window.addEventListener('hashchange', function () {
     var id = location.hash.replace('#', '');
-    if (id === 'passport' || id === 'rankings') openPage(id); else closePage(true);
+    if (id === 'rankings') openPage(id); else closePage(true);
   });
-  if (/^#(passport|rankings)$/.test(location.hash)) openPage(location.hash.slice(1));
+  if (/^#rankings$/.test(location.hash)) openPage(location.hash.slice(1));
 
   window.WMPages = { mission: mission, missionWire: missionWire, openPage: openPage, closePage: closePage };
 })();
