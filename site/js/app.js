@@ -1298,6 +1298,26 @@
       openHutCard(i);
     });
   }
+  // Open a logbook at one block of its story (used by search).
+  function openLogAt(id, i) {
+    if (active !== id) openLog(id);
+    setTimeout(function () {
+      var row = $('panel-body').querySelector('.row[data-i="' + i + '"]'), body = $('panel-body');
+      if (!row) return;
+      body.scrollTop = row.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - body.clientHeight * 0.3;
+      row.classList.add('is-found'); setTimeout(function () { row.classList.remove('is-found'); }, 2600);
+    }, 350);
+  }
+  var foundPeak = null;
+  function showPeak(p) {
+    if (!mapReady) return;
+    if (foundPeak) foundPeak.remove();
+    foundPeak = new maplibregl.Marker({ element: el('div', 'peak is-found', '<b>' + esc(p[0]) + '</b><span>' + fmt(p[1]) + ' m</span>'), anchor: 'bottom', offset: [0, -2] }).setLngLat([p[2], p[3]]).addTo(map);
+    if (story) story.userCam = true;
+    var to = { center: [p[2], p[3]], zoom: 12.6, pitch: 62, duration: reduceMotion ? 0 : 2200 };
+    if (!story) to.padding = padded(0); // with a logbook open the map keeps the padding it already has
+    map.flyTo(to);
+  }
   function setMeter(n) {
     $('meter-done').textContent = n;
     var t = $('meter-ticks').children;
@@ -1503,10 +1523,12 @@
     if (id === 'photos') openGallery(); else if (BY_ID[id] && id !== active) { closeGallery(true); openLog(id); }
   });
   if (location.hash === '#photos') openGallery();
+  if (!location.hash) openAbout(); // a first-time visitor reads what this is before meeting a bare map
 
   initMap();
   window.__wm = { open: openLog, logs: LOGS, map: function () { return map; }, story: function () { return story; }, fly: startFly, replay: startReplay, light: setLight, pano: startPano };
   window.WMApp = { LOGS: LOGS, BY_ID: BY_ID, HUTS: HUTS, meta: WM.meta, fmt: fmt, esc: esc, el: el, svg: svg, dateRange: dateRange, parts: parts, MON: MON, small: small,
     openLog: openLog, closePanel: closePanel, closeGallery: closeGallery, startReplay: startReplay, focusHut: focusHut, showTip: showTip, hideTip: hideTip,
+    openLogAt: openLogAt, showPeak: showPeak,
     panelOpen: function () { return !$('panel').hidden; }, map: function () { return map; }, mapReady: function () { return mapReady; } };
 })();

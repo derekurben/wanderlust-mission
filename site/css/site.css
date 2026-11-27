@@ -486,6 +486,24 @@ body.fly-open .mapctl { right: 16px; }
 body.fly-open .maplibregl-ctl-bottom-right { right: 0; bottom: 216px; }
 body.fly-open .flycard { bottom: 232px; }
 
+/* search */
+.search { position: relative; display: flex; align-items: center; gap: 8px; margin-left: 12px; padding: 0 10px; height: 36px; width: min(320px, 26vw); border: 2px solid var(--line); border-radius: 3px; color: var(--granite); background: var(--paper); }
+.search:focus-within { border-color: var(--ink); color: var(--ink); }
+.search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 14px; color: var(--ink); }
+.search input::-webkit-search-cancel-button { cursor: pointer; }
+.search-out { position: absolute; top: calc(100% + 8px); left: -2px; width: min(460px, 92vw); max-height: min(70vh, 560px); overflow-y: auto; margin: 0; padding: 6px 0; list-style: none; background: var(--paper); border-top: 3px solid var(--red); border-radius: 3px; box-shadow: 0 16px 40px rgba(27, 36, 44, .3); z-index: 60; }
+.search-out li[data-n] { display: flex; flex-direction: column; gap: 2px; padding: 8px 16px; cursor: pointer; }
+.search-out li[data-n]:hover, .search-out li.is-on { background: var(--snow); box-shadow: inset 3px 0 0 var(--red); }
+.search-out b { font-size: 14.5px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+.search-out span { font-size: 12.5px; color: var(--granite); }
+.search-out mark { background: #FFE27A; color: inherit; padding: 0 1px; }
+.search-h { padding: 10px 16px 4px; font-size: 12px; font-weight: 700; color: var(--granite); }
+.search-none { padding: 12px 16px; font-size: 14px; color: var(--granite); }
+.bar-search { display: none; border: 0; background: none; padding: 8px; border-radius: 3px; color: var(--ink); }
+.row.is-found { background: #FFF6CC; box-shadow: 0 0 0 8px #FFF6CC; transition: background 1.2s, box-shadow 1.2s; }
+body .peak.is-found { display: flex !important; color: #fff; }
+.peak.is-found b { background: var(--red); padding: 2px 7px; border-radius: 3px; text-shadow: none; }
+
 /* hut details card */
 .hutcard {
   position: fixed; z-index: 16; top: calc(var(--bar-h) + 14px); left: calc(var(--rail-w) + 16px); width: 340px; max-height: calc(100vh - var(--bar-h) - 150px); overflow-y: auto;
@@ -594,6 +612,11 @@ body.replaying .mapctl { display: none; }
   .livechip span { font-size: 13px; }
   .livechip small { display: none; }
   .hutcard, body.rail-shut .hutcard { top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: 62vh; border-radius: 0; z-index: 27; box-shadow: 0 -8px 26px rgba(27, 36, 44, .28); }
+  .bar-search { display: block; flex: none; }
+  .search { display: none; position: fixed; top: var(--bar-h); left: 0; right: 0; z-index: 45; width: auto; margin: 0; height: 48px; border-width: 0 0 3px; border-color: var(--red); border-radius: 0; box-shadow: 0 10px 22px rgba(27, 36, 44, .2); }
+  .search.is-open { display: flex; }
+  .search input { font-size: 16px; }
+  .search-out { left: 0; right: 0; width: auto; top: 100%; border-top: 0; border-radius: 0; max-height: calc(100vh - var(--bar-h) - 60px); }
   .peak { font-size: 11px; }
   .peak b { font-size: 11.5px; }
   .hud { left: 10px; right: 10px; bottom: 10px; transform: none; max-width: none; justify-content: space-between; padding: 10px 10px 10px 14px; gap: 10px; }
