@@ -58,3 +58,13 @@ Map © swisstopo. Terrain © Mapterhorn. Weather from Open-Meteo (ERA5). Map eng
 | `site/js/huts.js`, `site/js/peaks.js` | Generated: every hut on the list, and the summits around visited huts |
 
 Times along a route come from the watch recording where there is one. Without it they are estimated from the length of the walk, and the clock on the map says "about".
+
+## Live conditions (`site/js/live.js`)
+
+The Live button draws the present snow line, valley fog, cloud and storms over Switzerland. The visitor's browser fetches everything when Live is switched on:
+
+- Weather: Open-Meteo, MeteoSwiss ICON-CH1 model, 78 points on a 0.4° grid, cached in the browser for 15 minutes. Free tier is for non-commercial use, 10,000 calls a day; each Live load counts as 78.
+- Terrain heights: 12 Mapterhorn tiles at zoom 8.
+- Satellite switch: EUMETSAT EUMETView WMS, layer `mtg_fd:rgb_geocolour`, pinned to the latest time in its capabilities document.
+
+Snow line and fog top are estimated from the model points (see `level()` and `isFog()`); they are not measurements.
