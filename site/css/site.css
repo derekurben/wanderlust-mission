@@ -286,6 +286,19 @@ body.story-open .rail-list { overflow-x: hidden; padding-bottom: 24px; }
 body.rail-shut .strip { left: 14px; }
 .strip-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--granite); }
 .strip-head b { color: var(--ink); font-weight: 700; }
+.strip-tabs { display: flex; gap: 2px; white-space: nowrap; }
+.strip-head span#strip-now { white-space: nowrap; }
+.strip-tabs button { border: 0; background: none; padding: 3px 8px; border-radius: 3px; font-size: 13px; font-weight: 600; color: var(--granite); }
+.strip-tabs button:first-child { padding-left: 0; }
+.strip-tabs button:hover { color: var(--ink); }
+.strip-tabs button[aria-selected="true"] { color: var(--ink); font-weight: 700; box-shadow: inset 0 -2px 0 var(--red); border-radius: 0; }
+.strip-tabs button:only-child { box-shadow: none; }
+.strip-head { gap: 12px; }
+.strip-key { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; }
+.strip-key i { width: 70px; height: 6px; border-radius: 3px; }
+.strip-key[hidden] { display: none; }
+#clock-watch { color: var(--ink); font-weight: 600; }
+body.is-night #clock-watch { color: #F2F4F6; }
 .strip-head span { font-variant-numeric: tabular-nums; }
 .strip .chart { margin-top: 2px; cursor: pointer; }
 
@@ -420,7 +433,8 @@ body.rail-shut .strip { left: 14px; }
   background: var(--paper); border-radius: 3px; box-shadow: var(--shadow);
 }
 body.rail-shut .clock { left: 14px; }
-@media (max-width: 1380px) and (min-width: 901px) { body.story-open:not(.fly-open) .clock { top: calc(var(--bar-h) + 60px); } }
+@media (min-width: 901px) { body.story-open:not(.fly-open) .clock { top: calc(var(--bar-h) + 60px); } }
+@media (max-width: 1500px) { .strip-key { display: none; } }
 .clock p { display: flex; flex-direction: column; line-height: 1.25; }
 .clock b { font-stretch: 78%; font-weight: 800; font-size: 17px; font-variant-numeric: tabular-nums; }
 .clock span { font-size: 12.5px; color: var(--granite); font-variant-numeric: tabular-nums; }

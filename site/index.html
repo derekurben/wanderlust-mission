@@ -42,7 +42,7 @@
 
 <div class="clock" id="clock" hidden>
   <svg class="clock-arc" id="clock-arc" viewBox="0 0 120 46" width="120" height="46" aria-hidden="true"></svg>
-  <p><b id="clock-time"></b><span id="clock-wx"></span></p>
+  <p><b id="clock-time"></b><span id="clock-wx"></span><span id="clock-watch"></span></p>
 </div>
 
 <div class="livechip" id="livechip" hidden>
@@ -71,7 +71,7 @@
 </div>
 
 <div class="strip" id="strip" hidden>
-  <p class="strip-head"><b>Elevation</b><span id="strip-now"></span></p>
+  <div class="strip-head"><div class="strip-tabs" id="strip-tabs" role="tablist" aria-label="What the chart shows"></div><span class="strip-key" id="strip-key" hidden></span><span id="strip-now"></span></div>
   <div class="chart" id="strip-chart"></div>
 </div>
 
@@ -117,6 +117,7 @@
 <script src="js/huts.js"></script>
 <script src="js/peaks.js"></script>
 <script src="js/rankings.js"></script>
+<script src="js/watch.js"></script>
 <script src="js/sky.js"></script>
 <script src="js/app.js"></script>
 <script src="js/pages.js"></script>

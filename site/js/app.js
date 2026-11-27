@@ -82,6 +82,21 @@
   var story = null; // { l, rows, items, f, T, target, cur, clockT, clockCur, mode, raf, userCam, lastWalk, fly }
   var HUTS = (window.WM_HUTS && window.WM_HUTS.huts) || [], PEAKS = window.WM_PEAKS || [];
   var lightOn = true, wx = null, peakMarks = [], pano = null, replay = null;
+  // What the watch recorded, in 100 m steps along each route (js/watch.js). Not every trip has it.
+  var WATCH = window.WM_WATCH || {}, stripMetric = 'ele';
+  var METRICS = {
+    ele: { label: 'Elevation', unit: 'm', color: '#DA291C' },
+    hr: { label: 'Heart rate', unit: 'bpm', color: '#B0125A', ramp: ['#FCE1EA', '#E0558C', '#B0125A', '#4E0528'] },
+    kmh: { label: 'Speed', unit: 'km/h', color: '#1F6FB2', ramp: ['#DCEBF7', '#6FA9D8', '#1F6FB2', '#0B2F52'], digits: 1 },
+    temp: { label: 'Wrist temperature', unit: '°', color: '#B86E00', ramp: ['#FBEBD0', '#E8AD4A', '#B86E00', '#5A3500'] }
+  };
+  function watchAt(l, dist) {
+    var w = WATCH[l.id];
+    if (!w) return null;
+    var x = clamp(dist / w.step, 0, w.t.length - 1), i = Math.floor(x), j = Math.min(w.t.length - 1, i + 1), u = x - i;
+    var v = function (a) { return a ? a[i] + (a[j] - a[i]) * u : null; };
+    return { t: v(w.t), hr: v(w.hr), kmh: v(w.kmh), temp: v(w.temp), vam: v(w.vam) };
+  }
   var clamp = function (x, a, b) { return Math.max(a, Math.min(b, x)); };
   var hm = function (s) { var p = String(s).split(':'); return +p[0] + (+p[1] || 0) / 60; };
   var clockText = function (h) { h = ((h % 24) + 24) % 24; var m = Math.round(h * 60); if (m >= 1440) m -= 1440; return Math.floor(m / 60) + ':' + ('0' + (m % 60)).slice(-2); };
@@ -212,6 +227,9 @@
       map.addLayer({ id: 'route-hit', type: 'line', source: 'routes', paint: { 'line-color': '#000', 'line-opacity': 0, 'line-width': 18 } });
       WMSky.addLayers(map, 'route-case'); // sun shading and colour wash sit on the terrain, under the routes
       addGhosts();
+      map.addSource('effort', { type: 'geojson', lineMetrics: true, data: { type: 'FeatureCollection', features: [] } });
+      map.addLayer({ id: 'effort', type: 'line', source: 'effort', layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'none' },
+        paint: { 'line-width': ['interpolate', ['linear'], ['zoom'], 8, 3.5, 14, 7.5], 'line-gradient': ['interpolate', ['linear'], ['line-progress'], 0, '#B0125A', 1, '#B0125A'] } });
       addShots();
 
       map.on('mousemove', 'route-hit', function (e) {
@@ -333,6 +351,7 @@
     if (mapReady) {
       map.getSource('walked').setData({ type: 'FeatureCollection', features: [] });
       map.getSource('shots').setData({ type: 'FeatureCollection', features: [] });
+      map.setLayoutProperty('effort', 'visibility', 'none');
       WMSky.reset(map);
       map.setPaintProperty('ghost', 'circle-opacity', 0.92); map.setPaintProperty('ghost', 'circle-stroke-opacity', 0.9);
     }
@@ -416,6 +435,7 @@
         '<div class="actions"><button type="button" class="btn" id="fly-go"><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M6 4.5v11l9-5.5z" fill="currentColor"/></svg>Fly the route</button></div>' : '') + '</div>' +
       '<div class="story' + (l.track ? '' : ' is-plain') + '" id="story">' + rows + '</div>' +
       '<div class="sheet after" id="after">' +
+      watchBlock(l) +
       (l.weather.length ? '<section class="block"><h2>Weather on the day</h2><p class="note">Hourly conditions at the hut’s position and height, 5 am to 9 pm.</p><div id="weather"></div></section>' : '') +
       (l.huts.length ? '<section class="block"><h2>' + (l.huts.length > 1 ? 'Huts on this trip' : 'The hut') + '</h2><ul class="huts">' +
         l.huts.map(function (h) {
@@ -455,7 +475,7 @@
         map.setPadding(clearArea());
         ensureHiker(l.track[0]);
         frame(l, instant);
-        setShots(l); setPeaks(l);
+        setShots(l); setPeaks(l); setEffort(l);
         map.setPaintProperty('ghost', 'circle-opacity', 0.3); map.setPaintProperty('ghost', 'circle-stroke-opacity', 0.3);
         onStoryScroll();
         skyUpdate(true);
@@ -575,7 +595,7 @@
   // The watch recording gives the start and end. Between them time runs with distance. On an overnight trip the
   // rows written at the hut carry the evening, the night and the next morning.
   function buildClock(l, items) {
-    var n = l.dates.length, mov = l.time ? hm(l.time) : (l.km / 4 + l.gain / 500), W = l.window || null;
+    var n = l.dates.length, mov = l.time ? hm(l.time) : (l.km / 4 + l.gain / 500), W = l.window || null, wt = WATCH[l.id] || null;
     var N = items.length, T = new Array(N), day = new Array(N), i, d = 0;
     var rise = function (k) { return l.weather[k] ? hm(l.weather[k].sunrise) : 6.5; };
     var sett = function (k) { return l.weather[k] ? hm(l.weather[k].sunset) : 19.5; };
@@ -610,11 +630,16 @@
       else if (k === 0) { o.dep = W ? W[1] : 11; o.arr = Math.min(o.dep + span, Math.max(dusk, o.dep + 0.5)); }
       else if (k === n - 1 && W) { o.arr = W[3]; o.dep = clamp(o.arr - span, 5.5, Math.max(5.5, o.arr - 0.5)); }
       else { o.dep = 8.25; o.arr = Math.min(o.dep + span, dusk); }
+      var wd = wt && wt.days.filter(function (x) { return l.dates.indexOf(x.date) === k; })[0];
+      if (wd) { o.dep = wd.start; o.arr = wd.end; o.watch = true; } // the watch knows when the day really began and ended
     });
     D.forEach(function (o, k) {
       var moving = o.rows.length - o.stay, reach = moving > 0 ? o.path[Math.max(0, moving - 1)] : 0, j;
       if (o.stay) reach = o.path[o.rows.length - o.stay]; // the hut itself is where the day's walking ends
-      for (j = 0; j < moving; j++) T[o.rows[j]] = 24 * k + o.dep + (reach ? Math.min(1, o.path[j] / reach) : 0) * (o.arr - o.dep);
+      for (j = 0; j < moving; j++) {
+        T[o.rows[j]] = 24 * k + o.dep + (reach ? Math.min(1, o.path[j] / reach) : 0) * (o.arr - o.dep);
+        if (o.watch) T[o.rows[j]] = clamp(watchAt(l, items[o.rows[j]].f * l.total).t, 24 * k + o.dep, 24 * k + o.arr); // and when each spot was reached
+      }
       if (!o.stay) return;
       var a = 24 * k + o.arr, ss = 24 * k + sett(k), sr = 24 * (k + 1) + rise(k + 1), dp = 24 * (k + 1) + D[k + 1].dep;
       var K = D[k + 1].rows.length ? [a, ss - 1, ss - 0.1, ss + 0.55, 24 * k + 23.6, sr - 0.7, sr + 0.25, dp] : [a, ss - 1, ss - 0.1, ss + 0.6, 24 * k + 22.8];
@@ -627,7 +652,7 @@
       }
     });
     for (i = 1; i < N; i++) if (!(T[i] >= T[i - 1])) T[i] = T[i - 1]; // time never runs backwards
-    return { T: T, est: !W };
+    return { T: T, est: !W && !wt };
   }
   function weatherAt(l, T) {
     var d = clamp(Math.floor(T / 24), 0, l.weather.length - 1), day = l.weather[d];
@@ -662,6 +687,9 @@
     var c = w.cloud * 100, sky = c < 15 ? (night ? 'clear night' : 'clear') : c < 40 ? (night ? 'mostly clear' : 'mostly sunny') : c < 65 ? 'partly cloudy' : c < 88 ? 'mostly cloudy' : 'overcast';
     if (w.rain > 0.04) sky = (w.rain < 0.6 ? 'light ' : '') + (w.snow ? 'snow' : 'rain');
     $('clock-wx').textContent = fmt(w.temp) + '°, ' + sky + ', gusts ' + fmt(w.gust) + ' km/h';
+    var g = watchAt(s.l, s.cur), moving = s.mode === 'follow' && g && g.hr != null && Math.abs(g.t - s.clockCur) < 0.5; // not while the story sits at the hut overnight
+    $('clock-watch').textContent = moving ? fmt(g.hr) + ' bpm, ' + fmt(g.kmh, 1) + ' km/h' + (Math.abs(g.vam) >= 80 ? (g.vam > 0 ? ', climbing ' : ', descending ') + fmt(Math.abs(g.vam)) + ' m/h' : '') : '';
+    $('clock-watch').hidden = !moving;
     // the sun's real path over the day, with the sun (or moon) where it is now
     var X = function (h) { return 6 + (h / 24) * 108; }, Y = function (alt) { return 31 - clamp(alt, -22, 70) * 0.4; };
     if (s.arcDay !== w.d) {
@@ -904,7 +932,49 @@
   function hideTip() { tip.hidden = true; }
 
   // Elevation profile along the bottom of the map. The marker on it is the hiker.
+  function hours(h) { var m = Math.round(h * 60); return Math.floor(m / 60) + ' h ' + ('0' + (m % 60)).slice(-2); }
+  function watchBlock(l) {
+    var w = WATCH[l.id];
+    if (!w) return '';
+    return '<section class="block"><h2>From the watch</h2>' + w.days.map(function (d, i) {
+      var p = parts(d.date);
+      return (w.days.length > 1 ? '<p class="note" style="margin-top:' + (i ? 18 : 0) + 'px"><b>Day ' + (i + 1) + ', ' + DOW3[p.dow] + ' ' + p.d + ' ' + MON[p.m] + '.</b> ' : '<p class="note">') +
+        'Started ' + clockText(d.start) + ', finished ' + clockText(d.end) + '.</p>' +
+        '<dl class="stats"><div><dt>Moving</dt><dd>' + hours(d.moving) + '</dd></div><div><dt>Heart rate</dt><dd>' + fmt(d.hr) + '<small>avg</small></dd></div>' +
+        '<div><dt>Peak</dt><dd>' + fmt(d.hrMax) + '<small>bpm</small></dd></div><div><dt>Burned</dt><dd>' + fmt(d.kcal) + '<small>kcal</small></dd></div></dl>';
+    }).join('') + '<p class="note" style="margin-top:12px">Recorded on my Garmin. The chart under the map can show heart rate, speed and wrist temperature along the route, and colours the route to match. The watch sits on warm skin, so its temperature reads well above the air.</p></section>';
+  }
+  function percentile(a, q) { var b = a.slice().sort(function (x, y) { return x - y; }); return b[Math.min(b.length - 1, Math.floor(q * b.length))]; }
+  function rampColor(ramp, u) {
+    u = clamp(u, 0, 1) * (ramp.length - 1); var i = Math.min(ramp.length - 2, Math.floor(u)), t = u - i, a = ramp[i], b = ramp[i + 1], c = '#';
+    for (var k = 1; k < 7; k += 2) { var v = Math.round(parseInt(a.substr(k, 2), 16) * (1 - t) + parseInt(b.substr(k, 2), 16) * t); c += ('0' + v.toString(16)).slice(-2); }
+    return c;
+  }
+  // Colour the route by what the chart shows: pale where the reading was low, dark where it was high.
+  function setEffort(l) {
+    if (!mapReady || !map.getLayer('effort')) return;
+    var w = WATCH[l.id], M = METRICS[stripMetric], a = w && stripMetric !== 'ele' ? w[stripMetric] : null;
+    if (!a || !story) { map.setLayoutProperty('effort', 'visibility', 'none'); return; }
+    var lo = percentile(a, 0.04), hi = percentile(a, 0.96), n = Math.min(70, a.length), g = ['interpolate', ['linear'], ['line-progress']], i;
+    for (i = 0; i < n; i++) { var k = Math.round(i / (n - 1) * (a.length - 1)); g.push(i / (n - 1), rampColor(M.ramp, (a[k] - lo) / (hi - lo || 1))); }
+    map.getSource('effort').setData({ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: l.track.map(function (p) { return [p[0], p[1]]; }) } });
+    map.setPaintProperty('effort', 'line-gradient', g);
+    map.setLayoutProperty('effort', 'visibility', 'visible');
+  }
+  function stripTabs(l) {
+    var w = WATCH[l.id], host = $('strip-tabs'); host.innerHTML = '';
+    if (!w || !w[stripMetric]) stripMetric = 'ele';
+    ['ele', 'hr', 'kmh', 'temp'].forEach(function (k) {
+      if (k !== 'ele' && !(w && w[k])) return;
+      var b = el('button', ''); b.type = 'button'; b.textContent = METRICS[k].label; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(k === stripMetric));
+      b.addEventListener('click', function () { stripMetric = k; drawProfile(l); setEffort(l); });
+      host.appendChild(b);
+    });
+  }
   function drawProfile(l) {
+    stripTabs(l);
+    if (stripMetric !== 'ele') return drawSeries(l);
+    $('strip-key').hidden = true;
     var host = $('strip-chart'); host.innerHTML = '';
     var W = Math.max(320, Math.round($('strip').clientWidth - 28)), H = 112, m = { t: 18, r: 10, b: 20, l: 40 };
     var total = l.total;
@@ -953,7 +1023,8 @@
       var pt = pointAt(l, dist), x = X(dist);
       me.setAttribute('cx', x); me.setAttribute('cy', Y(pt.p[2]));
       clipRect.setAttribute('width', x);
-      $('strip-now').textContent = fmt((dist / total) * l.km, 1) + ' km in, ' + fmt(pt.p[2]) + ' m';
+      var g = watchAt(l, dist);
+      $('strip-now').textContent = fmt((dist / total) * l.km, 1) + ' km in, ' + fmt(pt.p[2]) + ' m' + (g && g.hr != null ? ', ' + fmt(g.hr) + ' bpm' : '');
     };
     l._cursor(story ? story.cur : 0);
     var distAt = function (ev) {
@@ -972,6 +1043,62 @@
       if (!story) return;
       var f = distAt(ev) / total, best = null, bd = 9;
       story.rows.forEach(function (r) { var d = Math.abs(+r.dataset.f - f); if (d < bd) { bd = d; best = r; } });
+      if (best) { var bi = story.rows.indexOf(best); if (story.fly) { story.fly.u = bi; story.fly.hold = 0; flyArrive(bi); } else scrollToRow(bi); }
+    };
+  }
+
+  // The same strip, showing a reading from the watch instead of height.
+  function drawSeries(l) {
+    var host = $('strip-chart'); host.innerHTML = '';
+    var w = WATCH[l.id], M = METRICS[stripMetric], a = w[stripMetric], total = l.total, dg = M.digits || 0;
+    var W = Math.max(320, Math.round($('strip').clientWidth - 28)), H = 112, m = { t: 18, r: 10, b: 20, l: 40 };
+    var lo = Math.min.apply(null, a), hi = Math.max.apply(null, a), step = niceStep(hi - lo || 1, 3);
+    var y0 = Math.floor(lo / step) * step, y1 = Math.ceil(hi / step) * step; if (y1 === y0) y1 = y0 + step;
+    var X = function (d) { return m.l + (d / total) * (W - m.l - m.r); };
+    var Y = function (v) { return H - m.b - ((v - y0) / (y1 - y0)) * (H - m.t - m.b); };
+    var val = function (dist) { return watchAt(l, dist)[stripMetric]; };
+    var s = svg('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', 'aria-label': M.label + ' along the route, from ' + fmt(lo, dg) + ' to ' + fmt(hi, dg) + ' ' + M.unit });
+    for (var e = y0; e <= y1 + 1e-6; e += step) {
+      s.appendChild(svg('line', { x1: m.l, x2: W - m.r, y1: Y(e), y2: Y(e), stroke: LINE, 'stroke-width': 1 }));
+      s.appendChild(svg('text', { x: m.l - 6, y: Y(e) + 4, 'text-anchor': 'end' }, fmt(e, step < 1 ? 1 : 0)));
+    }
+    var kmStep = niceStep(l.km, 6);
+    for (var k = 0; k <= l.km + 1e-6; k += kmStep) s.appendChild(svg('text', { x: X((k / l.km) * total), y: H - 5, 'text-anchor': k === 0 ? 'start' : 'middle' }, k === 0 ? '0 km' : fmt(k, kmStep < 1 ? 1 : 0)));
+    var d = '', i;
+    for (i = 0; i < a.length; i++) d += (i ? 'L' : 'M') + X(Math.min(total, i * w.step)).toFixed(1) + ' ' + Y(a[i]).toFixed(1);
+    s.appendChild(svg('path', { d: d, fill: 'none', stroke: M.color, 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+    l.huts.forEach(function (h) { // where the hut sits along the way
+      if (h.label) return;
+      var hx = X(l.cum[h.idx]);
+      s.appendChild(svg('line', { x1: hx, x2: hx, y1: m.t - 4, y2: H - m.b, stroke: GRANITE, 'stroke-width': 1, 'stroke-dasharray': '2 3' }));
+      s.appendChild(svg('text', { x: hx, y: 10, 'text-anchor': hx > W - 80 ? 'end' : hx < m.l + 60 ? 'start' : 'middle', 'class': 'hutlabel' }, h.name));
+    });
+    var me = svg('circle', { r: 6, fill: M.color, stroke: '#fff', 'stroke-width': 2.5 });
+    s.appendChild(me);
+    var ghost = svg('g', { visibility: 'hidden' }), gl = svg('line', { y1: m.t - 6, y2: H - m.b, stroke: INK, 'stroke-width': 1 }), gc = svg('circle', { r: 4.5, fill: '#FFD100', stroke: INK, 'stroke-width': 2 });
+    ghost.appendChild(gl); ghost.appendChild(gc); s.appendChild(ghost);
+    $('strip-key').hidden = false; // a small key for the colours on the route
+    $('strip-key').title = 'The route on the map is coloured the same way'; $('strip-key').innerHTML = 'low<i style="background:linear-gradient(90deg,' + M.ramp.join(',') + ')"></i>high';
+    host.appendChild(s);
+    l._cursor = function (dist) {
+      var pt = pointAt(l, dist), v = val(dist);
+      me.setAttribute('cx', X(dist)); me.setAttribute('cy', Y(v));
+      $('strip-now').textContent = fmt((dist / total) * l.km, 1) + ' km in, ' + fmt(pt.p[2]) + ' m, ' + fmt(v, dg) + ' ' + M.unit;
+    };
+    l._cursor(story ? story.cur : 0);
+    var distAt = function (ev) { var r = s.getBoundingClientRect(), px = ((ev.clientX - r.left) / r.width) * W; return Math.min(total, Math.max(0, ((px - m.l) / (W - m.l - m.r)) * total)); };
+    host.onpointermove = function (ev) {
+      var dist = distAt(ev), pt = pointAt(l, dist), x = X(dist), r = s.getBoundingClientRect(), v = val(dist), g = watchAt(l, dist);
+      gl.setAttribute('x1', x); gl.setAttribute('x2', x); gc.setAttribute('cx', x); gc.setAttribute('cy', Y(v));
+      ghost.setAttribute('visibility', 'visible');
+      var dd = ensureDot(); if (dd) dd.setLngLat([pt.p[0], pt.p[1]]).addTo(map);
+      showTip('<b>' + fmt(v, dg) + ' ' + M.unit + '</b><br>' + fmt((dist / total) * l.km, 1) + ' km in, ' + fmt(pt.p[2]) + ' m<br>' + clockText(g.t) + '<br>Select to jump the story here', r.left + (x / W) * r.width, r.top + (Y(v) / H) * r.height);
+    };
+    host.onpointerleave = function () { hideTip(); ghost.setAttribute('visibility', 'hidden'); if (dot) { dot.remove(); dot = null; } };
+    host.onclick = function (ev) {
+      if (!story) return;
+      var f = distAt(ev) / total, best = null, bd = 9;
+      story.rows.forEach(function (r) { var dd = Math.abs(+r.dataset.f - f); if (dd < bd) { bd = dd; best = r; } });
       if (best) { var bi = story.rows.indexOf(best); if (story.fly) { story.fly.u = bi; story.fly.hold = 0; flyArrive(bi); } else scrollToRow(bi); }
     };
   }

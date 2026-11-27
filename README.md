@@ -68,3 +68,10 @@ The Live button draws the present snow line, valley fog, cloud and storms over S
 - Satellite switch: EUMETSAT EUMETView WMS, layer `mtg_fd:rgb_geocolour`, pinned to the latest time in its capabilities document.
 
 Snow line and fog top are estimated from the model points (see `level()` and `isFog()`); they are not measurements.
+
+## Watch data (Garmin)
+
+- `.github/workflows/garmin-import.yml` runs `tools/garmin_import.py` on GitHub: it reads the logbook dates, fetches those days' recordings from Garmin's Personal API, and commits a trimmed copy to `source/garmin/` on the `garmin-import` branch. The key is the repository secret `GARMIN_PERSONAL_API_KEY`; it expires and must be replaced when Garmin says so. Logs print counts only.
+- `python3 tools/make_watch.py` lays those recordings along each route in 100 m steps and writes `site/js/watch.js` (time, heart rate, speed, climb rate, wrist temperature, day summaries).
+- Trips with no recording (Hundstein, Glattalp, Albert-Heim) simply have no watch features.
+- For a new logbook: add the logbook, push to `garmin-import` (or run the workflow by hand), copy the new file from that branch, run `make_watch.py`.
