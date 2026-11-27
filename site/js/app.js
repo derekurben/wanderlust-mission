@@ -339,6 +339,7 @@
   }
   function openPanel(html, wide) {
     endStory();
+    if (window.WMLive) window.WMLive.pause(!!wide); // a logbook has its own light; other panels leave the live view on
     $('panel').classList.toggle('is-story', !!wide);
     $('panel-body').innerHTML = html;
     $('panel').hidden = false;
@@ -349,6 +350,7 @@
   }
   function closePanel() {
     endStory();
+    if (window.WMLive) window.WMLive.pause(false);
     $('panel').hidden = true;
     document.body.classList.remove('panel-open');
     $('nav-mission').removeAttribute('aria-pressed');
@@ -1086,6 +1088,7 @@
       '<p>Huts that need real mountaineering skills or equipment wait until I have built up to them. For now I go for the ones reachable on foot in summer or on skis in winter.</p>' +
       '<p>There is no deadline. Eight to ten huts a year puts the finish 15 to 20 years out.</p></section>' +
       '<section class="block"><h2>Reading the map</h2>' +
+      '<p>The Live button on the map draws the present conditions over the whole country: the snow line, fog in the valleys, cloud and thunderstorms, from the MeteoSwiss forecast model, with the sun where it is right now. Its Satellite switch shows the latest Meteosat picture instead.</p>' +
       '<p>Red lines are routes I recorded on my watch. Each numbered pin is a hut and opens its logbook. A white pin marks a hut that is not on the SAC list, and the small white dots are the SAC huts still to come. Inside a logbook, scroll the story and the hiker walks the route beside it, in the light and weather of that day. The Light button switches that off.</p>' +
       '<p>Drag to pan, scroll to zoom, and hold the right mouse button or use two fingers to tilt and turn. Maps are from swisstopo. Terrain is from Mapterhorn.</p></section></div>', false);
     afterSidePanel();
@@ -1335,5 +1338,5 @@
   window.__wm = { open: openLog, logs: LOGS, map: function () { return map; }, story: function () { return story; }, fly: startFly, replay: startReplay, light: setLight, pano: startPano };
   window.WMApp = { LOGS: LOGS, BY_ID: BY_ID, HUTS: HUTS, meta: WM.meta, fmt: fmt, esc: esc, el: el, svg: svg, dateRange: dateRange, parts: parts, MON: MON, small: small,
     openLog: openLog, closePanel: closePanel, closeGallery: closeGallery, startReplay: startReplay, focusHut: focusHut, showTip: showTip, hideTip: hideTip,
-    panelOpen: function () { return !$('panel').hidden; } };
+    panelOpen: function () { return !$('panel').hidden; }, map: function () { return map; }, mapReady: function () { return mapReady; } };
 })();

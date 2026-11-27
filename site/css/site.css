@@ -472,6 +472,23 @@ body.fly-open .mapctl { right: 16px; }
 body.fly-open .maplibregl-ctl-bottom-right { right: 0; bottom: 216px; }
 body.fly-open .flycard { bottom: 232px; }
 
+/* live conditions */
+#live[aria-pressed="true"] { background: #1F6FB2; color: #fff; }
+.livechip {
+  position: fixed; z-index: 15; top: calc(var(--bar-h) + 60px); right: 16px; width: min(360px, calc(100vw - 32px));
+  display: flex; flex-direction: column; gap: 10px; padding: 12px 14px;
+  background: var(--paper); border-radius: 3px; border-top: 3px solid #1F6FB2; box-shadow: var(--shadow);
+}
+body.panel-open .livechip { right: calc(var(--panel-w) + 16px); }
+.livechip p { display: flex; flex-direction: column; gap: 3px; }
+.livechip b { font-stretch: 76%; font-weight: 800; font-size: 19px; line-height: 1.1; }
+.livechip span { font-size: 14px; line-height: 1.35; }
+.livechip small { font-size: 12px; line-height: 1.35; color: var(--granite); }
+.livechip-btns { display: flex; gap: 8px; }
+.livechip .btn { padding: 7px 11px; font-size: 13px; }
+.livechip .btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+body.replaying .livechip, body.story-open .livechip { display: none; }
+
 /* mission replay */
 .replay-btn {
   position: fixed; z-index: 15; left: calc(var(--rail-w) + 16px); bottom: 112px;
@@ -539,6 +556,9 @@ body.replaying .mapctl { display: none; }
   .clock b { font-size: 14px; }
   .clock span { font-size: 12px; }
   body.fly-open .clock { bottom: auto; top: calc(var(--bar-h) + 56px); }
+  .livechip, body.panel-open .livechip { top: auto; bottom: 150px; right: 12px; left: 12px; width: auto; padding: 10px 12px; gap: 8px; }
+  .livechip span { font-size: 13px; }
+  .livechip small { display: none; }
   .peak { font-size: 11px; }
   .peak b { font-size: 11.5px; }
   .hud { left: 10px; right: 10px; bottom: 10px; transform: none; max-width: none; justify-content: space-between; padding: 10px 10px 10px 14px; gap: 10px; }
