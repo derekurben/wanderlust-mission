@@ -79,7 +79,11 @@
   }
   // Fog or a low stratus deck: low cloud whose base is close to the ground and not high in the mountains.
   function isFog(p) { return p.lo >= 60 && p.base != null && p.base < 1750 && p.base - p.e < 900; }
-  function edge(x, y, w, h, m) { return smooth(Math.min(x, y, w - 1 - x, h - 1 - y), 0, m); } // fade out at the rim of the drawn area
+  // Fade out around Switzerland in a loose, uneven oval, so the drawn area never ends in a straight line.
+  function edge(x, y, w, h, n) {
+    var u = (x / w - 0.47) / 0.47, v = (y / h - 0.5) / 0.46, r = Math.sqrt(u * u + v * v) + (n - 0.5) * 0.34;
+    return 1 - smooth(r, 0.62, 0.98);
+  }
   function build(pts) {
     var n = NX * NY, f = { snow: new Float32Array(n), top: new Float32Array(n), fog: new Float32Array(n), cov: new Float32Array(n), thick: new Float32Array(n), rain: new Float32Array(n), storm: new Float32Array(n) };
     for (var j = 0; j < NY; j++) for (var i = 0; i < NX; i++) {
@@ -138,7 +142,7 @@
       var gy = gridY(y, GH);
       for (x = 0; x < GW; x++) {
         var k = y * GW + x, e = dem[k], gx = gxs[x], n = noise[((y & 255) << 8) | (x & 255)] - 0.5;
-        var line = snow(gx, gy) + n * 260, rim = edge(x, y, GW, GH, 90);
+        var line = snow(gx, gy) + n * 260, rim = edge(x, y, GW, GH, noise[(((y >> 3) & 255) << 8) | ((x >> 3) & 255)]);
         var sa = smooth(e, line - 90, line + 170) * 0.86;                   // snow: thin at the line, solid above it
         if (sa > 0.01 && x > 0 && x < GW - 1 && y > 0 && y < GH - 1) {      // steep rock sheds its snow
           var slope = (Math.abs(dem[k + 1] - dem[k - 1]) + Math.abs(dem[k + GW] - dem[k - GW])) / 600;
@@ -192,7 +196,7 @@
     clouds._cov = new Float32Array(CW * CH); clouds._thick = new Float32Array(CW * CH); clouds._rim = new Float32Array(CW * CH); clouds._storms = [];
     for (var y = 0, k = 0; y < CH; y++) { var gy = gridY(y, CH); for (var x = 0; x < CW; x++, k++) {
       var gx = gridX(x, CW), s = storm(gx, gy), r = rain(gx, gy);
-      clouds._rim[k] = edge(x, y, CW, CH, 26);
+      clouds._rim[k] = edge(x, y, CW, CH, noise[(((y * 2) & 255) << 8) | ((x * 2) & 255)]);
       clouds._cov[k] = clamp(cov(gx, gy) + s * 0.3, 0, 1); clouds._thick[k] = clamp(thick(gx, gy) + Math.min(0.5, r * 0.25) + s * 0.5, 0, 1);
       if (s > 0.5 && (x % 9 === 0) && (y % 9 === 0)) clouds._storms.push([x, y]);
     } }
