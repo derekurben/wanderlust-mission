@@ -82,7 +82,7 @@
   // Fade out around Switzerland in a loose, uneven oval, so the drawn area never ends in a straight line.
   function edge(x, y, w, h, n) {
     var u = (x / w - 0.47) / 0.47, v = (y / h - 0.5) / 0.46, r = Math.sqrt(u * u + v * v) + (n - 0.5) * 0.34;
-    return 1 - smooth(r, 0.62, 0.98);
+    return 1 - smooth(r, 0.72, 1.06);
   }
   function build(pts) {
     var n = NX * NY, f = { snow: new Float32Array(n), top: new Float32Array(n), fog: new Float32Array(n), cov: new Float32Array(n), thick: new Float32Array(n), rain: new Float32Array(n), storm: new Float32Array(n) };
@@ -228,7 +228,7 @@
     map.addSource('live-ground', { type: 'canvas', canvas: ground, coordinates: CORNERS, animate: false });
     map.addSource('live-clouds', { type: 'canvas', canvas: clouds, coordinates: CORNERS, animate: false });
     map.addSource('live-sat', { type: 'raster', tileSize: 512, maxzoom: 9, attribution: 'Satellite: © EUMETSAT',
-      tiles: ['https://view.eumetsat.int/geoserver/wms?service=WMS&version=1.3.0&request=GetMap&layers=mtg_fd:rgb_geocolour&styles=&format=image/jpeg&crs=EPSG:3857&width=512&height=512&bbox={bbox-epsg-3857}'] });
+      tiles: ['https://view.eumetsat.int/geoserver/wms?service=WMS&version=1.3.0&request=GetMap&layers=mtg_fd:rgb_geocolour&styles=&format=image/jpeg&crs=EPSG:3857&width=512&height=512&bbox={bbox-epsg-3857}'] }); // the exact picture is named in satLatest()
     // snow and fog lie on the ground under the sun shading; cloud floats over the shading; the colour wash covers both
     map.addLayer({ id: 'live-sat', type: 'raster', source: 'live-sat', layout: { visibility: 'none' }, paint: { 'raster-fade-duration': 300 } }, 'sunshade');
     map.addLayer({ id: 'live-ground', type: 'raster', source: 'live-ground', layout: { visibility: 'none' }, paint: { 'raster-fade-duration': 0, 'raster-opacity': 0.96 } }, 'sunshade');
@@ -253,6 +253,7 @@
     if (data) { data.pts.forEach(function (p) { cover += p.c; }); cover /= data.pts.length * 100; }
     window.WMSky.apply(map, { az: sn.az, alt: sat ? Math.max(sn.alt, 30) : sn.alt, cloud: sat ? 0 : cover * 0.5, rain: 0, snow: false, gust: 10 }); // the satellite picture carries its own light
     if (map.getLayer('sunshade') && sat) map.setLayoutProperty('sunshade', 'visibility', 'none');
+    if (!sat) map.setPaintProperty('tint', 'background-opacity', map.getPaintProperty('tint', 'background-opacity') * 0.6); // snow and fog take colour strongly: go easy
     return { sun: sn, clock: z.hour + ':' + z.minute };
   }
 
@@ -275,8 +276,9 @@
   }
   function chip(msg) {
     var c = $('livechip'), t = data ? data.time.slice(11, 16) : '';
-    $('live-title').textContent = sat ? 'Satellite, latest picture' : (busy ? 'Live conditions' : 'Live, ' + t);
-    $('live-text').textContent = msg || (sat ? 'Meteosat, from EUMETSAT. A new picture every 10 minutes, usually 20 to 30 minutes old. Detail is about 1 km, so it is best zoomed out.' : (fields ? describe() : ''));
+    var st = satAt ? new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Zurich', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(satAt) : '';
+    $('live-title').textContent = sat ? 'Satellite' + (st ? ', ' + st : '') : (busy ? 'Live conditions' : 'Live, ' + t);
+    $('live-text').textContent = msg || (sat ? 'The latest Meteosat picture, from EUMETSAT. A new one arrives every 10 minutes. Detail is about 1 km, so it is best zoomed out. By night it shows cloud and city lights.' : (fields ? describe() : ''));
     $('live-src').textContent = sat ? '' : 'From the MeteoSwiss forecast model, read through Open-Meteo. It is a model of now, not a measurement.';
     $('live-sat').setAttribute('aria-pressed', String(sat));
     c.hidden = !(on && !paused);
@@ -315,7 +317,26 @@
   }
 
   $('live').addEventListener('click', function () { set(!on); });
-  $('live-sat').addEventListener('click', function () { sat = !sat; show(); chip(); });
+  // Every tile must come from the same satellite picture, so ask which one is the latest and name it.
+  var SAT = 'https://view.eumetsat.int/geoserver/wms?service=WMS&version=1.3.0&request=GetMap&layers=mtg_fd:rgb_geocolour&styles=&format=image/jpeg&crs=EPSG:3857&width=512&height=512&bbox={bbox-epsg-3857}';
+  var satAt = null, satAsked = 0;
+  function satLatest() {
+    if (Date.now() - satAsked < 8 * 60000) return Promise.resolve(satAt);
+    satAsked = Date.now();
+    return fetch('https://view.eumetsat.int/geoserver/wms?service=WMS&version=1.3.0&request=GetCapabilities').then(function (r) { return r.text(); }).then(function (t) {
+      var i = t.indexOf('<Name>mtg_fd:rgb_geocolour</Name>'), m = i < 0 ? null : /<Dimension name="time"[^>]*>[^<\/]*\/([^<\/]+)\/[^<]*</.exec(t.slice(i, i + 8000));
+      if (!m) throw new Error('no time');
+      satAt = new Date(m[1]);
+      A.map().getSource('live-sat').setTiles([SAT + '&time=' + encodeURIComponent(satAt.toISOString())]);
+      return satAt;
+    });
+  }
+  $('live-sat').addEventListener('click', function () {
+    sat = !sat;
+    if (!sat) { show(); chip(); return; }
+    chip('Finding the latest satellite picture…');
+    satLatest().then(function () { if (sat && on) { show(); chip(); } }).catch(function () { sat = false; show(); chip('The satellite service is not reachable right now.'); });
+  });
   $('live-close').addEventListener('click', function () { set(false); });
   window.WMLive = { set: set, pause: pause, isOn: function () { return on; }, state: function () { return { on: on, paused: paused, sat: sat, data: data, fields: fields }; } };
 })();
