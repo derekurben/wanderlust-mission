@@ -75,3 +75,7 @@ Snow line and fog top are estimated from the model points (see `level()` and `is
 - `python3 tools/make_watch.py` lays those recordings along each route in 100 m steps and writes `site/js/watch.js` (time, heart rate, speed, climb rate, wrist temperature, day summaries).
 - Trips with no recording (Hundstein, Glattalp, Albert-Heim) simply have no watch features.
 - For a new logbook: add the logbook, push to `garmin-import` (or run the workflow by hand), copy the new file from that branch, run `make_watch.py`.
+
+## Hut details
+
+`source/hut_info_raw.tsv` holds beds, winter room, website and booking link (OpenStreetMap) and the nearest public transport stop (transport.opendata.ch, height from swisstopo) for every hut, gathered 27 Nov 2026. `python3 tools/make_hutinfo.py` turns it into `site/js/hutinfo.js`. A white dot on the map opens the card; each logbook's hut section shows the same facts. The stop is the closest by straight line, which is not always the usual approach.

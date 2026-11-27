@@ -486,6 +486,26 @@ body.fly-open .mapctl { right: 16px; }
 body.fly-open .maplibregl-ctl-bottom-right { right: 0; bottom: 216px; }
 body.fly-open .flycard { bottom: 232px; }
 
+/* hut details card */
+.hutcard {
+  position: fixed; z-index: 16; top: calc(var(--bar-h) + 14px); left: calc(var(--rail-w) + 16px); width: 340px; max-height: calc(100vh - var(--bar-h) - 150px); overflow-y: auto;
+  background: var(--paper); border-top: 4px solid var(--red); border-radius: 3px; box-shadow: 0 12px 34px rgba(27, 36, 44, .3); padding: 14px 16px 16px;
+  transition: left .28s cubic-bezier(.2, .7, .2, 1);
+}
+body.rail-shut .hutcard { left: 16px; }
+.hutcard .card-title { padding-right: 34px; }
+.hutcard-close { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; box-shadow: none; background: var(--snow); }
+.hutcard .huts { margin-top: 12px; }
+.hutcard .huts li, .hut-more .huts li { align-items: flex-start; gap: 14px; }
+.hutcard .huts li b, .hut-more .huts li b { flex: none; font-size: 13.5px; }
+.hutcard .huts li span, .hut-more .huts li span { font-size: 13.5px; }
+.hut-links { margin-top: 12px; flex-wrap: wrap; gap: 6px; }
+.hut-links .btn { padding: 7px 11px; font-size: 13px; text-decoration: none; }
+.hutcard .actions { margin-top: 12px; }
+.hut-more { margin-top: 16px; }
+.hut-more h3 { font-stretch: 76%; font-weight: 800; font-size: 18px; }
+body.story-open .hutcard, body.replaying .hutcard { display: none; }
+
 /* live conditions */
 #live[aria-pressed="true"] { background: #1F6FB2; color: #fff; }
 .livechip {
@@ -573,6 +593,7 @@ body.replaying .mapctl { display: none; }
   .livechip, body.panel-open .livechip { top: auto; bottom: 150px; right: 12px; left: 12px; width: auto; padding: 10px 12px; gap: 8px; }
   .livechip span { font-size: 13px; }
   .livechip small { display: none; }
+  .hutcard, body.rail-shut .hutcard { top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: 62vh; border-radius: 0; z-index: 27; box-shadow: 0 -8px 26px rgba(27, 36, 44, .28); }
   .peak { font-size: 11px; }
   .peak b { font-size: 11.5px; }
   .hud { left: 10px; right: 10px; bottom: 10px; transform: none; max-width: none; justify-content: space-between; padding: 10px 10px 10px 14px; gap: 10px; }

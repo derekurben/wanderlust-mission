@@ -387,6 +387,7 @@
     var l = BY_ID[id];
     if (!l) return;
     if (replay) stopReplay(true);
+    closeHutCard();
     hideCard(); hideTip();
     active = id; hot = null;
     $('nav-mission').removeAttribute('aria-pressed');
@@ -441,6 +442,10 @@
         l.huts.map(function (h) {
           return '<li><b>' + esc(h.label || h.name) + (h.sac ? '<span class="tag">SAC</span>' : '<span class="tag is-off">not a SAC hut</span>') + '</b><span>' + fmt(h.ele) + ' m</span></li>';
         }).join('') + '</ul>' +
+        l.huts.map(function (h) {
+          var m = null; HUTS.forEach(function (x) { if (x.log === l.id && hav(x.at, h.at) < 250) m = x; });
+          return m ? '<div class="hut-more">' + (l.huts.length > 1 ? '<h3>' + esc(m.n) + '</h3>' : '') + '<p class="note">' + esc(m.p) + ', ' + (CANTONS[m.c] || m.c) + '</p>' + hutFacts(m) + '</div>' : '';
+        }).join('') +
         (l.track ? '<div class="actions" style="margin-top:14px">' + l.huts.map(function (h, k) {
           return '<button type="button" class="btn is-quiet" data-pano="' + k + '">Look around from ' + esc(h.label ? 'the high point' : h.name) + '</button>';
         }).join('') + '</div>' : '') + '<p class="note" style="margin-top:12px">' + (sac ? sac + ' of the 153 counted here.' : 'This one does not count toward the 153.') + '</p></section>' : '') +
@@ -1216,6 +1221,7 @@
       '<p>There is no deadline. Eight to ten huts a year puts the finish 15 to 20 years out.</p></section>' +
       '<section class="block"><h2>Reading the map</h2>' +
       '<p>The Live button on the map draws the present conditions over the whole country: the snow line, fog in the valleys, cloud and thunderstorms, from the MeteoSwiss forecast model, with the sun where it is right now. Its Satellite switch shows the latest Meteosat picture instead.</p>' +
+      '<p>Select any white dot for that hut’s details: height, beds, the nearest public transport stop, and links to its website and booking page. Hut details come from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors.</p>' +
       '<p>Red lines are routes I recorded on my watch. Each numbered pin is a hut and opens its logbook. A white pin marks a hut that is not on the SAC list, and the small white dots are the SAC huts still to come. Inside a logbook, scroll the story and the hiker walks the route beside it, in the light and weather of that day. The Light button switches that off.</p>' +
       '<p>Drag to pan, scroll to zoom, and hold the right mouse button or use two fingers to tilt and turn. Maps are from swisstopo. Terrain is from Mapterhorn.</p></section></div>', false);
     afterSidePanel();
@@ -1231,19 +1237,55 @@
     map.addLayer({ id: 'ghost', type: 'circle', source: 'ghosts', paint: {
       'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.4, 9, 4.6, 13, 7.5],
       'circle-color': '#FFFFFF', 'circle-opacity': 0.92, 'circle-stroke-color': '#3A454E', 'circle-stroke-width': 1.5, 'circle-stroke-opacity': 0.9 } });
+    map.addSource('hutpick', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+    map.addLayer({ id: 'hutpick', type: 'circle', source: 'hutpick', paint: { 'circle-radius': 11, 'circle-color': '#FFFFFF', 'circle-opacity': 0.35, 'circle-stroke-color': RED, 'circle-stroke-width': 3 } });
     map.addLayer({ id: 'ghost-hit', type: 'circle', source: 'ghosts', paint: { 'circle-radius': 13, 'circle-color': '#000', 'circle-opacity': 0 } });
-    var words = function (h) { return '<b>' + esc(h.n) + '</b><br>' + fmt(h.ele) + ' m, ' + esc(h.p) + ' (' + h.c + ')<br>Not visited yet'; };
+    var words = function (h) { return '<b>' + esc(h.n) + '</b><br>' + fmt(h.ele) + ' m, ' + esc(h.p) + ' (' + h.c + ')<br>Not visited yet. Select for details'; };
     map.on('mousemove', 'ghost-hit', function (e) {
       if (!e.features.length || story) return;
       map.getCanvas().style.cursor = 'pointer';
       showTip(words(HUTS[e.features[0].properties.i]), e.originalEvent.clientX, e.originalEvent.clientY - 6);
     });
     map.on('mouseleave', 'ghost-hit', function () { map.getCanvas().style.cursor = ''; hideTip(); });
-    map.on('click', 'ghost-hit', function (e) { // a tap on a phone has no hover, so show the same words
+    map.on('click', 'ghost-hit', function (e) {
       if (!e.features.length || story) return;
-      showTip(words(HUTS[e.features[0].properties.i]), e.originalEvent.clientX, e.originalEvent.clientY - 6);
-      clearTimeout(addGhosts.t); addGhosts.t = setTimeout(hideTip, 3200);
+      hideTip(); openHutCard(e.features[0].properties.i);
     });
+    map.on('click', function (e) { // a click on bare map puts the card away
+      if ($('hutcard').hidden) return;
+      if (!map.queryRenderedFeatures(e.point, { layers: ['ghost-hit'] }).length) closeHutCard();
+    });
+  }
+
+  // ---------- hut details: every hut on the list, visited or not ----------
+  var HUTINFO = window.WM_HUTINFO || {};
+  var CANTONS = { VS: 'Valais', GR: 'Graubünden', BE: 'Bern', UR: 'Uri', TI: 'Ticino', GL: 'Glarus', SG: 'St. Gallen', OW: 'Obwalden', SZ: 'Schwyz', VD: 'Vaud', AI: 'Appenzell Innerrhoden' };
+  function hutFacts(h) {
+    var f = HUTINFO[h.n] || {}, rows = '', links = '';
+    if (f.beds) rows += '<li><b>Beds</b><span>' + fmt(f.beds) + (f.winter ? ', winter room ' + fmt(f.winter) : '') + '</span></li>';
+    else if (f.winter) rows += '<li><b>Winter room</b><span>' + fmt(f.winter) + ' beds</span></li>';
+    if (f.food) rows += '<li><b>Meals</b><span>Served when the hut is staffed</span></li>';
+    if (f.stop) rows += '<li><b>Nearest stop</b><span>' + esc(f.stop.n) + '<br>' + fmt(f.stop.km, 1) + ' km as the crow flies' +
+      (f.stop.ele != null ? ', ' + fmt(Math.abs(h.ele - f.stop.ele)) + ' m ' + (h.ele >= f.stop.ele ? 'below' : 'above') + ' the hut' : '') + '</span></li>';
+    if (f.web) links += '<a class="btn is-quiet" href="' + esc(f.web) + '" target="_blank" rel="noopener">Hut website</a>';
+    if (f.book) links += '<a class="btn is-quiet" href="' + esc(f.book) + '" target="_blank" rel="noopener">Book a bed</a>';
+    links += '<a class="btn is-quiet" href="https://map.geo.admin.ch/?swisssearch=' + h.at[1] + ',' + h.at[0] + '" target="_blank" rel="noopener">swisstopo map</a>';
+    return (rows ? '<ul class="huts is-facts">' + rows + '</ul>' : '') + '<div class="actions hut-links">' + links + '</div>';
+  }
+  function openHutCard(i) {
+    var h = HUTS[i];
+    if (!h) return;
+    $('hutcard-body').innerHTML = '<p class="card-kicker">' + (h.log ? 'Hut ' + h.no + ' of ' + WM.meta.total + ', reached ' + dateRange([h.date]) : 'Not visited yet') + '</p>' +
+      '<h3 class="card-title">' + esc(h.n) + '</h3><p class="card-sub">' + fmt(h.ele) + ' m, ' + esc(h.p) + ', ' + (CANTONS[h.c] || h.c) + '</p>' + hutFacts(h) +
+      (h.log ? '<div class="actions"><button type="button" class="btn" id="hutcard-log">Read the logbook</button></div>' : '') +
+      '<p class="card-hint">Beds and links from OpenStreetMap. The stop is simply the closest one on the map, from the Swiss timetable, and is not always the usual way in. For the staffed season, see the hut’s own site.</p>';
+    if (h.log) $('hutcard-log').addEventListener('click', function () { closeHutCard(); openLog(h.log); });
+    $('hutcard').hidden = false;
+    if (mapReady) { map.getSource('hutpick').setData({ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: h.at } }); }
+  }
+  function closeHutCard() {
+    $('hutcard').hidden = true;
+    if (mapReady && map.getSource('hutpick')) map.getSource('hutpick').setData({ type: 'FeatureCollection', features: [] });
   }
   function focusHut(i) {
     var h = HUTS[i];
@@ -1253,8 +1295,7 @@
     map.flyTo({ center: h.at, zoom: 11.6, pitch: 55, padding: padded(0), duration: reduceMotion ? 0 : 2200 });
     map.once('moveend', function () {
       var pt = map.project(h.at), r = map.getCanvas().getBoundingClientRect();
-      showTip('<b>' + esc(h.n) + '</b><br>' + fmt(h.ele) + ' m, ' + esc(h.p) + ' (' + h.c + ')<br>Not visited yet', r.left + pt.x, r.top + pt.y - 12);
-      setTimeout(hideTip, 4500);
+      openHutCard(i);
     });
   }
   function setMeter(n) {
@@ -1398,6 +1439,7 @@
   $('meter').addEventListener('click', openMission);
   $('nav-about').addEventListener('click', openAbout);
   $('panel-close').addEventListener('click', closePanel);
+  $('hutcard-close').addEventListener('click', closeHutCard);
   $('replay').addEventListener('click', startReplay);
   $('light').addEventListener('click', function () { setLight(this.getAttribute('aria-pressed') !== 'true'); });
   $('nav-menu').addEventListener('click', function () {
@@ -1420,6 +1462,7 @@
     if (e.key === ' ' && story && story.fly && !/^(BUTTON|A|INPUT|VIDEO)$/.test(e.target.tagName)) { e.preventDefault(); flyPlay(!story.fly.playing); return; }
     if (e.key !== 'Escape') return;
     if (!$('gallery').hidden) closeGallery();
+    else if (!$('hutcard').hidden) closeHutCard();
     else if (replay) stopReplay();
     else if (pano) stopPano();
     else if (story && story.fly) stopFly();

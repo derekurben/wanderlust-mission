@@ -1,0 +1,151 @@
+hut	osm_name	beds	winter_room	website	booking	food	osm_type	stop	stop_m	stop_ele
+Hundsteinhütte	Hundsteinhütte SAC	42	12	https://www.hundstein.ch/	https://hut-reservation.org/reservation/book-hut/32/wizard	yes	alpine_hut	Stauberen	2448	1741
+Chamanna da Grialetsch	Grialetschhütte	58	10	https://www.grialetsch.ch/	https://hut-reservation.org/reservation/book-hut/444/wizard	yes	alpine_hut	Davos Dischma, Dürrboden	3194	2004
+Glattalphütte	Glattalphütte	51	12	https://www.glattalphuette.ch/	https://hut-reservation.org/reservation/book-hut/39/wizard	yes	alpine_hut	Glattalp	222	1871
+Lidernenhütte	Lidernenhütte SAC	87	27	https://www.lidernen.ch/	https://hut-reservation.org/reservation/book-hut/5/wizard	yes	alpine_hut	Riemenstalden, Chäppeliberg	1354	1189
+Voralphütte	Voralphütte SAC	40	18	https://www.voralphuette.ch	https://hut-reservation.org/reservation/book-hut/259/wizard	yes	alpine_hut	Göschenen, Abzw. Voralp	4650	1402
+Spitzmeilenhütte	Spitzmeilenhütte	50	8	https://www.spitzmeilenhuette.ch/		yes	alpine_hut	Maschgenkamm	3967	2008
+Leglerhütte	Leglerhütte	54	6	http://www.leglerhuette.ch	https://hut-reservation.org/reservation/book-hut/13/wizard	yes	alpine_hut	Mettmen	3675	1597
+Capanna Piansecco	Capanna Piansecco	46	20	https://www.capannapiansecco.ch/	https://hut-reservation.org/reservation/book-hut/399/wizard	yes	alpine_hut	All'Acqua	964	1615
+Salbithütte	Salbithütte	58	10	https://salbit.ch/	https://hut-reservation.org/reservation/book-hut/227/wizard	yes	alpine_hut	Göschenen, Grit	1440	1195
+Sewenhütte	Sewenhütte SAC	62	10	https://www.sewenhuette.ch/	https://hut-reservation.org/reservation/book-hut/269/wizard	yes	alpine_hut	Meien, Gorezmettlen	1099	1620
+Glärnischhütte	Glärnischhütte	90	20	https://www.glhuette.ch/		yes	alpine_hut	Klöntal, Vorauen	3040	850
+Fridolinshütten	Fridolinshütte	50	12	http://www.fridolinshuette.ch		yes	alpine_hut	Urnerboden, Klus	7750	1690
+Grünhornhütte				https://www.sac-toedi.ch/grünhornhütte				Urnerboden, Klus	8193	1690
+Planurahütte	Planurahütte	41	6	https://planurahuette.ch/		yes	alpine_hut	Urnerboden, Klus	5417	1690
+Rugghubelhütte	Rugghubelhütte SAC	85	19	https://www.rugghubel.ch/	https://hut-reservation.org/reservation/book-hut/41/wizard	yes	alpine_hut	Chrüzhütte	3536	1715
+Albert-Heim-Hütte	Albert-Heim-Hütte SAC	64	8	https://www.albertheimhuette.ch		yes	alpine_hut	Tiefenbach (Furka)	1810	2102
+Dammahütte	Dammahütte SAC	20	20	https://dammahuette.ch/	https://hut-reservation.org/reservation/book-hut/228/wizard	yes	alpine_hut	Göscheneralp, Dammagletscher	3194	1783
+Kröntenhütte	Kröntenhütte	80	30	https://www.kroentenhuette.com/	https://hut-reservation.org/reservation/book-hut/274/wizard	yes	alpine_hut	Brüsti	5366	1529
+Aarbiwak	Aarbiwak	17	17	https://www.sac-pilatus.ch/	https://hut-reservation.org/reservation/book-hut/603/wizard		wilderness_hut	Pfingstegg	10043	1389
+Almagellerhütte	Almagellerhütte	120	9	https://www.almagellerhuette.ch/	https://hut-reservation.org/reservation/book-hut/208/wizard	yes	alpine_hut	Heidbodme	3769	2344
+Arbenbiwak								Zermatt Schwarzsee	5584	2582
+Balmhornhütte	Balmhornhütte			http://www.sac-altels.ch/huetten/balmhornhuette.php			alpine_hut	Selden, Gasthaus Steinbock	2782	1546
+Baltschiederklause	Baltschiederklause		no	https://www.rhone.ch/baltschiederklause			alpine_hut	Fafleralp	4861	1766
+Berglihütte	Berglihütte			http://www.sac-bern.ch			alpine_hut	Jungfraujoch	3641	3488
+Bergseehütte	Bergseehütte SAC	65	14	http://www.bergsee.ch		yes	alpine_hut	Göscheneralp, Dammagletscher	1433	1783
+Binntalhütte	Binntalhütte	50	48	https://cabane-binntal.ch/	https://hut-reservation.org/reservation/book-hut/264/wizard	yes	alpine_hut	Binn, Brunnebiel	3945	1845
+Bivouac au Col de la Dent Blanche	Col de la Dent Blanche CAS Bivouac	15	15	https://www.cas-jaman.ch/cabanes/bivouac-de-la-dent-blanche	https://hut-reservation.org/reservation/book-hut/513/wizard		alpine_hut	Ferpècle	5559	1768
+Bivouac de l'Aiguillette à la Singla	L'Aiguillette à la Singla CAS Bivouac	12	12	https://cas-chasseron.ch/			alpine_hut	Arolla, Magine	9183	1968
+Bivouac du Dolent-La Maye	Bivouac du Dolent	12	12	https://www.cas-gruyere.ch/fr/cabanes/bivouac-du-dolent/			alpine_hut	La Fouly VS, Télésiège	2360	1600
+Blüemlisalphütte	Blüemlisalphütte	100	16	https://www.bluemlisalphuette.com/	https://hut-reservation.org/reservation/book-hut/1/wizard	yes	alpine_hut	Pochtenalp, Abzw. Waldrand	4201	1339
+Bordierhütte	Bordierhütte	44	9	https://bordierhuette.com/	https://hut-reservation.org/reservation/book-hut/156/wizard	yes	alpine_hut	Gasenried, Dorfplatz	4264	1659
+Britanniahütte	Britanniahütte	101	10	https://www.britannia.ch/	https://hut-reservation.org/reservation/book-hut/9/wizard	yes	alpine_hut	Felskinn	1759	2985
+Bächlitalhütte	Bächlitalhütte SAC	75	12	http://www.baechlitalhuette.ch	https://hut-reservation.org/reservation/book-hut/23/wizard	yes	alpine_hut	Handegg, Gelmerbahn	3327	1400
+Cabane Arpitettaz	Cabane d'Arpitettaz	32	14	https://www.arpitettaz.ch/	https://hut-reservation.org/reservation/book-hut/511/wizard	yes	alpine_hut	Zinal, Les Plats de la Lé	4847	1676
+Cabane Rambert	Cabane Rambert	38	6	https://cas-diablerets.ch/cabanes/cabane-rambert/	https://hut-reservation.org/reservation/book-hut/280/wizard	yes	alpine_hut	Les Plans-sur-Bex,Pont de Nant	3012	1253
+Cabane d'Orny	Cabane d'Orny	83	20	https://cas-diablerets.ch/cabanes/cabane-orny/	https://hut-reservation.org/reservation/book-hut/279/wizard	yes	alpine_hut	La Breya	3814	2194
+Cabane de Bertol	Cabane de Bertol CAS	80	16	http://www.bertol.ch		yes	alpine_hut	Arolla, Magine	3964	1968
+Cabane de Chanrion	Cabane de Chanrion	55	7	https://www.chanrion.ch/	https://hut-reservation.org/reservation/book-hut/379/wizard	yes	alpine_hut	Mauvoisin	7628	1841
+Cabane de Moiry	Cabane de Moiry	96	20	https://cabane-moiry.ch/		yes	alpine_hut	Moiry VS, glacier	2188	2350
+Cabane de Saleinaz	Cabane de Saleinaz CAS	48	22	https://www.cas-neuchatel.ch/cabanes/cabane-de-saleinaz-2691m/	https://hut-reservation.org/reservation/book-hut/382/wizard	yes	alpine_hut	Praz-de-Fort, Branche d'en-Bas	3457	1371
+Cabane de Susanfe	Cabane de Susanfe	71	20	https://susanfe.ch/		yes	alpine_hut	Champéry	4451	1035
+Cabane de Tracuit	Cabane de Tracuit CAS	116	24	https://www.cas-chaussy.ch/	https://hut-reservation.org/reservation/book-hut/494/wizard	yes	alpine_hut	Zinal, Les Plats de la Lé	3801	1676
+Cabane de Valsorey	Cabane de Valsorey	52	30	https://www.valsorey.ch/	https://hut-reservation.org/reservation/book-hut/400/wizard	yes	alpine_hut	Bourg-St-Pierre, Commune	5495	1620
+Cabane de l'A Neuve	Cabane de l'A Neuve CAS	28	20	https://cas-diablerets.ch/aneuve	https://hut-reservation.org/reservation/book-hut/277/wizard	yes	alpine_hut	La Seiloz, L'Amônaz	2603	1569
+Cabane de la Dent Blanche	Cabane de la Dent Blanche CAS	35	20	https://www.cabane-dent-blanche.ch/	https://hut-reservation.org/reservation/book-hut/436/wizard	yes	alpine_hut	Ferpècle	6714	1768
+Cabane des Diablerets	Cabane des Diablerets	32		https://www.cabane-diablerets.ch/		yes	alpine_hut	Cabane-des-Diablerets	175	2522
+Cabane des Dix	Cabane des Dix	115	16	http://www.cabanedesdix.ch	https://hut-reservation.org/reservation/book-hut/10/wizard	yes	alpine_hut	Arolla, Magine	5079	1968
+Cabane des Vignettes	Cabane des Vignettes CAS	125	15	https://cabane-des-vignettes.ch/	https://hut-reservation.org/reservation/book-hut/226/wizard	yes	alpine_hut	Arolla, Magine	3589	1968
+Cabane des Violettes	Cabane des Violettes	24		http://www.cabanedesviolettes.ch		yes	alpine_hut	Cabane-des-Violettes	135	2222
+Cabane du Mont Fort	Cabane Mont Fort	58	6	https://cabanemontfort.com		yes	alpine_hut	La Chaux VS	922	2263
+Cabane du Mountet	Cabane du Mountet CAS	80	20	https://cas-diablerets.ch/	https://hut-reservation.org/reservation/book-hut/278/wizard	yes	alpine_hut	Moiry VS, glacier	7747	2350
+Cabane du Trient	Cabane du Trient	90	4	https://cas-diablerets.ch/cabanes/cabane-du-trient/	https://hut-reservation.org/reservation/book-hut/281/wizard	yes	alpine_hut	La Breya	5211	2194
+Cabane du Vélan	Cabane du Vélan	62	6	https://www.velan.ch/		yes	alpine_hut	Bourg-St-Bernard	4251	1924
+Calandahütte	Calandahütte	29		https://www.calandahuette.ch/	https://hut-reservation.org/reservation/book-hut/176/wizard	yes	alpine_hut	Haldenstein, Usserdorfstrasse	3232	569
+Camona da Cavardiras	Cavardirashütte	70	15	https://www.cavardiras.ch/		yes	alpine_hut	Caischavedra (Disentis)	4224	1856
+Camona da Maighels	Camona da Maighels CAS	83	14	https://www.maighelshuette.ch/	https://hut-reservation.org/reservation/book-hut/26/wizard	yes	alpine_hut	Tschamut, Via Alpsu	3571	1646
+Camona da Punteglias	Camona da Punteglias CAS	30	18	https://www.punteglias.ch/	https://hut-reservation.org/reservation/book-hut/240/wizard	yes	alpine_hut	Trun, S. Catrina barriera	4432	880
+Capanna Adula	Capanna Adula CAS	24	9	https://capannaadula.casticino.ch	https://hut-reservation.org/reservation/book-hut/42/wizard	yes	alpine_hut	Dangio, Paese	3176	801
+Capanna Alzasca	Capanna Alzasca	20	10	http://www.capannaalzasca.ch	https://hut-reservation.org/reservation/book-hut/198/wizard	yes	alpine_hut	Linescio, di Dentro	4015	672
+Capanna Basodino (Robiei)	Capanna Basodino CAS	59	20	http://www.capannabasodino.ch	https://hut-reservation.org/reservation/book-hut/8/wizard	yes	alpine_hut	Robiei	425	1894
+Capanna Cadlimo	Capanna Cadlimo	76	15	https://www.cadlimohuette.ch	https://hut-reservation.org/reservation/book-hut/34/wizard	yes	alpine_hut	Piora	5233	1793
+Capanna Campo Tencia	Capanna Campo Tencia	60	16	https://campotencia.casticino.ch	https://hut-reservation.org/reservation/book-hut/36/wizard	yes	alpine_hut	Prato (Leventina),Biv.Mascengo	4582	1024
+Capanna Corno Gries	Capanna Corno Gries CAS	46	9	https://www.corno-gries.ch/	https://hut-reservation.org/reservation/book-hut/197/wizard	yes	alpine_hut	Cruina	1405	2035
+Capanna Cristallina	Capanna Cristallina	120	8	https://capannacristallina.casticino.ch/	https://hut-reservation.org/reservation/book-hut/20/wizard	yes	alpine_hut	Robiei	3358	1894
+Capanna Motterascio	Capanna Michela Motterascio	72	24	http://www.capannamotterascio.ch	https://hut-reservation.org/reservation/book-hut/221/wizard	yes	alpine_hut	Lago di Luzzone	4243	1613
+Capanna Sasc Furä	Capanna Sasc Furä	36	4	https://www.sascfura.ch/	https://hut-reservation.org/reservation/book-hut/38/wizard	yes	alpine_hut	Stampa, Palù	2867	979
+Capanna da l'Albigna	Capanna da l'Albigna CAS	88	14	https://albigna.ch/	https://hut-reservation.org/reservation/book-hut/3/wizard	yes	alpine_hut	Albigna	1155	2095
+Capanna del Forno	Fornohütte - Capanna del Forno CAS	63	4	https://www.fornohuette.ch/	https://hut-reservation.org/reservation/book-hut/18/wizard	yes	alpine_hut	Albigna	4951	2095
+Capanna di Sciora	Capanna di Sciora	42	10	https://sac-hoherrohn.ch/content/capanna-di-sciora/	https://hut-reservation.org/reservation/book-hut/7/wizard	yes	alpine_hut	Stampa, Val d'Arca	3726	988
+Carschinahütte	Carschinahütte	80	10	https://www.carschina.ch/	https://hut-reservation.org/reservation/book-hut/46/wizard	yes	alpine_hut	St. Antönien,PartnunAlpenrösli	2522	1775
+Chamanna Coaz	Chamanna Coaz CAS	55		https://www.coaz.ch/	https://hut-reservation.org/reservation/book-hut/386/wizard	yes	alpine_hut	Corvatsch	3966	3296
+Chamanna Jenatsch	Chamanna Jenatsch CAS	73	14	https://www.chamannajenatsch.ch/	https://hut-reservation.org/reservation/book-hut/157/wizard	yes	alpine_hut	Sur GR Alp Flix, Tigias Hotel	5349	1977
+Chamanna d'Es-cha	Chamanna d'Es-cha CAS	50	10	https://www.es-cha.ch/	https://hut-reservation.org/reservation/book-hut/25/wizard	yes	alpine_hut	La Punt, Alp Alesch	2894	2030
+Chamanna da Boval	Chamanna da Boval CAS	80	14	https://www.boval.ch/	https://hut-reservation.org/reservation/book-hut/391/wizard	yes	alpine_hut	Diavolezza	3113	2973
+Chamanna da Tschierva	Chamanna da Tschierva	100	8	https://tschierva.ch	https://hut-reservation.org/reservation/book-hut/487/wizard	yes	alpine_hut	Corvatsch	4764	3296
+Chamanna dal Linard	Chamanna dal Linard	38	6	http://www.linardhuette.ch		yes	alpine_hut	Sagliains	2228	1433
+Chamonas d'Ela	Chamonas d'Ela CAS	26	26	https://www.sac-davos.ch/	https://hut-reservation.org/reservation/book-hut/182/wizard		alpine_hut	Bergün/Bravuogn, posta	4287	1366
+Chamonna Lischana	Chamonna Lischana	42	16	https://www.lischanahuette.ch/	https://hut-reservation.org/reservation/book-hut/78/wizard	yes	alpine_hut	Scuol, Plan da Funtanas	2785	1494
+Chamonna Tuoi	Chamonna Tuoi	74	14	https://www.tuoi.ch/	https://hut-reservation.org/reservation/book-hut/33/wizard	yes	alpine_hut	Guarda, Pitschen	6194	1646
+Chelenalphütte	Chelenalphütte	42	10	https://www.chelenalp.ch/	https://hut-reservation.org/reservation/book-hut/55/wizard	yes	alpine_hut	Göscheneralp, Dammagletscher	5179	1783
+Claridenhütte	Claridenhütte	74	12	https://www.claridenhuette.ch/		yes	alpine_hut	Urnerboden, Dorf	4301	1373
+Cresta-Biwak								Mattmark	5826	2197
+Cufercalhütte	Cufercalhütte SAC	22	6	https://www.cufercal.ch/	https://hut-reservation.org/reservation/book-hut/165/wizard	yes	alpine_hut	Sufers, Lai da Vons	2187	1970
+Doldenhornhütte	Doldenhornhütte SAC	36	10	https://www.doldenhornhuette.ch/	https://hut-reservation.org/reservation/book-hut/11/wizard	yes	alpine_hut	Kandersteg (Talst. Oeschinen)	1628	1200
+Domhütte	Domhütte SAC	75	8	https://domhuette.ch		yes	alpine_hut	Randa, Bahnhof	2798	1407
+Dossenhütte	Dossenhütte SAC	51	11	https://www.dossenhuette.ch/	https://hut-reservation.org/reservation/book-hut/31/wizard	yes	alpine_hut	Rosenlaui, Gletscherschlucht	2849	1361
+Enderlinhütte	Enderlinhütte SAC	30	17	https://www.sac-piz-sol.ch/html/a46b96ee-d135-11df-94da-deec044f7f8f/information_enderlinhuette		yes	alpine_hut	Maienfeld, St. Luzisteig	2052	714
+Etzlihütte	Etzlihütte	75	4	https://etzlihuette.ch/	https://hut-reservation.org/reservation/book-hut/398/wizard	yes	alpine_hut	Rueras	5154	1447
+Fergenhütte	Fergenhütte	21	21	https://www.sac-praettigau.ch/	https://hut-reservation.org/reservation/book-hut/241/wizard	yes	alpine_hut	Klosters, Monbiel Parkplatz	3356	1309
+Finsteraarhornhütte	Finsteraarhornhütte	116	10	https://www.finsteraarhornhuette.ch/	https://hut-reservation.org/reservation/book-hut/213/wizard	yes	alpine_hut	Furggulti	8549	2558
+Fründenhütte	Fründenhütte SAC	58		https://www.fruendenhuette.ch/	https://hut-reservation.org/reservation/book-hut/19/wizard	yes	alpine_hut	Oeschinen (Bergstation)	3995	1683
+Gaulihütte	Gaulihütte SAC	65	20	https://www.gaulihuette.ch/	https://hut-reservation.org/reservation/book-hut/27/wizard	yes	alpine_hut	Guttannen, Aegerstein	6333	930
+Gelmerhütte	Gelmerhütte	55	50	https://www.gelmerhuette.ch/	https://hut-reservation.org/reservation/book-hut/66/wizard	yes	alpine_hut	Gelmersee	2531	1861
+Geltenhütte	Cabane de Gelten SAC	70	18	https://www.gelten.ch/	https://hut-reservation.org/reservation/book-hut/17/wizard	yes	alpine_hut	Lauenensee	2698	1379
+Glecksteinhütte	Glecksteinhütte SAC	88	20	https://www.gleckstein.ch/	https://hut-reservation.org/reservation/book-hut/2/wizard	yes	alpine_hut	Grindelwald, Alpenvogelpark	1912	1401
+Grassenbiwak	Biwak am Grassen						wilderness_hut	Titlis	1808	3018
+Gspaltenhornhütte	Gspaltenhornhütte SAC	60		https://www.gspaltenhornhuette.ch/	https://hut-reservation.org/reservation/book-hut/44/wizard	yes	alpine_hut	Schilthorn	5312	2965
+Guggihütte	Guggihütte	24	24	https://www.sac-interlaken.ch/	https://hut-reservation.org/reservation/book-hut/665/wizard		alpine_hut	Eigergletscher	1338	2311
+Hollandiahütte	Hollandiahütte	86	12	https://www.hollandiahuette.ch/	https://hut-reservation.org/reservation/book-hut/374/wizard	yes	alpine_hut	Jungfraujoch	8199	3488
+Hüfihütte	Hüfihütte	32		https://www.huefihuette.ch/	https://hut-reservation.org/reservation/book-hut/388/wizard	yes	alpine_hut	Unterschächen, Hältikehr	7491	1092
+Kesch-Hütte	Chamanna digl Kesch	92	20	https://www.kesch.ch/	https://hut-reservation.org/reservation/book-hut/4/wizard	yes	alpine_hut	Bergün/Bravuogn, Tuors Chants	3626	1827
+Konkordiahütte	Konkordia Hütte	155	20	https://www.konkordiahuette.ch/	https://hut-reservation.org/reservation/book-hut/12/wizard	yes	alpine_hut	Jungfraujoch	7543	3488
+Laggin Biwak								Gabi (Simplon)	3111	1226
+Lauteraarhütte	Lauteraarhütte	28	12	https://www.lauteraarhuette.ch/	https://hut-reservation.org/reservation/book-hut/558/wizard	yes	alpine_hut	Handegg, Gelmerbahn	8006	1400
+Leutschachhütte	Leutschachhütte SAC	60	6	http://www.leutschachhuette.ch		yes	alpine_hut	Arnisee	3525	1365
+Lohnerhütte	Lohnerhütte SAC	18	18	https://www.sac-wildstrubel.ch/		yes	alpine_hut	Adelboden, Hotel Alpina	2765	1287
+Lämmerenhütte	Lämmerenhütte	96	10	https://www.laemmeren.ch/	https://hut-reservation.org/reservation/book-hut/453/wizard	yes	alpine_hut	Gemmipass	3213	2344
+Länta-Hütte	Läntahütte SAC	33	22	https://www.laentahuette.ch/		yes	alpine_hut	Lago di Luzzone	5823	1613
+Martinsmadhütte	Martinsmadhütte	40	4	https://www.martinsmadhuette.ch/	https://hut-reservation.org/reservation/book-hut/615/wizard	yes	alpine_hut	Elm Tschinglenalp	1509	1515
+Medelserhütte	Camona da Medel CAS	51	10	https://www.medelserhuette.ch	https://hut-reservation.org/reservation/book-hut/332/wizard	yes	alpine_hut	Pian Geirett	4303	2003
+Mischabeljochbiwak	Mischabeljochbiwak SAC						wilderness_hut	Längfluh	2593	2866
+Monte-Leone-Hütte	Monte Leone-Hütte	20	16	https://www.cas-sommartel.ch/	https://hut-reservation.org/reservation/book-hut/340/wizard	yes	alpine_hut	Schallbett	2656	1933
+Monte-Rosa-Hütte	Monte Rosa Hütte	120	12	https://monterosahuette.ch	https://hut-reservation.org/reservation/book-hut/6/wizard	yes	alpine_hut	Gornergrat	3854	3090
+Mutthornhütte	Mutthornhütte						alpine_hut	Fafleralp	6814	1766
+Muttseehütte	Muttseehütte	76	8	https://www.muttseehuette.ch/	https://hut-reservation.org/reservation/book-hut/229/wizard	yes	alpine_hut	Linthal, Bergli	6449	915
+Oberaarjochhütte	Oberaarjochhütte	30	10	https://www.oberaarjochhuette.ch/	https://hut-reservation.org/reservation/book-hut/15/wizard	yes	alpine_hut	Münster VS, Dorfplatz	8125	1371
+Oberaletschhütte	Oberaletschhütte	58	10	http://www.oberaletsch.ch	https://hut-reservation.org/reservation/book-hut/47/wizard	yes	alpine_hut	Belalp Hohbiel	3035	2677
+Ramozhütte	Ramozhütte	23	23	https://sac-arosa.ch/ramozhuette/	https://hut-reservation.org/reservation/book-hut/246/wizard		alpine_hut	Parpaner Rothorn	3766	2855
+Refuge de Chalin	Refuge de Chalin	8	8	https://www.cas-chaussy.ch/			alpine_hut	Mex VS	4155	1110
+Refuge des Bouquetins	Refuge des Bouquetins CAS	26	20	http://www.cas-valdejoux.ch			alpine_hut	Arolla, Magine	6809	1968
+Rifugio Saoseo	Rifugio SAC Lungacqua Saoseo	80	68	https://www.saoseo.ch/	https://hut-reservation.org/reservation/book-hut/341/wizard	yes	alpine_hut	Lungacqua	64	1986
+Ringelspitzhütte	Ringelspitzhütte SAC	36	10	https://www.ringelspitzhuette.ch/	https://hut-reservation.org/reservation/book-hut/514/wizard	yes	alpine_hut	Trin, Quadris	4249	895
+Rosenlauibiwak				https://www.sac-oberaargau.ch/huetten/rosenlauibiwak.php				Rosenlaui, Gletscherschlucht	2380	1361
+Rothornhütte	Rothornhütte	54	5	https://www.rothornhuette-sac.ch/	https://hut-reservation.org/reservation/book-hut/334/wizard	yes	alpine_hut	Zermatt	4738	1605
+Rotondohütte	Rotondohütte	80	20	https://www.rotondohuette.ch/	https://hut-reservation.org/reservation/book-hut/404/wizard	yes	alpine_hut	Bedretto, Paese	4804	1403
+Rottalhütte	Rottalhütte SAC	28	28	https://www.sac-interlaken.ch/index.php/huetten/rottalhuette	https://hut-reservation.org/reservation/book-hut/498/wizard	yes	alpine_hut	Jungfraujoch	3716	3488
+Salbitschijenbiwak								Göschenen, Abzw. Voralp	1737	1402
+Sardonahütte	Sardonahütte	44	14	https://www.sardonahuette.ch/	https://hut-reservation.org/reservation/book-hut/486/wizard	yes	alpine_hut	Cassons	4372	2499
+Schalijochbiwak	Schalijochbiwak	8	8	https://www.sac-basel.ch/	https://hut-reservation.org/reservation/book-hut/348/wizard		alpine_hut	Randa	5596	1407
+Schreckhornhütte	Schreckhornhütte SAC	56	16	https://www.schreckhornhuette.ch	https://hut-reservation.org/reservation/book-hut/204/wizard	yes	alpine_hut	Pfingstegg	5101	1389
+Schönbielhütte	Schönbielhütte SAC	70	12	https://www.section-monte-rosa.ch/	https://hut-reservation.org/reservation/book-hut/308/wizard	yes	alpine_hut	Zermatt Schwarzsee	6325	2582
+Seetalhütte	Seetalhütte	12	10	https://www.sac-praettigau.ch/	https://hut-reservation.org/reservation/book-hut/242/wizard	yes	wilderness_hut	Klosters, Monbiel Parkplatz	6777	1309
+Silberhornhütte	Silberhornhütte SAC	10	10	https://www.sac-lauterbrunnen.ch/	https://hut-reservation.org/reservation/book-hut/515/wizard		alpine_hut	Stechelberg, Hotel	2417	906
+Silvrettahütte	Silvrettahütte	69	12	https://www.silvrettahuette.ch/	https://hut-reservation.org/reservation/book-hut/80/wizard	yes	alpine_hut	Klosters, Monbiel Parkplatz	9092	1309
+Spannorthütte	Spannorthütte SAC	40	9	https://www.spannorthuette.ch	https://hut-reservation.org/reservation/book-hut/244/wizard	yes	alpine_hut	Fürenalp	3165	1840
+Stockhornbiwak	Stockhorn-Biwak	18	18	http://www.stockhornbiwak.ch	https://hut-reservation.org/reservation/book-hut/527/wizard		wilderness_hut	Fafleralp	6496	1766
+Sustlihütte	Sustlihütte SAC	67	13	https://www.sustlihuette.ch/	https://hut-reservation.org/reservation/book-hut/525/wizard	yes	alpine_hut	Meien, Sustenbrüggli	601	1892
+Terrihütte	Camona da Terri	110	20	https://www.terrihuette.ch/	https://hut-reservation.org/reservation/book-hut/16/wizard	yes	alpine_hut	Vrin, Parvalsauns	4633	1630
+Tierberglihütte	Tierberglihütte SAC	78	6	https://tierbergli.ch/	https://hut-reservation.org/reservation/book-hut/305/wizard	yes	alpine_hut	Steingletscher, Susten	3388	1864
+Topalihütte	Topalihütte	38	6	https://www.topalihuette.ch/	https://hut-reservation.org/reservation/book-hut/166/wizard	yes	alpine_hut	Herbriggen, Mattsand	2370	1229
+Treschhütte	Treschhütte SAC	32	32	http://www.treschhuette.ch		yes	alpine_hut	Gurtnellen, Fellital	2218	711
+Trifthütte	Trifthütte SAC		no				alpine_hut	Guttannen, Dorf	6572	1057
+Turtmannhütte	Turtmannhütte SAC	72	14	http://www.turtmannhuette.ch	https://hut-reservation.org/reservation/book-hut/530/wizard	yes	alpine_hut	Gruben VS	5758	1827
+Täschhütte	Täschhütte	74	10	https://www.taeschhuette.ch	https://hut-reservation.org/reservation/book-hut/51/wizard	yes	alpine_hut	Rothorn VS	4182	3094
+Weisshornhütte	Weisshornhütte SAC	31	6	https://www.sac-basel.ch/huetten/weisshornhuette	https://hut-reservation.org/reservation/book-hut/672/wizard	yes	alpine_hut	Täsch	3149	1438
+Weissmieshütte	Weissmieshütte SAC	125		https://www.weissmieshuette.ch/	https://hut-reservation.org/reservation/book-hut/209/wizard	yes	alpine_hut	Hohsaas	958	3099
+Wildhornhütte	Wildhornhütte	96	10	https://www.wildhornhuette.ch/	https://hut-reservation.org/reservation/book-hut/164/wizard	yes	alpine_hut	Lauenensee	3935	1379
+Wildstrubelhütte	Wildstrubelhütte	68	10	https://www.wildstrubelhuette.ch/	https://hut-reservation.org/reservation/book-hut/65/wizard	yes	alpine_hut	Glacier-de-la-Plaine-Morte	2177	2869
+Windegghütte	Windegghütte SAC	41	12	https://www.windegghuette.ch/	https://hut-reservation.org/reservation/book-hut/214/wizard	yes	alpine_hut	Nessental, Triftbahn	3657	1019
+Zapporthütte	Zapporthütte SAC	24		https://www.zapporthuette.ch/			alpine_hut	S. Bernardino, Ospizio	5895	2065
